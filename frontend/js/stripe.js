@@ -3,7 +3,7 @@ import { supabase } from "./supabase.js";
 const CREATE_CHECKOUT_URL =
 "https://mxzacyfkisblfqbxvkjj.functions.supabase.co/create-checkout";
 
-const stripe = Stripe("pk_test_51TBOMyEaG3WhqeCsBWypjYFtbREXKe5CVtfO3R6xALi3f6h8TvPuIXRCUvTpmbq9I50v0TItIgqbrEXKX2pt5V2N00lf3wRFaE");
+const stripe = Stripe("pk_live_51TBOMyEaG3WhqeCs7rpZehsXcn71P3JF6uGL7YHw7P310P4B6ZaAnWpGxXfZaulvLWZHHKSUGpMKLrreki5lvTZK009GBrStxo");
 
 async function startCheckout(priceId, exam) {
 
@@ -53,7 +53,7 @@ document.getElementById("ap_calc_ab_btn")
 .addEventListener("click", () => {
 
   startCheckout(
-    "price_1TC5nCEaG3WhqeCszMoQB798",
+    "price_1TBp8xEaG3WhqeCssMpll6gA",
     "AP_CALC_AB"
   );
 
@@ -63,7 +63,7 @@ document.getElementById("ap_calc_bc_btn")
 .addEventListener("click", () => {
 
   startCheckout(
-    "price_1TC5neEaG3WhqeCs8KPlaRhQ",
+    "price_1TBp9rEaG3WhqeCsTQERd7xd",
     "AP_CALC_BC"
   );
 
@@ -73,7 +73,7 @@ document.getElementById("ap_precalc_btn")
 .addEventListener("click", () => {
 
   startCheckout(
-    "price_1TC5nzEaG3WhqeCsoxHGcSqb",
+    "price_1TBpBSEaG3WhqeCsgTWj5pV8",
     "AP_PRECALC"
   );
 
@@ -83,7 +83,7 @@ document.getElementById("sat-btn")
 .addEventListener("click", () => {
 
   startCheckout(
-    "price_1TC5phEaG3WhqeCsgeCCf1fT",
+    "price_1TBpD4EaG3WhqeCsowFAN74q",
     "SAT_MATH"
   );
 
@@ -93,7 +93,7 @@ document.getElementById("all-exams-btn")
 .addEventListener("click", () => {
 
   startCheckout(
-    "price_1TC5qKEaG3WhqeCsHBbtbniY",
+    "price_1TBpEIEaG3WhqeCsDtKUWba9",
     "ALL"
   );
 
