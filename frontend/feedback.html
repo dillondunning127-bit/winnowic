@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Feedback</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+<!-- BACK BUTTON -->
+<button id="back-btn" class="btn-secondary back-btn">← Back</button>
+
+<h1 class="page-title">Feedback</h1>
+<p class="page-subtitle">Comments and concerns</p>
+
+<!-- INFO CARD -->
+<div class="card feedback-card">
+  <p>
+    If you find an error with a question, describe it as clearly as possible
+    (include topic/unit if you can).
+  </p>
+
+  <p>
+    You can also suggest improvements, new features, or anything that would
+    make your experience better.
+  </p>
+
+  <p>
+    Your feedback directly improves the platform — thank you.
+  </p>
+</div>
+
+<!-- INPUT CARD -->
+<div class="card feedback-card">
+
+  <textarea 
+    id="feedback-input"
+    rows="8"
+    placeholder="Write your feedback here..."
+  ></textarea>
+
+  <button id="submit-feedback-btn" class="btn-primary">
+    Submit Feedback
+  </button>
+
+  <p id="feedback-message"></p>
+
+</div>
+
+<script type="module" src="js/feedback.js"></script>
+
+</body>
+</html>

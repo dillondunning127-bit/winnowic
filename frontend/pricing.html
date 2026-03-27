@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <title>Upgrade</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://js.stripe.com/v3/"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<button id="back-btn" class="btn-secondary back-btn">← Back</button>
+
+<h1 class="pricing-title">Upgrade Your Prep</h1>
+<p class="pricing-subtitle">Unlock full access and maximize your score</p>
+
+<div class="pricing-container">
+
+  <!-- FREE -->
+  <div class="plan">
+    <h2>Free</h2>
+    <p class="price">$0</p>
+    <ul>
+      <li>1 exam simulation per test</li>
+      <li>Limited question bank</li>
+      <li>Filters available</li>
+    </ul>
+  </div>
+
+  <!-- SAT -->
+  <div class="plan highlight">
+    <h2>SAT Math</h2>
+    <p class="price">$6<span>/month</span></p>
+    <ul>
+      <li>Unlimited SAT questions</li>
+      <li>Diagnostics</li>
+      <li>Adaptive quizzes</li>
+    </ul>
+    <button id="sat-btn" class="btn-primary">Start SAT Plan</button>
+  </div>
+
+  <!-- ALL -->
+  <div class="plan">
+    <h2>All Exams</h2>
+    <p class="price">$10<span>/month</span></p>
+    <ul>
+      <li>SAT + AP exams</li>
+      <li>Diagnostics</li>
+      <li>Adaptive quizzes</li>
+    </ul>
+    <button id="all-exams-btn" class="btn-primary">Get Full Access</button>
+  </div>
+
+  <!-- AP -->
+  <div class="plan">
+    <h2>AP 5's Deal</h2>
+    <p class="price">$5</p>
+    <p class="small-text">April–May only</p>
+    <ul>
+      <li>Access to one AP exam</li>
+      <li>Diagnostics included</li>
+      <li>Expires May 31</li>
+    </ul>
+
+    <div class="ap-buttons">
+      <button id="ap_calc_ab_btn" class="btn-secondary">AP Calc AB</button>
+      <button id="ap_calc_bc_btn" class="btn-secondary">AP Calc BC</button>
+      <button id="ap_precalc_btn" class="btn-secondary">AP Precalc</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const backBtn = document.getElementById("back-btn");
+
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      if (document.referrer) {
+        window.history.back();
+      } else {
+        window.location.href = "/index.html";
+      }
+    });
+  }
+</script>
+
+<script type="module" src="/js/stripe.js"></script>
+
+</body>
+</html>

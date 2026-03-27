@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Diagnostics</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="js/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+   <a href="index.html">
+  <button class="btn-secondary">← Back</button>
+</a>
+  </div>
+
+  <h1 class="logo">Diagnostics Dashboard</h1>
+
+  <!-- SELECTORS CARD -->
+  <div class="card">
+
+    <label>Exam <span style="color:gray;">(select first)</span></label>
+    <select id="examSelect">
+      <option value="">Select Exam</option>
+      <option value="SAT_MATH">SAT Math</option>
+      <option value="AP_PRECALC">AP Precalculus</option>
+      <option value="AP_CALC_AB">AP Calc AB</option>
+      <option value="AP_CALC_BC">AP Calc BC</option>
+    </select>
+
+    <label>Unit</label>
+    <select id="unitSelect">
+      <option value="">Select Unit</option>
+    </select>
+
+  </div>
+
+  <div class="upgrade-wrapper">
+  <button id="upgrade-btn-global" class="primary-btn">
+    Upgrade 🚀
+  </button>
+</div>
+
+  <!-- READINESS CARD -->
+  <div class="card" id="readiness-container" style="display:none;text-align:center;">
+
+    <div id="readinessChartContainer" style="display:none; margin:auto; position:relative; width:260px;">
+      <canvas id="readinessChart"></canvas>
+
+      <div id="chartCenterScore" style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        font-size:28px;
+        font-weight:bold;
+      ">
+        --
+      </div>
+    </div>
+
+    
+
+   <div>
+  <strong>Exam Readiness:</strong>
+  <span id="readinessScore"></span>
+</div>
+
+
+<div id="largestImprovement" style="margin-top:10px;font-weight:bold;"></div>
+  </div>
+
+  <!-- UNIT DETAILS CARD -->
+  <div id="diagnosticResults" class="card" style="display:none;">
+
+    <h2 id="unitTitle"></h2>
+
+    <div>
+      <strong>Accuracy (Last 20):</strong>
+      <span id="accuracyScore"></span>
+    </div>
+
+    <div>
+      <strong>Current Streak:</strong>
+      <span id="streakScore"></span>
+    </div>
+
+    <div>
+      <strong>Mastery Level:</strong>
+      <div id="masteryBadge"></div>
+    </div>
+
+    <div class="progress-bar-bg" style="margin-top:10px;">
+      <div id="masteryBar"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module" src="js/diagnostics.js"></script>
+</body>
+</html>

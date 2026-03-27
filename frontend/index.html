@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Winnowic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <img src="/assets/logo-full.png" class="logo-img" alt="Winnowic">
+
+  <!-- AUTH CARD -->
+  <div id="auth-container" class="card">
+      <h3>User Info:</h3>
+
+      <input type="email" id="email-input" placeholder="Email" class="text-input">
+      <input type="password" id="password-input" placeholder="Password" class="text-input">
+
+      <button id="signup-btn" class="btn-secondary">Sign Up</button>
+      <button id="login-btn" class="btn-primary">Login</button>
+      <div class="auth-header">
+
+  <p id="user-status"></p>
+
+  <button id="logout-btn" class="btn-ghost">Logout</button>
+
+</div>
+
+      <p id="user-status"></p>
+  </div>
+
+  <div id="auth-required-message" style="display:none;">
+    <p>Please log in to access the quiz.</p>
+</div>
+  <!-- QUIZ SECTION -->
+  <div id="quiz-section" style="display:none;">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <button id="diagnostics-btn" class="btn-secondary" style="display:none;">Diagnostics</button>
+        <button id="feedback-btn" class="btn-secondary">
+  Feedback: Comments & Concerns
+</button>
+        <button id="upgrade-btn" class="primary-btn">
+  <span class="rocket-icon"></span>
+  Upgrade
+</button>
+    </div>
+
+    <!-- SETTINGS CARD -->
+    <div class="card">
+        <h2>Select Your Practice</h2>
+
+      <div class="timer-row">
+  <label class="toggle-container">
+    <span>Timer</span>
+
+    <input type="checkbox" id="timerToggle" checked>
+    <span class="slider"></span>
+  </label>
+</div>
+
+        <select id="exam-select">
+    <option value="">-- Select Exam --</option>
+    <option value="AP_PRECALC">AP Precalculus</option>
+    <option value="AP_CALC_AB">AP Calc AB</option>
+    <option value="AP_CALC_BC">AP Calc BC</option>
+    <option value="SAT_MATH">SAT Math</option>
+</select>
+
+        <label>Quiz Length:</label>
+        <select id="time-select" disabled></select>
+
+        
+
+        <select id="unit-select" disabled></select>
+
+        <button id="start-quiz-btn" class="btn-primary">Start Quiz</button>
+        <button id="adaptive-quiz-btn" class="btn-primary">Take Adaptive Quiz</button>
+
+        <div id="message"></div>
+        <p id="quiz-message"></p>
+    </div>
+
+    <!-- QUESTION CARD -->
+   <div id="question-card" class="card" style="display:none;">
+
+<div id="timerDisplay">
+          Time Remaining: <span id="timeRemaining">00:00</span>
+        </div>
+
+
+        <div id="question-image-container">
+            <img id="question-image">
+        </div>
+
+        <h2 id="question"></h2>
+
+        <button id="choice-a" style="display:none"></button>
+        <button id="choice-b" style="display:none"></button>
+        <button id="choice-c" style="display:none"></button>
+        <button id="choice-d" style="display:none"></button>
+
+        <div id="grid-container" style="display:none">
+            <input id="grid-input">
+            <span id="grid-result"></span>
+            <button id="grid-submit">Submit</button>
+        </div>
+
+        <div id="explanation"></div>
+        <button id="next-btn"style="display:none;">Next</button>
+
+ <div class="progress-bar-bg">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div id="progress-container"></div>
+        <div id="exam-readiness"></div>
+        <div id="weak-areas-container"></div>
+
+    </div>
+
+    <!-- PROGRESS CARD -->
+    <div class="card">
+        <div id="history-container"></div>
+    </div>
+<div id="section-transition" class="transition-overlay" style="display:none;">
+  <div class="transition-card">
+    <p id="transition-text"></p>
+    <button id="transition-continue" class="btn-primary">Continue</button>
+  </div>
+</div>
+  </div>
+
+</div>
+
+</body>
+<script type="module" src="./js/quizSettings.js"></script>
+
+<script type="module" src="./js/main.js"></script>
+
+</html>
+
