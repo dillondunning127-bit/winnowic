@@ -16,8 +16,8 @@ export function showQuizUI() {
 }
 
 export function hideQuizUI() {
-    document.getElementById("quiz-section").style.display = "none";
-    document.getElementById("auth-required-message").style.display = "block";
+    document.getElementById("quiz-section").style.display = "block"; // keep visible
+    document.getElementById("auth-required-message").style.display = "none"; // optional: hide message
 }
 
 export async function signUp() {
