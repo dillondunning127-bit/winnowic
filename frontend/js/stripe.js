@@ -5,47 +5,61 @@ const CREATE_CHECKOUT_URL =
 
 const stripe = Stripe("pk_live_51TBOMyEaG3WhqeCs7rpZehsXcn71P3JF6uGL7YHw7P310P4B6ZaAnWpGxXfZaulvLWZHHKSUGpMKLrreki5lvTZK009GBrStxo");
 
+/* ✅ MESSAGE FUNCTION (MOVE OUTSIDE) */
+function showPricingMessage(text) {
+  const msg = document.getElementById("pricing-message");
+  if (!msg) return;
+
+  msg.textContent = text;
+
+  setTimeout(() => {
+    msg.textContent = "";
+  }, 4000);
+}
+
+/* ✅ FIXED CHECKOUT */
 async function startCheckout(priceId, exam, productType) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
+  // 🔒 Check user FIRST
   if (!user) {
-    alert("Please log in first.");
+    showPricingMessage("Create a free account to unlock this plan 🚀");
     return;
   }
 
+  // ✅ THEN get session
   const { data: { session } } = await supabase.auth.getSession();
 
-if (!session) {
-  alert("Please log in again.");
-  return;
-}
+  if (!session) {
+    showPricingMessage("Session expired. Please log in again.");
+    return;
+  }
 
-const response = await fetch(CREATE_CHECKOUT_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${session.access_token}` 
-  },
- body: JSON.stringify({
-  priceId,
-  userId: user.id,
-  exam,
-  productType
-})
-});
+  const response = await fetch(CREATE_CHECKOUT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session.access_token}` 
+    },
+    body: JSON.stringify({
+      priceId,
+      userId: user.id,
+      exam,
+      productType
+    })
+  });
 
-const data = await response.json();
+  const data = await response.json();
 
-console.log("Checkout response:", data);
+  console.log("Checkout response:", data);
 
-if (!data.url) {
-  alert("Checkout failed. Check console.");
-  return;
-}
+  if (!data.url) {
+    showPricingMessage("Checkout failed. Please try again.");
+    return;
+  }
 
-window.location.href = data.url;
-
+  window.location.href = data.url;
 }
 
 /* BUTTON LISTENERS */
