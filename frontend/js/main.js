@@ -20,21 +20,46 @@ window.addEventListener("DOMContentLoaded", async () => {
 // Check initial state
 const { data: { user } } = await supabase.auth.getUser();
 
-if (user) {
-    diagnosticsBtn.style.display = "block";
-} else {
-    diagnosticsBtn.style.display = "none";
+const cancelBtn = document.getElementById("cnclsub-btn");
+const deleteBtn = document.getElementById("dltact-btn");
+
+if (cancelBtn && deleteBtn) {
+    if (user) {
+        cancelBtn.style.display = "block";
+        deleteBtn.style.display = "block";
+    } else {
+        cancelBtn.style.display = "none";
+        deleteBtn.style.display = "none";
+    }
 }
+
+diagnosticsBtn.style.display = "block"; // always visible
 
 document
 .getElementById("diagnostics-btn")
-.addEventListener("click", () => {
+.addEventListener("click", async () => {
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    alert("Sign up to view your diagnostics.");
+    return;
+  }
 
   window.location.href = "diagnostics.html";
-
 });
 // ✅ Listen for login/logout changes
 supabase.auth.onAuthStateChange((event, session) => {
+
+if (cancelBtn && deleteBtn) {
+    if (session?.user) {
+        cancelBtn.style.display = "block";
+        deleteBtn.style.display = "block";
+    } else {
+        cancelBtn.style.display = "none";
+        deleteBtn.style.display = "none";
+    }
+}
 
     if (session?.user) {
         diagnosticsBtn.style.display = "block";
@@ -86,12 +111,19 @@ document.getElementById("adaptive-quiz-btn")
         }
 
         // 🔒 PAYWALL CHECK (FIX)
-        const hasAccess = await checkExamAccess(selectedExam);
+       const { data: { user } } = await supabase.auth.getUser();
 
-        if (!hasAccess) {
-            message.textContent = "🔒 Upgrade to unlock adaptive quizzes.";
-            return;
-        }
+if (!user) {
+    message.textContent = "Create a free account to start.";
+    return;
+}
+
+const hasAccess = await checkExamAccess(selectedExam);
+
+if (!hasAccess) {
+    message.textContent = "🔒 Upgrade to unlock adaptive quizzes.";
+    return;
+}
 
         // Clear old messages
         message.textContent = "";
