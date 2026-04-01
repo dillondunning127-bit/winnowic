@@ -638,3 +638,16 @@ body {
     max-width: 220px;
     height: auto;
 }
+
+.top-bar-message {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+}
