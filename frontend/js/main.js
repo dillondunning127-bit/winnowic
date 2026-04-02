@@ -35,6 +35,17 @@ if (cancelBtn && deleteBtn) {
 
 diagnosticsBtn.style.display = "block"; // always visible
 
+const messageEl = document.getElementById("top-bar-message");
+
+function showTopMessage(text) {
+    messageEl.textContent = text;
+    messageEl.style.display = "block";
+
+    setTimeout(() => {
+        messageEl.style.display = "none";
+    }, 3000);
+}
+
 document
 .getElementById("diagnostics-btn")
 .addEventListener("click", async () => {
@@ -42,7 +53,7 @@ document
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    alert("Sign up to view your diagnostics.");
+    showTopMessage("🔓 Please sign up or log in to access diagnostics page.");
     return;
   }
 
@@ -61,12 +72,7 @@ if (cancelBtn && deleteBtn) {
     }
 }
 
-    if (session?.user) {
-        diagnosticsBtn.style.display = "block";
-    } else {
-        diagnosticsBtn.style.display = "none";
-    }
-
+   
 });   
 
 
