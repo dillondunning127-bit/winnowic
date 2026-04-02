@@ -400,6 +400,8 @@ document.getElementById("choice-d").textContent = shuffled[3].text;
 
 export async function nextQuestion() {
 
+document.getElementById("login-lock-message").style.display = "none";
+
     // ✅ ADAPTIVE QUIZ FLOW
     if (isAdaptiveMode) {
 
@@ -548,6 +550,17 @@ if (buttons[letter]) {
     
 // 🔥 Insert individual attempt
 const { data: { user } } = await supabase.auth.getUser();
+
+// 🚫 NOT LOGGED IN → BLOCK AFTER FIRST QUESTION
+if (!user) {
+    document.getElementById("login-lock-message").style.display = "block";
+
+    // hide explanation + next button
+    document.getElementById("explanation").textContent = "";
+    document.getElementById("next-btn").style.display = "none";
+
+    return; // 🚨 STOP HERE (prevents crash)
+}
 
 if (user) {
     await supabase.from("topic_attempts").insert([
