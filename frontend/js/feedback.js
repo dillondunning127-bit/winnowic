@@ -27,13 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const { data: { user } } = await supabase.auth.getUser();
 
     const { error } = await supabase
-      .from("feedback")
-      .insert([
-        {
-          user_id: user?.id || null,
-          message: text
-        }
-      ]);
+  .from("feedback")
+  .insert([
+    {
+      user_id: user?.id || null,
+      message: text,
+      is_anonymous: user ? false : true
+    }
+  ]);
 
     if (error) {
       console.error(error);
