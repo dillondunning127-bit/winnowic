@@ -29,26 +29,27 @@
   <button id="logout-btn" class="btn-ghost">Logout</button>
 
 </div>
-
+ <div id="auth-required-message" style="display:none;">
+    <p>Please log in to access the quiz.</p>
+</div>
       <p id="user-status"></p>
   </div>
 
-  <div id="auth-required-message" style="display:none;">
-    <p>Please log in to access the quiz.</p>
-</div>
+ 
   <!-- QUIZ SECTION -->
   <div id="quiz-section" style="display:none;">
 
     <!-- TOP BAR -->
-     <div id="top-bar-message" class="top-bar-message"></div>
+     
     <div class="top-bar">
+      <div id="top-bar-message" class="top-bar-message"></div>
         <button id="diagnostics-btn" class="btn-secondary" style="display:none;">Diagnostics</button>
         <button id="feedback-btn" class="btn-secondary">
   Feedback: Comments & Concerns
 </button>
         <button id="upgrade-btn" class="primary-btn">
   <span class="rocket-icon"></span>
-  Pricing
+   Pricing starting at just $5!
 </button>
     </div>
 
@@ -87,6 +88,31 @@
         <p id="quiz-message"></p>
     </div>
 
+
+<div class="card" id="diagnostic-entry">
+
+  <button id="start-diagnostic-test" class="btn-primary">
+    Take Free Diagnostic Test
+  </button>
+
+  <div id="diagnostic-setup" style="display:none; margin-top:12px;">
+
+    <select id="diagnostic-exam-select" class="text-input">
+      <option value="">Select Exam- Do not change exam after starting test.</option>
+      <option value="SAT_MATH">SAT Math</option>
+      <option value="AP_PRECALC">AP Precalculus</option>
+      <option value="AP_CALC_AB">AP Calc AB</option>
+      <option value="AP_CALC_BC">AP Calc BC</option>
+    </select>
+
+    <button id="confirm-diagnostic" class="btn-secondary" style="margin-top:10px;">
+      Start Test
+    </button>
+
+  </div>
+</div>
+
+
     <!-- QUESTION CARD -->
    <div id="question-card" class="card" style="display:none;">
 
@@ -111,10 +137,7 @@
             <span id="grid-result"></span>
             <button id="grid-submit">Submit</button>
         </div>
-<div id="login-lock-message" style="display:none; color:#d9534f; font-weight:600; margin-top:10px;">
-🔓 Unlock full explanations + score tracking
-→ Create a free account (or log in) to continue.
-</div>
+
         <div id="explanation"></div>
         <button id="next-btn"style="display:none;">Next</button>
 
@@ -129,9 +152,9 @@
     </div>
 
     <!-- PROGRESS CARD -->
-    <div class="card">
-        <div id="history-container"></div>
-    </div>
+    
+        <div class="card" id="history-container"><h3>Past Attempts</h3></div>
+    
 <div id="section-transition" class="transition-overlay" style="display:none;">
   <div class="transition-card">
     <p id="transition-text"></p>
