@@ -338,6 +338,10 @@ unitData.forEach((u, i) => {
 
 const readinessPercent = Math.round(totalContribution);
 
+if (readinessEl) {
+  readinessEl.textContent = `${readinessPercent}%`;
+}
+
 /* ADD GRAY REMAINDER */
 
 const remaining = 100 - readinessPercent;
@@ -767,7 +771,7 @@ const colorPalette = [
   await calculateExamReadiness(exam);
 }
 
-async function getPredictedScore(exam, readinessPercent) {
+export async function getPredictedScore(exam, readinessPercent) {
 
   console.log("Predicted Score Input:", exam, readinessPercent);
 
