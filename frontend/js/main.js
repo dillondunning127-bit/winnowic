@@ -2,7 +2,7 @@ import { initAuthListener, login, logout, signUp } from './auth.js';
 import { loadQuestions, selectAnswer, nextQuestion } from './quiz.js';
 import { loadAdaptiveQuiz } from './quiz.js';
 import { supabase} from './supabase.js';
-import { initQuizSettings } from "./quizSettings.js";
+import { initQuizSettings} from "./quizSettings.js";
 import { checkExamAccess } from "./subscription.js";
 import { getUserExams } from "./subscription.js";
 
@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     initAuthListener();
   
  const diagnosticsBtn = document.getElementById("diagnostics-btn");
-
+const examSelect = document.getElementById("exam-select") || null;
 // Check initial state
 const { data: { user } } = await supabase.auth.getUser();
 
@@ -52,10 +52,8 @@ document
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    showTopMessage("🔓 Please sign up or log in to access diagnostics page.");
-    return;
-  }
+  
+  
 
   window.location.href = "diagnostics.html";
 });
@@ -76,12 +74,80 @@ if (cancelBtn && deleteBtn) {
 });   
 
 
+const startQuizBtn = document.getElementById("start-quiz-btn");
+
+if (startQuizBtn && examSelect) {
+    startQuizBtn.addEventListener("click", () => {
+
+    const exam = examSelect.value;
+    const unit = document.getElementById("unit-select").value;
+
+    if (!exam) {
+        showTopMessage("Please select an exam.");
+        return;
+    }
+
+    sessionStorage.setItem("diagnosticMode", "false");
+
+    document.dispatchEvent(new CustomEvent("quizStart", {
+        detail: {
+            exam,
+            unit,
+            quizLength: parseInt(document.getElementById("time-select").value)
+        }
+    }));
+});
+}
 const feedbackBtn = document.getElementById("feedback-btn");
 
 if (feedbackBtn) {
   feedbackBtn.addEventListener("click", () => {
     window.location.href = "/feedback.html";
   });
+}
+
+const startDiagBtn = document.getElementById("start-diagnostic-test");
+const diagSetup = document.getElementById("diagnostic-setup");
+const confirmDiag = document.getElementById("confirm-diagnostic");
+
+if (startDiagBtn) {
+    startDiagBtn.addEventListener("click", () => {
+    
+        diagSetup.style.display = "block";
+        sessionStorage.removeItem("diagnosticResults");
+sessionStorage.removeItem("diagnosticExam");
+sessionStorage.removeItem("diagnosticMode");
+    });
+}
+
+if (confirmDiag) {
+    
+    confirmDiag.addEventListener("click", () => {
+
+    // 🔥 HARD RESET EVERYTHING BEFORE START
+    sessionStorage.removeItem("diagnosticResults");
+    sessionStorage.removeItem("diagnosticExam");
+    sessionStorage.removeItem("diagnosticMode");
+
+    // force fresh state
+    document.dispatchEvent(new CustomEvent("quizReset"));
+
+    const exam = document.getElementById("diagnostic-exam-select").value;
+
+    if (!exam) return;
+
+    sessionStorage.setItem("diagnosticMode", "true");
+
+    diagSetup.style.display = "none";
+
+    document.dispatchEvent(new CustomEvent("quizStart", {
+        detail: {
+            exam,
+            unit: null,
+            quizLength: 20
+        }
+    }));
+});
 }
 
 const upgradeBtn = document.getElementById("upgrade-btn");
@@ -102,12 +168,14 @@ if (upgradeBtn) {
 }
 
 
-const examSelect = document.getElementById("exam-select");
+
   // Diagnostics quiz elements;
 const select = document.getElementById("time-select");
 const message = document.getElementById("message");
-document.getElementById("adaptive-quiz-btn")
-    .addEventListener("click", async () => {
+const adaptiveBtn = document.getElementById("adaptive-quiz-btn");
+
+if (adaptiveBtn && examSelect) {
+    adaptiveBtn.addEventListener("click", async () => {
 
         const selectedExam = examSelect.value;
 
@@ -125,6 +193,7 @@ if (!user) {
 }
 
 const hasAccess = await checkExamAccess(selectedExam);
+const quizLength = parseInt(select.value);
 
 if (!hasAccess) {
     message.textContent = "🔒 Upgrade to unlock adaptive quizzes.";
@@ -134,7 +203,7 @@ if (!hasAccess) {
         // Clear old messages
         message.textContent = "";
 
-        const success = await loadAdaptiveQuiz(selectedExam);
+        const success = await loadAdaptiveQuiz(selectedExam, quizLength);
 
         if (!success) {
             message.textContent =
@@ -158,7 +227,10 @@ if (!hasAccess) {
         btn.style.opacity = "1";
     }
 }
-examSelect.addEventListener("change", updateAdaptiveButton);
+
+if (examSelect) {
+    examSelect.addEventListener("change", updateAdaptiveButton);
+}
     document.getElementById("login-btn")
         .addEventListener("click", login);
 
@@ -196,5 +268,5 @@ document.getElementById("next-btn")
     /* ============================= */
     /* DYNAMIC UNIT SYSTEM */
     /* ============================= */
-});
+}});
 
