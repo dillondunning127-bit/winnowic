@@ -211,9 +211,6 @@ export async function calculateExamReadiness(selectedExam) {
 
 const readinessEl = document.getElementById("readinessScore");
 
-if (readinessEl) {
-  readinessEl.textContent = `${readinessPercent}%`;
-}
 
 let largestGap = {
   unit: null,
