@@ -318,7 +318,7 @@ if (remaining > 0) {
 const chartCanvas = document.getElementById("readinessChart");
 
 if (chartCanvas) {
-  renderReadinessChart(labels, chartData, colors);
+  
 
   const predictedScore = await getPredictedScore(selectedExam, readinessPercent);
 
