@@ -6,7 +6,9 @@
     <title>Winnowic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <script defer src="/_vercel/insights/script.js"></script>
 </head>
+
 <body>
 
 <div class="container">
@@ -22,103 +24,140 @@
 
       <button id="signup-btn" class="btn-secondary">Sign Up</button>
       <button id="login-btn" class="btn-primary">Login</button>
-      <div class="auth-header">
 
-  <p id="user-status"></p>
-
-  <button id="logout-btn" class="btn-ghost">Logout</button>
-
-</div>
- <div id="auth-required-message" style="display:none;">
-    <p>Please log in to access the quiz.</p>
-</div>
       <p id="user-status"></p>
   </div>
 
- 
   <!-- QUIZ SECTION -->
-  <div id="quiz-section" style="display:none;">
+  <div id="quiz-section">
 
     <!-- TOP BAR -->
-     
     <div class="top-bar">
+
+      <!-- ACCOUNT MENU -->
+      <div class="account-menu">
+        <button id="account-gear" class="gear-btn" style="display:none;">
+            <img src="/assets/icon-gear.png" alt="Settings">
+        </button>
+
+        <div id="account-dropdown" class="account-dropdown" style="display:none;">
+            <div id="account-email" class="dropdown-email"></div>
+
+            <button id="logout-btn" class="dropdown-item btn-icon">
+                <img src="/assets/icon-x-circle.png" class="icon">
+                Log Out
+            </button>
+
+            <button id="cnclsub-btn" class="dropdown-item btn-icon">
+                <img src="/assets/icon-x-circle.png" class="icon">
+                Cancel Subscription
+            </button>
+
+            <button id="dltact-btn" class="dropdown-item danger btn-icon">
+                <img src="/assets/icon-trash.png" class="icon">
+                Delete Account
+            </button>
+        </div>
+      </div>
+
       <div id="top-bar-message" class="top-bar-message"></div>
-        <button id="diagnostics-btn" class="btn-secondary" style="display:none;">Diagnostics</button>
-        <button id="feedback-btn" class="btn-secondary">
-  Feedback: Comments & Concerns
-</button>
-        <button id="upgrade-btn" class="primary-btn">
-  <span class="rocket-icon"></span>
-   Pricing starting at just $5!
-</button>
+
+      <!-- DIAGNOSTICS -->
+      <button id="diagnostics-btn" class="btn-secondary btn-icon">
+        <span class="icon-hover">
+            <img src="/assets/icon-chart-before.png" class="before">
+            <img src="/assets/icon-chart-after.png" class="after">
+        </span>
+           <span>Diagnostics</span>
+      </button>
+
+      <!-- FEEDBACK -->
+      <button id="feedback-btn" class="btn-secondary btn-icon">
+        <span class="icon-hover">
+            <img src="/assets/icon-chat-before.png" class="before">
+            <img src="/assets/icon-chat-after.png" class="after">
+        </span>
+        <span>Feedback</span>
+      </button>
+
+      <!-- UPGRADE -->
+      <button id="upgrade-btn" class="primary-btn btn-icon">
+        <img src="/assets/icon-rocket.png" class="icon">
+        Pricing starting at just $5!
+      </button>
+
     </div>
+
+<!-- MODE SELECTOR (NEW - SAFE ADDITION) -->
+<div class="card" id="mode-selector-card">
+  <h2>Choose Mode</h2>
+
+  <div class="mode-buttons">
+    <button id="mode-normal" class="btn-secondary btn-icon">
+      Practice
+    </button>
+
+    <button id="mode-adaptive" class="btn-secondary btn-icon">
+      Adaptive Practice
+    </button>
+
+    <button id="mode-diagnostic" class="btn-secondary btn-icon">
+      Diagnostic
+    </button>
+  </div>
+</div>
 
     <!-- SETTINGS CARD -->
     <div class="card">
         <h2>Select Your Practice</h2>
 
-      <div class="timer-row">
-  <label class="toggle-container">
-    <span>Timer</span>
+        <div class="timer-row">
+          <label class="toggle-container">
+            <span>Timer</span>
+            <input type="checkbox" id="timerToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
 
-    <input type="checkbox" id="timerToggle" checked>
-    <span class="slider"></span>
-  </label>
-</div>
 
+        <label>Exam:</label>
         <select id="exam-select">
-    <option value="">-- Select Exam (Lock means no access to premium features) --</option>
-    <option value="AP_PRECALC">AP Precalculus</option>
-    <option value="AP_CALC_AB">AP Calc AB</option>
-    <option value="AP_CALC_BC">AP Calc BC</option>
-    <option value="SAT_MATH">SAT Math</option>
-</select>
+            <option value="">-- Select Exam --</option>
+            <option value="AP_PRECALC">AP Precalculus</option>
+            <option value="AP_CALC_AB">AP Calc AB</option>
+            <option value="AP_CALC_BC">AP Calc BC</option>
+            <option value="SAT_MATH">SAT Math</option>
+        </select>
 
-        <label>Quiz Length:</label>
+        <label id="label-time">Quiz Length:</label>
         <select id="time-select" disabled></select>
-
-        
-
+     <label id="label-unit">Unit:</label>
         <select id="unit-select" disabled></select>
 
-        <button id="start-quiz-btn" class="btn-primary">Start Quiz</button>
-        <button id="adaptive-quiz-btn" class="btn-primary">Take Adaptive Quiz</button>
+        <button id="start-quiz-btn" class="btn-primary btn-icon">
+            <img src="/assets/icon-play.png" class="icon">
+            Start Quiz
+        </button>
 
         <div id="message"></div>
-        <p id="quiz-message"></p>
     </div>
-
-
-<div class="card" id="diagnostic-entry">
-
-  <button id="start-diagnostic-test" class="btn-primary">
-    Take Free Diagnostic Test
-  </button>
-
-  <div id="diagnostic-setup" style="display:none; margin-top:12px;">
-
-    <select id="diagnostic-exam-select" class="text-input">
-      <option value="">Select Exam- Do not change exam after starting test.</option>
-      <option value="SAT_MATH">SAT Math</option>
-      <option value="AP_PRECALC">AP Precalculus</option>
-      <option value="AP_CALC_AB">AP Calc AB</option>
-      <option value="AP_CALC_BC">AP Calc BC</option>
-    </select>
-
-    <button id="confirm-diagnostic" class="btn-secondary" style="margin-top:10px;">
-      Start Test
-    </button>
-
-  </div>
-</div>
-
 
     <!-- QUESTION CARD -->
    <div id="question-card" class="card" style="display:none;">
+<div id="quiz-top-row">
+  <div id="timerDisplay">
+    <img src="/assets/icon-timer.png" class="icon" >
+    Time Remaining: <span id="timeRemaining">00:00</span>
+  </div>
 
-<div id="timerDisplay">
-          Time Remaining: <span id="timeRemaining">00:00</span>
-        </div>
+  <button id="report-btn" class="report-btn btn-icon">
+  <span class="icon-hover">
+    
+    <img src="/assets/icon-flag.png" class="icon">
+  </span>
+  <span>Report</span>
+</button>
+</div>
 
 
         <div id="question-image-container">
@@ -160,23 +199,36 @@
     <p id="transition-text"></p>
     <button id="transition-continue" class="btn-primary">Continue</button>
   </div>
-</div> <button id="cnclsub-btn" class="btn-secondary">
-  Cancel Subscription
-</button>
-<button id="dltact-btn" class="btn-secondary">
-  Delete Account Data
-</button>
+</div> 
   </div>
 
 </div>
 
 
+<div id="report-popup" class="report-popup" style="display:none;">
+  
+  <div class="popup-header">
+    <span>Report</span>
+    <span id="close-report" class="close-x">✕</span>
+  </div>
+
+  <select id="report-type" class="text-input">
+    <option value="incorrect">Incorrect Answer</option>
+    <option value="unclear">Unclear Wording</option>
+    <option value="other">Other</option>
+  </select>
+
+  <textarea id="report-message" placeholder="Optional details..." style="display:none;"></textarea>
+
+  <button id="submit-report" class="btn-primary">Submit</button>
+
+</div>
+  </div>
+</div>
 
 </body>
+
 <script type="module" src="./js/quizSettings.js"></script>
-
 <script type="module" src="./js/main.js"></script>
-
 <script type="module" src="./js/customer_manage.js"></script>
 </html>
-
