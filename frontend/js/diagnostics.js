@@ -8,7 +8,6 @@ let unitSelect;
 let resultsDiv;
 
 window.addEventListener("DOMContentLoaded", async () => {
-
   // 🔥 Detect which page we're on
   const examSelectIndex = document.getElementById("exam-select");   // index.html
   const examSelectDiag = document.getElementById("examSelect");     // diagnostics.html
@@ -33,30 +32,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
-  // 🔒 Lock exams (ONLY if dropdown supports options)
-  if (examSelect.options) {
-
-    const userExams = await getUserExams();
-    const options = Array.from(examSelect.options);
-
-    for (let option of options) {
-      if (option.value === "") continue;
-
-      if (!userExams.includes("ALL") && !userExams.includes(option.value)) {
-        option.textContent += " 🔒";
-        option.dataset.locked = "true";
-      }
-    }
-  }
-console.log("USER EXAMS:", await getUserExams());
-  // ✅ Attach listeners safely
-  examSelect.addEventListener("change", loadDiagnostics);
-
-  if (unitSelect) {
-    examSelect.addEventListener("change", loadUnits);
-    unitSelect.addEventListener("change", loadDiagnostics);
-  }
-
+  await updateExamLocks();
+examSelect.addEventListener("change", loadUnits);
+unitSelect.addEventListener("change", loadDiagnostics);
+// 🔥 ALSO LOAD ON INITIAL PAGE LOAD
+await loadUnits();
 });
 
 function formatUnit(unit) {
@@ -133,21 +113,7 @@ export async function renderDiagnostics(data) {
   const selectedOption = examSelect.selectedOptions[0];
 
   // ✅ LOCKED EXAM CHECK (UNCHANGED)
-  if (selectedOption?.dataset.locked === "true") {
-    resultsDiv.innerHTML = `
-      <div class="paywall">
-        <h3>🔒 ${selectedOption.textContent.replace(" 🔒", "")}</h3>
-        <p>Unlock this exam to view diagnostics.</p>
-        <button id="upgrade-btn">Upgrade</button>
-      </div>
-    `;
-
-    document.getElementById("upgrade-btn").onclick = () => {
-      window.location.href = "/pricing.html";
-    };
-
-    return;
-  }
+  await updateExamLocks();
 
   const hasAccess = await checkExamAccess(exam);
 
@@ -491,7 +457,7 @@ export async function loadDiagnostics() {
   if (selectedOption?.dataset.locked === "true") {
     resultsDiv.innerHTML = `
       <div class="paywall">
-        <h3>🔒 ${selectedOption.textContent.replace(" 🔒", "")}</h3>
+        <h3>(Premium) ${selectedOption.textContent.replace(" (Premium)", "")}</h3>
         <p>Unlock this exam to view diagnostics.</p>
         <button id="upgrade-btn">Upgrade</button>
       </div>
@@ -792,4 +758,24 @@ export async function getPredictedScore(exam, readinessPercent) {
   if (!data) return "--";
 
   return data.predicted_score;
+}
+
+export async function updateExamLocks() {
+  if (!examSelect || !examSelect.options) return;
+
+  const userExams = await getUserExams();
+  const options = Array.from(examSelect.options);
+
+  for (let option of options) {
+    if (option.value === "") continue;
+
+    // 🔥 RESET FIRST (VERY IMPORTANT)
+    option.textContent = option.textContent.replace(" (Premium)", "");
+    delete option.dataset.locked;
+
+    if (!userExams.includes("ALL") && !userExams.includes(option.value)) {
+      option.textContent += " (Premium)";
+      option.dataset.locked = "true";
+    }
+  }
 }
