@@ -350,7 +350,7 @@ if (improvementDiv && largestGap.unit) {
       ${formatUnit(largestGap.unit)}
     </div>
     <div style="color: #FF6B00;">
-      +${percent}% potential gain
+      +${percent}% potential (weighted) gain
     </div>
   </div>
 `;
