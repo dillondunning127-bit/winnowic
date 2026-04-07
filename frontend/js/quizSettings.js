@@ -55,7 +55,6 @@ export function initQuizSettings() {
     startBtn.addEventListener("click", () => {
 
 if (!selectedTime) {
-    alert("Select a quiz length");
     return;
 }
 
