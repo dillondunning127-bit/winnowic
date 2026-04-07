@@ -15,17 +15,170 @@ let examSections = [];
 let currentSectionIndex = 0;
 let questionsInCurrentSection = 0;
 let remainingQuestions = 0;
-let selectedExam = null;
-let selectedUnit = null;
+let exam = null;
+let unit = null;
 let isTransitioning = false;
-
+let quizConfig = {
+    mode: "normal",
+    exam: null,
+    unit: null,
+    length: null
+};
 import { stopTimer } from "./quizSettings.js";
+
+export async function startQuiz(mode, externalConfig = null) {
+    
+quizConfig = {
+    mode: null,
+    exam: null,
+    unit: null,
+    length: null
+};
+    
+  console.log("ENTRY:", mode, externalConfig);
+    resetQuizState();
+
+ let exam;
+
+if (mode === "diagnostic") {
+    exam = externalConfig?.exam;
+} else {
+    exam = externalConfig?.exam || document.getElementById("exam-select")?.value;
+}
+const unit = externalConfig?.unit ?? document.getElementById("unit-select")?.value;
+let length;
+
+if (mode === "diagnostic") {
+    length = 20;
+} else {
+    length = externalConfig?.quizLength ?? parseInt(document.getElementById("time-select")?.value);
+}
+
+// 🔥 HARD FIX: prevent NaN EVER
+if (!length || isNaN(length)) {
+    length = 20;
+}
+
+    if (!exam) {
+        console.warn("No exam selected");
+        return;
+    }
+
+    // 🔥 STORE CONFIG GLOBALLY
+    quizConfig = {
+        mode,
+        exam,
+        unit,
+        length
+    };
+console.log("QUIZ CONFIG:", quizConfig);
+    if (mode === "adaptive") {
+        return startAdaptiveFlow();
+    }
+
+    if (mode === "diagnostic") {
+        return startDiagnosticFlow();
+    }
+
+    return startNormalFlow();
+}
+
+async function startNormalFlow() {
+    isAdaptiveMode = false;
+
+   exam = quizConfig.examForSections || quizConfig.exam;
+    unit = quizConfig.unit;
+    
+        examSections = await loadExamSections(
+    exam,
+    Number(quizConfig.length) // ✅ FORCE NUMBER
+    );
+console.log("Loading sections for:", exam, quizConfig.length);
+    if (!examSections.length) {
+        console.error("No sections found");
+        return;
+    }
+
+    totalQuestions = examSections.reduce(
+        (sum, s) => sum + s.question_count,
+        0
+    );
+
+    currentSectionIndex = 0;
+    sectionQuestionsLoaded = 0;
+
+    startSectionTimer(examSections[0].section_time_seconds);
+
+    await loadQuestions(
+    quizConfig.examForQuestions || exam,
+    unit,
+    quizConfig.length
+);
+    console.log("Loaded sections:", examSections);
+}
+
+async function startDiagnosticFlow() {
+    sessionStorage.setItem("diagnosticMode", "true");
+sessionStorage.setItem("diagnosticExam", quizConfig.exam);
+    quizConfig.unit = null;
+    quizConfig.length = 20;
+    quizConfig.mode = "diagnostic";
+const originalExam = quizConfig.exam;
+
+sessionStorage.setItem("diagnosticMode", "true");
+sessionStorage.setItem("diagnosticExam", originalExam);
+
+quizConfig.mode = "diagnostic";
+quizConfig.length = 20;
+
+// DO NOT override exam for questions
+quizConfig.examForSections = "DIAGNOSTIC_EXAM";
+quizConfig.examForQuestions = originalExam;
+
+    // 🔥 HARD GUARD
+    if (!quizConfig.length || isNaN(quizConfig.length)) {
+        quizConfig.length = 20;
+    }
+
+    return startNormalFlow();
+}
+
+async function startAdaptiveFlow() {
+    isAdaptiveMode = true;
+
+    exam = quizConfig.exam;
+    unit = null;
+
+    examSections = await loadExamSections(
+        exam,
+        Number(quizConfig.length)
+    );
+
+    if (!examSections.length) {
+        console.error("No sections found for adaptive");
+        return;
+    }
+
+    totalQuestions = examSections.reduce(
+        (sum, s) => sum + s.question_count,
+        0
+    );
+
+    currentSectionIndex = 0;
+    sectionQuestionsLoaded = 0;
+
+    startSectionTimer(examSections[0].section_time_seconds);
+
+    return loadAdaptiveQuestionsForSection();
+}
+
 
 export function resetQuizState() {
 
     // HARD RESET EVERYTHING (no conditional safety nonsense)
     usedQuestionIds = new Set();
-
+quizConfig.examForSections = null;
+quizConfig.examForQuestions = null;
     currentQuestions = [];
     currentQuestionIndex = 0;
     currentSectionIndex = 0;
@@ -36,67 +189,6 @@ export function resetQuizState() {
     sessionStorage.removeItem("diagnosticExam");
     sessionStorage.removeItem("diagnosticMode");
 }
-
-document.addEventListener("quizStart", async (event) => {
-const startBtn = document.getElementById("start-quiz-btn");
-const adaptiveBtn = document.getElementById("adaptive-quiz-btn");
-remainingQuestions = event.detail.quizLength;
-if (startBtn) {
-    startBtn.textContent = "Loading...";
-    startBtn.disabled = true;
-}
-
-if (startBtn) startBtn.disabled = true;
-if (adaptiveBtn) adaptiveBtn.disabled = true;
-const isDiagnosticMode = sessionStorage.getItem("diagnosticMode") === "true";
-const questionCard = document.getElementById("question-card");
-if (questionCard) questionCard.style.display = "block";
-
-stopTimer(); // 🔥 clears any old timer before starting new quiz
-isAdaptiveMode = false;
-currentQuestionIndex = 0;
-score = 0;
-currentSectionIndex = 0;
-sectionQuestionsLoaded = 0;
-usedQuestionIds.clear();
-
-  const { exam, unit, quizLength } = event.detail;
-remainingQuestions = quizLength;
-selectedExam = exam;
-selectedUnit = unit;
-
-const sectionExam = isDiagnosticMode ? "DIAGNOSTIC_EXAM" : exam;
-
-examSections = await loadExamSections(sectionExam, quizLength);
-  if (examSections.length === 0) {
-    console.error("No exam sections found");
-    return;
-  }
-
-totalQuestions = examSections.reduce(
-  (sum, section) => sum + section.question_count,
-  0
-);
-
-  currentSectionIndex = 0;
-  questionsInCurrentSection = examSections[0].question_count;
-
-  startSectionTimer(examSections[0].section_time_seconds);
-
-  await loadQuestions(exam, unit, quizLength);
-
-if (startBtn) {
-  startBtn.textContent = "Start Quiz";
-  startBtn.disabled = false;
-}
-
-if (adaptiveBtn) {
-  adaptiveBtn.textContent = "Take Adaptive Quiz";
-  adaptiveBtn.disabled = false;
-}
-
-});
-
 
 function startSectionTimer(seconds) {
 
@@ -141,20 +233,23 @@ export function goToNextSection() {
 
   currentSectionIndex++;
 
-  if (remainingQuestions <= 0) {
-    return;
-}
-
   if (currentSectionIndex >= examSections.length) {
     finishQuiz();
     return;
   }
 
   const nextSection = examSections[currentSectionIndex];
-
+sectionQuestionsLoaded = 0;
+currentQuestionIndex = 0;
   showSectionTransition(nextSection, async () => {
-    await loadQuestions(selectedExam, selectedUnit);
-  });
+  currentQuestionIndex = 0;
+
+  if (isAdaptiveMode) {
+    await loadAdaptiveQuestionsForSection();
+  } else {
+    await loadQuestions(exam, unit);
+  }
+});
 }
 
 export function showSectionTransition(section, onContinue) {
@@ -164,11 +259,11 @@ export function showSectionTransition(section, onContinue) {
   const overlay = document.getElementById("section-transition");
   const text = document.getElementById("transition-text");
   const btn = document.getElementById("transition-continue");
-
+currentQuestionIndex = 0;   // 🔥 ADD THIS
   let message;
 
   // SAT CUSTOM LOGIC
-  if (selectedExam === "SAT_MATH") {
+  if (exam === "SAT_MATH") {
     const sectionNumber = currentSectionIndex + 1;
 
     if (sectionNumber === 2) {
@@ -207,19 +302,15 @@ export function showSectionTransition(section, onContinue) {
   setTimeout(proceed, 5000);
 }
 
-export async function loadQuestions(selectedExam, selectedUnit, quizLength = null) {
-
+export async function loadQuestions(exam, unit, quizLength = null) {
+ const questionCard = document.getElementById("question-card");
+  if (questionCard) questionCard.style.display = "block";
     if (!examSections || examSections.length === 0) {
-        console.error("No sections configured for this exam.");
+        console.error("No sections configured for this exam.");  ///line 274 
         return false;
     }
 
-    const readiness = await calculateExamReadiness(selectedExam);
-
-    document.getElementById("exam-readiness").textContent =
-        readiness !== null && readiness !== undefined
-            ? `Exam Readiness: ${readiness}%`
-            : "Exam Readiness: --";
+    
 
     document.getElementById("progress-bar").style.width = "0%";
     document.getElementById("progress-container").textContent = "";
@@ -235,21 +326,21 @@ export async function loadQuestions(selectedExam, selectedUnit, quizLength = nul
         .eq("calculator_allowed", section.calculator_allowed)
         .eq("is_active", true);
 
-    if (selectedExam === "AP_CALC_AB") {
+    if (exam === "AP_CALC_AB") {
         query = query.contains("exams", ["CALC_AB"]);
-    } else if (selectedExam === "AP_CALC_BC") {
+    } else if (exam === "AP_CALC_BC") {
         query = query.contains("exams", ["CALC_BC"]);
     } else {
-        query = query.contains("exams", [selectedExam]);
+        query = query.contains("exams", [exam]);
     }
 
     // Only filter by unit IF one is selected
-    if (selectedUnit) {
-        query = query.eq("unit", selectedUnit);
+    if (unit) {
+        query = query.eq("unit", unit);
     }
 
-    const hasAccess = await checkExamAccess(selectedExam);
-    const isLoggedIn = (await supabase.auth.getUser()).data.user !== null;
+    const hasAccess = await checkExamAccess(exam);
+   const isLoggedIn = (await supabase.auth.getUser()).data.user !== null;
 
     if (isLoggedIn && !hasAccess) {
         query = query.eq("simulation_eligible", true);
@@ -277,15 +368,14 @@ export async function loadQuestions(selectedExam, selectedUnit, quizLength = nul
 
     const shuffled = pool.sort(() => Math.random() - 0.5);
 
-    const isDiagnosticMode =
-        sessionStorage.getItem("diagnosticMode") === "true";
+ const isDiagnosticMode = quizConfig.mode === "diagnostic";
 
     let selectedQuestions = [];
 
     // =========================
     // 🔥 DIAGNOSTIC MODE (GUARANTEE ALL UNITS)
     // =========================
-    if (isDiagnosticMode && !selectedUnit) {
+   if (quizConfig.mode === "diagnostic") {
 
         const byUnit = {};
 
@@ -385,11 +475,12 @@ function shuffleAnswers(questionObj) {
 }
 
 function showQuestion() {
-
+const reportBtn = document.getElementById("report-btn");
+if (reportBtn) reportBtn.style.display = "inline-flex";
     animateQuestionChange();
 
     const questionObj = currentQuestions[currentQuestionIndex];
-
+window.currentQuestionId = questionObj.id;
     if (!questionObj) {
         showFinalScore();
         return;
@@ -456,72 +547,50 @@ document.getElementById("choice-d").textContent = shuffled[3].text;
 }
 
 export async function nextQuestion() {
-    // ✅ ADAPTIVE QUIZ FLOW
-    if (isAdaptiveMode) {
 
-        currentQuestionIndex = Math.min(
-    currentQuestionIndex + 1,
-    currentQuestions.length - 1
-);
+    if (isTransitioning) return;
 
-        if (currentQuestionIndex >= currentQuestions.length) {
-            showFinalScore();
-            return;
-        }
-
-        document.getElementById("next-btn").style.display = "none";
-        document.getElementById("explanation").textContent = "";
-
-        showQuestion();
-        return;
-    }
-
-    // ✅ NORMAL SECTION-BASED QUIZ
-
-    if (currentSectionIndex >= examSections.length) {
-        showFinalScore();
-        return;
-    }
+    const section = examSections[currentSectionIndex];
 
     currentQuestionIndex++;
     sectionQuestionsLoaded++;
 
-    // 🔥 SECTION COMPLETE
-    if (sectionQuestionsLoaded >= examSections[currentSectionIndex].question_count) {
+    // =========================
+    // SECTION COMPLETE
+    // =========================
+    if (sectionQuestionsLoaded >= section.question_count) {
 
         currentSectionIndex++;
 
-if (currentSectionIndex >= examSections.length) {
-    showFinalScore();
-    return;
-}
+        if (currentSectionIndex >= examSections.length) {
+            showFinalScore();
+            return;
+        }
 
-if (remainingQuestions <= 0) {
-    showFinalScore();
-    return;
-}
-
-        const nextSection = examSections[currentSectionIndex]; // ✅ FIX
+        const nextSection = examSections[currentSectionIndex];
 
         sectionQuestionsLoaded = 0;
+        currentQuestionIndex = 0;
 
-        showSectionTransition(nextSection, async () => {  //line 451
-            const ok = await loadQuestions(selectedExam, selectedUnit);
-if (!ok) return;
+        showSectionTransition(nextSection, async () => {
+
+            if (isAdaptiveMode) {
+                await loadAdaptiveQuestionsForSection();
+            } else {
+                await loadQuestions(exam, unit);
+            }
         });
 
         return;
     }
 
-    // 🔁 NORMAL NEXT QUESTION
+    // =========================
+    // NEXT QUESTION SAME SECTION
+    // =========================
     document.getElementById("next-btn").style.display = "none";
     document.getElementById("explanation").textContent = "";
 
-    if (currentQuestionIndex < currentQuestions.length) {
-        showQuestion();
-    } else {
-        showFinalScore();
-    }
+    showQuestion();
 }
 
 export async function selectAnswer(letter) {
@@ -623,7 +692,7 @@ if (buttons[letter]) {
     // 🔥 Update diagnostic topic stats
     
 // 🔥 Insert individual attempt
-const { data: { user } } = await supabase.auth.getUser();
+const { data: { user }, error: userError } = await supabase.auth.getUser();
 
 // 🚫 NOT LOGGED IN → BLOCK AFTER FIRST QUESTION
 if (!user) {
@@ -632,19 +701,28 @@ if (!user) {
     // ❗ allow quiz to continue, just skip DB writes
     console.log("Anonymous mode: skipping DB tracking");
 }
-
+if (!user) {
+    console.log("No user → skip adaptive");
+}
+const examsArray = Array.isArray(questionObj.exams)
+    ? questionObj.exams
+    : [questionObj.exams];
 if (user) {
-    await supabase.from("topic_attempts").insert([
+   const { data, error } = await supabase.from("topic_attempts").insert([
 {
     user_id: user.id,
-    exams: questionObj.exams,
+    exams: examsArray,
     unit: questionObj.unit,
     is_correct: isCorrect
 }
 ]);
+console.log("INSERT RESULT:", data, error);
 }
 
    if (user) {
+    const { data: { user } } = await supabase.auth.getUser();
+
+if (!user) return;
   const { error: statsError } = await supabase.rpc(
     'increment_unit_stats',
     {
@@ -658,8 +736,8 @@ if (user) {
   if (statsError) {
     console.error("Error updating topic stats:", statsError);
   } else {
-    const selectedExam = questionObj.exams[0];
-    const readiness = await calculateExamReadiness(selectedExam);
+    const exam = questionObj.exams[0];
+    const readiness = await calculateExamReadiness(exam);
 
     document.getElementById("exam-readiness").textContent =
       `Exam Readiness: ${readiness}%`;
@@ -718,10 +796,11 @@ export async function loadHistory(userId) {
 /* ============================= */
 
 async function showFinalScore() {
+const reportBtn = document.getElementById("report-btn");
+if (reportBtn) reportBtn.style.display = "none";
+const isDiagnosticMode = quizConfig.mode === "diagnostic";
 
-const isDiagnosticMode = sessionStorage.getItem("diagnosticMode");
-
-if (isDiagnosticMode === "true") {
+if (isDiagnosticMode) {
 
     const diagnosticData = answerResults;
 
@@ -730,7 +809,7 @@ if (isDiagnosticMode === "true") {
         JSON.stringify(diagnosticData)
     );
 
-    sessionStorage.setItem("diagnosticExam", selectedExam);
+    sessionStorage.setItem("diagnosticExam", quizConfig.exam);
 
     window.location.href = "/diagnostics.html?mode=mini";
     return;
@@ -761,7 +840,12 @@ document.getElementById("progress-container").textContent =
 stopTimer();
 
     // 🔹 Get logged in user
-    const { data: { user } } = await supabase.auth.getUser();
+const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+if (!user || !user.id) {
+    console.log("No valid user → skipping quiz_attempt insert");
+    return;
+}
 
    if (user) {
     await supabase.from("quiz_attempts").insert([
@@ -782,27 +866,27 @@ loadHistory(user?.id ?? null);
 
 //Load adaptive quiz!!
 
-export async function loadAdaptiveQuiz(selectedExam, quizLength = 10) {
+export async function loadAdaptiveQuiz(exam, quizLength = 10) {
+    quizConfig.mode = "adaptive";
+    if (!examSections || !examSections[currentSectionIndex]) {
+  console.error("Missing section at index:", currentSectionIndex, examSections);
+  return;
+}
   const questionCard = document.getElementById("question-card");
   if (questionCard) questionCard.style.display = "block";
-
+alert("adaptive quiz loading...");
   stopTimer();
   currentQuestionIndex = 0;
   score = 0;
   usedQuestionIds.clear();
   isAdaptiveMode = true;
 
-  const adaptiveBtn = document.getElementById("adaptive-quiz-btn");
-  if (adaptiveBtn) {
-    adaptiveBtn.textContent = "Loading...";
-    adaptiveBtn.disabled = true;
-  }
-
-  const { data: { user } } = await supabase.auth.getUser();
+    
+ const { data: { user } } = await supabase.auth.getUser();
   if (!user) return false;
 
-  const examArrayValue = getExamArrayValue(selectedExam);
-  const hasAccess = await checkExamAccess(selectedExam);
+  const examArrayValue = getExamArrayValue(exam);
+  const hasAccess = await checkExamAccess(exam);
 
   const MIN_ATTEMPTS = 3;
   const MASTERY_MIN_ATTEMPTS = 12;
@@ -817,10 +901,13 @@ export async function loadAdaptiveQuiz(selectedExam, quizLength = 10) {
     .eq("user_id", user.id)
     .contains("exams", [examArrayValue]);
 
-  if (statsError || !stats || stats.length === 0) {
-    console.log("No diagnostic data.");
-    return false;
-  }
+  if (statsError) {
+    console.error("Stats error:", statsError);
+}
+
+if (!stats || stats.length === 0) {
+    console.log("No diagnostic data → fallback to normal quiz");
+}
 
   // ==============================
   // 2. FETCH ALL ATTEMPTS (ONE QUERY)
@@ -950,8 +1037,7 @@ export async function loadAdaptiveQuiz(selectedExam, quizLength = 10) {
     return false;
   }
 
-  currentQuestions = selectedQuestions;
-  totalQuestions = selectedQuestions.length;
+
 
   currentQuestionIndex = 0;
   score = 0;
@@ -966,25 +1052,23 @@ export async function loadAdaptiveQuiz(selectedExam, quizLength = 10) {
     if (el) el.style.display = "block";
   });
 
-  showQuestion();
+  // RESET SECTION STATE
+currentSectionIndex = 0;
+sectionQuestionsLoaded = 0;
+isAdaptiveMode = true;
 
-  if (adaptiveBtn) {
-    adaptiveBtn.textContent = "Take Adaptive Quiz";
-    adaptiveBtn.disabled = false;
-  }
+// LOAD SECTIONS FIRST (same as normal mode)
+examSections = await loadExamSections(
+  examArrayValue,
+  quizLength
+);
 
-let adaptiveQuestions = [];
-
-while (adaptiveQuestions.length < QUIZ_SIZE) {
-    const remaining = shuffled.filter(q =>
-        !adaptiveQuestions.includes(q)
-    );
-
-    if (remaining.length === 0) break;
-
-    adaptiveQuestions.push(remaining[0]);
+// START FIRST SECTION WITH ADAPTIVE LOGIC
+await loadAdaptiveQuestionsForSection();
+if (!examSections || examSections.length === 0) {
+  console.error("❌ No exam sections loaded - adaptive cannot start");
+  return false;
 }
-
   return true;
 }
 
@@ -998,4 +1082,63 @@ function animateQuestionChange() {
     setTimeout(() => {
         card.style.opacity = "1";
     }, 150);
+}
+
+async function loadAdaptiveQuestionsForSection() {
+  const section = examSections?.[currentSectionIndex];
+
+if (!section) {
+  console.error("Section missing");
+  return;
+}
+
+  const examArrayValue = getExamArrayValue(quizConfig.exam);
+
+  const { data: allQuestions } = await supabase
+    .from("questions")
+    .select("*")
+    .eq("calculator_allowed", section.calculator_allowed)
+    .contains("exams", [examArrayValue]);
+
+  if (!allQuestions || allQuestions.length === 0) {
+    console.log("No questions in section:", section);
+    return false;
+  }
+
+  // =========================
+  // ADAPTIVE FILTER INSIDE SECTION
+  // =========================
+
+  const filtered = allQuestions.filter(q =>
+    quizConfig?.adaptiveMode === true
+      ? applyAdaptiveWeighting(q)   // <-- your logic hook
+      : true
+  );
+
+  // shuffle / select up to section.question_count
+  const selectedQuestions = filtered
+    .sort(() => Math.random() - 0.5)
+    .slice(0, section.question_count);
+
+  currentQuestions = selectedQuestions;
+  currentQuestionIndex = 0;
+  sectionQuestionsLoaded = 0;
+resetQuestionUI();
+  showQuestion();
+}
+
+function resetQuestionUI() {
+  const questionCard = document.getElementById("question-card");
+  if (questionCard) questionCard.style.display = "block";
+
+  document.getElementById("progress-bar").style.width = "0%";
+  document.getElementById("progress-container").textContent = "";
+
+  document.getElementById("explanation").textContent = "";
+  document.getElementById("next-btn").style.display = "none";
+
+  ["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "block";
+  });
 }
