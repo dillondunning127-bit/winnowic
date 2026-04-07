@@ -952,6 +952,15 @@ body {
   overflow-x: hidden;
 }
 
+.pricing-container,
+.pricing-title,
+.pricing-subtitle,
+.plan,
+#back-btn {
+  position: relative;
+  z-index: 1;
+}
+
 /* ✏️ Pencil line background layer */
 body::before {
   content: "";
