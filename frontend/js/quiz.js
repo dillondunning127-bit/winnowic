@@ -862,6 +862,7 @@ loadHistory(user?.id ?? null);
 
     // reset index so new quiz can start clean
     currentQuestionIndex = 0;
+    score = 0;
 }
 
 //Load adaptive quiz!!
