@@ -961,6 +961,65 @@ body {
   z-index: 1;
 }
 
+body {
+  position: relative;
+  z-index: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  background-color: #FFD84D;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 18px
+  );
+}
+
+.page-title,
+.page-subtitle,
+.card,
+#back-btn,
+textarea,
+#submit-feedback-btn,
+#feedback-message {
+  position: relative;
+  z-index: 1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 2px,
+    transparent 2px,
+    transparent 34px
+  );
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  z-index: -1; /* 🔥 THIS IS THE KEY FIX */
+}
+
 /* ✏️ Pencil line background layer */
 body::before {
   content: "";
