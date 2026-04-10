@@ -33,11 +33,35 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   await updateExamLocks();
-examSelect.addEventListener("change", loadUnits);
-unitSelect.addEventListener("change", loadDiagnostics);
+if (examSelect) {
+  examSelect.addEventListener("change", loadUnits);
+}
+
+if (unitSelect) {
+  unitSelect.addEventListener("change", loadDiagnostics);
+} // line 37
 // 🔥 ALSO LOAD ON INITIAL PAGE LOAD
-await loadUnits();
+if (examSelect) {
+  await loadUnits();
+}
 });
+
+async function loadSnapshots(exam, unit) {
+  let query = supabase
+    .from("progress_snapshots")
+    .select("*")
+    .eq("exam", exam)
+    .order("questions_answered", { ascending: true });
+
+  if (unit === "ALL") {
+    query = query.is("unit", null);
+  } else {
+    query = query.eq("unit", unit);
+  }
+
+  const { data } = await query;
+  return data || [];
+}
 
 function formatUnit(unit) {
   return unit
@@ -100,10 +124,240 @@ function renderReadinessChart(labels, data, colors) {
       ,cutout:"70%"
     }
   });
-
 }
 
+export async function updateUserStats(user, exam, isCorrect) {
+  const { data: existing } = await supabase
+    .from("user_stats")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("exam", exam)
+    .maybeSingle();
 
+  if (!existing) {
+    await supabase.from("user_stats").insert({
+      user_id: user.id,
+      exam,
+      total_correct: isCorrect ? 1 : 0,
+      total_attempted: 1
+    });
+  } else {
+    await supabase
+      .from("user_stats")
+      .update({
+        total_correct: existing.total_correct + (isCorrect ? 1 : 0),
+        total_attempted: existing.total_attempted + 1,
+        updated_at: new Date()
+      })
+      .eq("user_id", user.id)
+      .eq("exam", exam);
+  }
+}
+
+export async function maybeCreateSnapshot({ user, exam, unit }) {
+  try {
+    console.log("🔥 snapshot trigger fired", { user, exam, unit });
+
+    // 1. Get total attempts for this exam (ARRAY SAFE QUERY)
+    const { data: attempts, count, error: attemptsError } = await supabase
+      .from("topic_attempts")
+      .select("is_correct", { count: "exact" })
+      .eq("user_id", user.id)
+      .contains("exams", [exam]);
+if (count % 20 !== 0) return;
+    if (attemptsError) {
+      console.error("❌ attempts query error:", attemptsError);
+      return;
+    }
+
+    console.log("📊 topic_attempt count:", count);
+
+    if (!count || count < 20) return;
+
+    // 2. Calculate accuracy directly (NO user_stats table)
+    const total_attempted = attempts?.length || 0;
+    const total_correct = attempts?.filter(a => a.is_correct).length || 0;
+
+   const accuracy =
+  total_attempted === 0
+    ? 0
+    : Number(total_correct / total_attempted);
+
+    if (!Number.isFinite(accuracy)) {
+  console.error("❌ Invalid accuracy:", accuracy);
+  return;
+}
+    // 3. Get predicted score safely
+// 3. Get predicted score safely (FINAL FIX)
+let predicted_score = null;
+
+const safeAccuracy = Number(accuracy);
+
+if (Number.isFinite(safeAccuracy)) {
+
+  // 🔥 FIX: convert + ROUND to clean SQL-safe number
+  const readinessPercent = await calculateExamReadiness(exam);
+
+  const { data: scoreRow, error: scoreError } = await supabase
+    .from("exam_score_lookup")
+    .select("predicted_score, percent_correct")
+    .eq("exam", exam)
+    .lte("percent_correct", readinessPercent)
+    .order("percent_correct", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (scoreError) {
+    console.error("❌ score lookup error:", scoreError);
+  }
+
+  if (scoreRow) {
+    predicted_score = scoreRow.predicted_score;
+  }
+
+} else {
+  console.error("❌ skipping score lookup due to invalid accuracy");
+}
+
+    // 4. Insert GLOBAL snapshot (ALL units)
+    const { error: insertError1 } = await supabase
+      .from("progress_snapshots")
+      .insert({
+        user_id: user.id,
+        exam,
+        unit: null,
+        questions_answered: total_attempted,
+        accuracy,
+        predicted_score
+      });
+
+    if (insertError1) {
+      console.error("❌ snapshot insert error (global):", insertError1);
+    }
+
+    // 5. UNIT snapshot (only if valid unit exists)
+    // 🔥 COUNT UNIT ATTEMPTS CORRECTLY
+}
+  catch (err) {
+    console.error("❌ maybeCreateSnapshot crashed:", err);
+  }
+  
+// 🔥 GET LAST 20 UNIT ATTEMPTS (THIS WAS MISSING)
+const { data: unitAttempts } = await supabase
+  .from("topic_attempts")
+  .select("is_correct")
+  .eq("user_id", user.id)
+  .contains("exams", [exam])
+  .eq("unit", unit)
+  .order("created_at", { ascending: false })
+  .limit(20);
+
+// 🔥 COUNT TOTAL UNIT ATTEMPTS
+const { count: unitCount } = await supabase
+  .from("topic_attempts")
+  .select("*", { count: "exact", head: true })
+  .eq("user_id", user.id)
+  .contains("exams", [exam])
+  .eq("unit", unit);
+
+// Only snapshot every 20 UNIT attempts
+if (unitCount % 20 === 0 && unitCount >= 20 && unitAttempts?.length === 20) {
+
+  const correct = unitAttempts.filter(x => x.is_correct).length;
+  const unitAccuracy = correct / 20;
+
+  const { error: unitInsertError } = await supabase
+    .from("progress_snapshots")
+    .insert({
+      user_id: user.id,
+      exam,
+      unit,
+      questions_answered: unitCount,
+      accuracy: unitAccuracy,
+      predicted_score: null
+    });
+
+  if (unitInsertError) {
+    console.error("❌ unit snapshot insert error:", unitInsertError);
+  }
+}
+}
+
+let progressChart = null;
+
+
+async function loadProgressSnapshots(exam, unit) {
+  let query = supabase
+    .from("progress_snapshots")
+    .select("*")
+    .eq("exam", exam)
+    .order("questions_answered", { ascending: true });
+
+  if (unit === "ALL") {
+    query = query.is("unit", null);
+  } else {
+    query = query.eq("unit", unit);
+  }
+
+  const { data } = await query;
+
+  return data || [];
+}
+
+function renderProgressChart(linelabels, data, labelName = "Progress") {
+
+  const canvas = document.getElementById("progressChart");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  if (progressChart) {
+    progressChart.destroy();
+  }
+
+  progressChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: linelabels,
+      datasets: [{
+        label: labelName,
+        data: data,
+        tension: 0,
+        borderWidth: 5,
+        borderColor: "#FF6B00",
+        pointRadius: 5,
+pointHoverRadius: 8,
+pointBackgroundColor: "#FF6B00",
+pointBorderColor: "#FF6B00",
+        pointHitRadius: 12
+      }]
+    },
+    options: {
+      animation: {
+        duration: 1000
+      },
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: "# Questions"
+          }
+        },
+        y: {
+  display: true,
+  title: {
+    display: true,
+    text: labelName
+  }
+}
+      }
+    }
+  });
+}
 
 export async function renderDiagnostics(data) {
 
@@ -210,6 +464,7 @@ export async function renderDiagnostics(data) {
 export async function calculateExamReadiness(selectedExam) {
 
 const readinessEl = document.getElementById("readinessScore");
+
 
 
 let largestGap = {
@@ -506,16 +761,17 @@ export async function loadDiagnostics() {
       .select("*")
       .contains("exams", [examArrayValue]);
 
-    await renderAllUnits(allStats || [], exam);
+    await renderAllUnits(allStats || [], exam); // line 749
 
     return;
   }
 
   // 🔥 SINGLE UNIT VIEW
 
-  resultsDiv.style.display = "block";
-document.getElementById("readiness-container").style.display = "none";
-
+  resultsDiv.style.display = "block"; largestImprovement
+document.getElementById("readiness-container").style.display = "block";
+document.getElementById("readinessPercentContainer").style.display = "none";
+document.getElementById("largestImprovement").style.display = "none";
   let { data, error } = await supabase
     .from("topic_stats")
     .select("*")
@@ -537,19 +793,36 @@ document.getElementById("readiness-container").style.display = "none";
     };
   }
 
+const snapshots = await loadProgressSnapshots(exam, unit);
+
+const linelabels = snapshots.map(s => s.questions_answered);
+
+const dataPoints =
+  unit === "ALL"
+    ? snapshots.map(s => s.predicted_score)
+    : snapshots.map(s => Math.round(s.accuracy * 100));
+    renderProgressChart(linelabels, dataPoints, unit === "ALL" ? "Score" : "Accuracy %");
   renderDiagnostics(data);
 }
 async function renderAllUnits(dataArray, exam) {
 
+  const unit = "ALL"; // 🔥 important for snapshot loader
+
+  const snapshots = await loadProgressSnapshots(exam, unit);
+
+  const linelabels = snapshots.map(s => s.questions_answered);
+
+  const scoreData = snapshots.map(s => Math.round(s.predicted_score || 0));
+
   const container = document.getElementById("diagnosticResults");
   container.innerHTML = "";
   container.style.display = "block";
-
+document.getElementById("readinessPercentContainer").style.display = "block";
   const chartContainer = document.getElementById("readinessChartContainer");
   if (chartContainer) {
     chartContainer.style.display = "block";
   }
-
+document.getElementById("largestImprovement").style.display = "block";
   document.getElementById("readiness-container").style.display = "block";
   const examArrayValue = getExamArrayValue(exam);
 
@@ -578,6 +851,11 @@ async function renderAllUnits(dataArray, exam) {
 
   const attemptsByUnit = {};
 
+
+
+
+renderProgressChart(linelabels, scoreData, "Predicted Score");
+
   if (attempts) {
     for (let a of attempts) {
       if (!attemptsByUnit[a.unit]) {
@@ -586,7 +864,6 @@ async function renderAllUnits(dataArray, exam) {
       attemptsByUnit[a.unit].push(a.is_correct);
     }
   }
-
   // 🔥 READINESS CALCULATION (GLOBAL)
   let totalWeight = 0;
   let weightedMastery = 0;
@@ -600,6 +877,7 @@ async function renderAllUnits(dataArray, exam) {
     let percent = 0;
 
     if (last20.length > 0) {
+      
       const correct = last20.filter(x => x).length;
       percent = Math.round((correct / last20.length) * 100);
     }
@@ -658,10 +936,11 @@ div.classList.add("unit-card");
 
   </div>
 `;
-
-    container.appendChild(div);
+container.appendChild(div);
   }
 
+
+    
   // 🔥 FINAL READINESS %
   const readinessPercent = totalWeight > 0
     ? Math.round((weightedMastery / totalWeight) * 100)
@@ -681,7 +960,7 @@ div.classList.add("unit-card");
   }
 
   // 🔥 CHART DATA
-  const labels = [];
+  
   const chartData = [];
   const colors = [];
 
@@ -699,8 +978,8 @@ const colorPalette = [
 ];
 
   let total = 0;
-
-  weightUnits.forEach((w, i) => {
+const labels = [];
+  weightUnits.forEach((w, i) => { //line 955
 
     const unitAttempts = attemptsByUnit[w.unit] || [];
     const last20 = unitAttempts.slice(0, 20);
@@ -728,10 +1007,15 @@ const colorPalette = [
     chartData.push(remaining);
     colors.push("#e0e0e0");
   }
-
+await calculateExamReadiness(exam);
+const dataPoints =
+  unit === "ALL"
+    ? snapshots.map(s => s.predicted_score)
+    : snapshots.map(s => Math.round(s.accuracy * 100));
+    
   // 🔥 RENDER CHART
   renderReadinessChart(labels, chartData, colors);
-  await calculateExamReadiness(exam);
+  
 }
 
 export async function getPredictedScore(exam, readinessPercent) {
