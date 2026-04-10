@@ -2,6 +2,8 @@ import { supabase } from "./supabase.js";
 import { calculateExamReadiness } from "./diagnostics.js";
 import { checkExamAccess } from "./subscription.js";
 import { getExamArrayValue } from "./diagnostics.js";
+import { maybeCreateSnapshot } from "./diagnostics.js";
+import { updateUserStats } from "./diagnostics.js";
 let usedQuestionIds = new Set();
 let answerResults = [];
 let currentQuestionIndex = 0;
@@ -720,9 +722,7 @@ console.log("INSERT RESULT:", data, error);
 }
 
    if (user) {
-    const { data: { user } } = await supabase.auth.getUser();
-
-if (!user) return;
+    
   const { error: statsError } = await supabase.rpc(
     'increment_unit_stats',
     {
@@ -743,7 +743,11 @@ if (!user) return;
       `Exam Readiness: ${readiness}%`;
   }
 }
+const exam = questionObj.exams[0];
+const unit = questionObj.unit;
 
+await updateUserStats(user, exam, isCorrect);
+await maybeCreateSnapshot({ user, exam, unit });
 
     document.getElementById("explanation").textContent =
         questionObj.explanation || "No explanation provided.";
