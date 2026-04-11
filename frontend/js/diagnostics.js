@@ -709,7 +709,6 @@ export async function loadDiagnostics() {
   if (selectedOption?.dataset.locked === "true") {
     resultsDiv.innerHTML = `
       <div class="paywall">
-        <h3>(Premium) ${selectedOption.textContent.replace(" (Premium)", "")}</h3>
         <p>Unlock this exam to view diagnostics.</p>
         <button id="upgrade-btn">Upgrade</button>
       </div>
@@ -1051,11 +1050,9 @@ export async function updateExamLocks() {
     if (option.value === "") continue;
 
     // 🔥 RESET FIRST (VERY IMPORTANT)
-    option.textContent = option.textContent.replace(" (Premium)", "");
     delete option.dataset.locked;
 
     if (!userExams.includes("ALL") && !userExams.includes(option.value)) {
-      option.textContent += " (Premium)";
       option.dataset.locked = "true";
     }
   }
