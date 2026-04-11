@@ -745,10 +745,10 @@ console.log("INSERT RESULT:", data, error);
 }
 const exam = questionObj.exams[0];
 const unit = questionObj.unit;
-
+if(user) {
 await updateUserStats(user, exam, isCorrect);
 await maybeCreateSnapshot({ user, exam, unit });
-
+}
     document.getElementById("explanation").textContent =
         questionObj.explanation || "No explanation provided.";
 
