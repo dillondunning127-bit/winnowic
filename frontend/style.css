@@ -1061,3 +1061,121 @@ body::after {
   position: relative;
   z-index: 1;
 }
+
+/* ========================= */
+/* 📱 MOBILE OPTIMIZATION */
+/* ========================= */
+@media (max-width: 600px) {
+
+  /* CONTAINER */
+  .container {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 12px;
+  }
+
+  /* ===== TOP BAR FIX ===== */
+  .top-bar {
+    flex-wrap: wrap;              /* 🔥 allows wrapping */
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .top-bar button {
+    flex: 1 1 auto;               /* 🔥 responsive buttons */
+    min-width: 120px;
+  }
+
+  /* FIX PRICING BUTTON */
+  #upgrade-btn,
+  #upgrade-btn-global {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* FIX GEAR BUTTON POSITION */
+  .account-menu {
+    order: -1;                    /* 🔥 moves it to front */
+  }
+
+  .gear-btn {
+    margin-right: auto;           /* 🔥 pushes it into view */
+  }
+
+  /* ===== LOGO ===== */
+  .logo-img {
+    max-width: 160px;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* ===== BUTTONS ===== */
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  /* ===== TEXTAREA (FEEDBACK) ===== */
+  textarea {
+    font-size: 16px; /* 🔥 prevents iOS zoom + easier typing */
+  }
+
+  /* BACK BUTTON */
+  .back-btn {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  /* ===== PRICING PAGE FIX ===== */
+  .pricing-container {
+    flex-direction: column;       /* 🔥 stack vertically */
+    align-items: center;
+  }
+
+  .plan {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  /* ===== MODE BUTTONS ===== */
+  .mode-buttons {
+    flex-direction: column;
+  }
+
+  .mode-buttons button {
+    width: 100%;
+  }
+
+  /* ===== CHART FIXES ===== */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  #readinessChartContainer {
+    width: 200px !important;      /* slightly smaller but centered */
+  }
+
+  /* ===== DIAGNOSTICS CARD TEXT ===== */
+  #diagnosticResults {
+    font-size: 14px;
+  }
+
+  /* ===== GENERAL TEXT ===== */
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+}
