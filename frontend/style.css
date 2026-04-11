@@ -781,6 +781,7 @@ body {
 .account-dropdown {
   position: absolute;
   right: 0;
+  left: auto; /* ensures it doesn't go off left */
   top: 30px;
   background: white;
   border-radius: 10px;
@@ -788,6 +789,14 @@ body {
   width: 200px;
   padding: 10px;
   z-index: 999;
+}
+
+@media (max-width: 600px) {
+  .account-dropdown {
+    right: 10px;
+    left: auto;
+    width: 180px;
+  }
 }
 
 .dropdown-item {
@@ -1125,10 +1134,11 @@ body::after {
   }
 
   /* BACK BUTTON */
-  .back-btn {
-    font-size: 14px;
-    padding: 10px 16px;
-  }
+ .back-btn {
+  font-size: 16px;
+  padding: 12px 18px;
+  border-radius: 10px;
+}
 
   /* ===== PRICING PAGE FIX ===== */
   .pricing-container {
@@ -1179,3 +1189,18 @@ body::after {
   }
 
 }
+
+#question-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden; /* prevents weird overflow */
+}
+
+#question-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
