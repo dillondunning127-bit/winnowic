@@ -693,22 +693,28 @@ body {
 }
 
 .report-btn {
+  display: inline-flex;          /* 🔥 ensures full clickable flex area */
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 16px;            /* 🔥 bigger hitbox */
+  border-radius: 10px;
+
   background-color: #fff5f5;
   color: #d64545;
   border: 1px solid #ffd6d6;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
+
   cursor: pointer;
-  width: auto; /* 🔥 prevents full width */
-  white-space: nowrap; /* 🔥 prevents stretching */
+  width: auto !important;
+
+  gap: 6px;                      /* spacing icon + text */
+
   transition: all 0.2s ease;
 }
-
-.report-btn:hover {
-  background-color: #ffecec;
-  transform: scale(1.05);
+.report-btn * {
+  pointer-events: none;
 }
+
 
 .report-popup {
   position: absolute;
@@ -750,11 +756,7 @@ body {
   margin-bottom: 10px;
 }
 
-.report-btn {
-  width: auto !important;   /* 🔥 force override */
-  display: inline-block;    /* 🔥 prevents stretch */
-  padding: 6px 12px;
-}
+
 
 .account-menu {
   position: relative;
@@ -780,9 +782,11 @@ body {
 
 .account-dropdown {
   position: absolute;
-  right: 0;
-  left: auto; /* ensures it doesn't go off left */
-  top: 30px;
+  top: 40px;
+
+  left: 0;       /* 🔥 anchor to left side of gear */
+  right: auto;   /* 🔥 disable right anchoring */
+
   background: white;
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
