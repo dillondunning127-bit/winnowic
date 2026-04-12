@@ -75,7 +75,6 @@ if (!selectedTime) {
 const quizLength = parseInt(quizLengthValue);
 
 if (isNaN(quizLength)) {
-    alert("Select a quiz length");
     return;
 }
 
