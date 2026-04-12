@@ -59,7 +59,6 @@ if (!selectedTime) {
 }
 
     if (!selectedExam) {
-        alert("Select an exam");
         return;
     }
 
