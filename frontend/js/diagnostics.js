@@ -465,8 +465,6 @@ export async function calculateExamReadiness(selectedExam) {
 
 const readinessEl = document.getElementById("readinessScore");
 
-
-
 let largestGap = {
   unit: null,
   value: 0
@@ -990,7 +988,7 @@ const labels = [];
       percent = correct / last20.length;
     }
 
-    const contribution = percent * (1 / weightUnits.length) * 100;
+    const contribution = percent * w.weight * 100;
 
     labels.push(w.unit);
     chartData.push(contribution);
@@ -1006,7 +1004,6 @@ const labels = [];
     chartData.push(remaining);
     colors.push("#e0e0e0");
   }
-await calculateExamReadiness(exam);
 const dataPoints =
   unit === "ALL"
     ? snapshots.map(s => s.predicted_score)
