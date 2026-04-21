@@ -14,7 +14,10 @@
 <div class="container">
 
   <img src="/assets/logo-full.png" class="logo-img" alt="Winnowic">
-
+<div class="hero-text">
+  <h1>Tailored SAT + AP Study Tool</h1>
+  <p class="hero-subtext">Practice smarter, focus on weak areas, and track your progress</p>
+</div>
   <!-- AUTH CARD -->
   <div id="auth-container" class="card">
       <h3>User Info:</h3>
@@ -91,19 +94,37 @@
 <!-- MODE SELECTOR (NEW - SAFE ADDITION) -->
 <div class="card" id="mode-selector-card">
   <h2>Choose Mode</h2>
+  <p class="mode-subtitle">Start practicing based on your goal</p>
 
   <div class="mode-buttons">
-    <button id="mode-normal" class="btn-secondary btn-icon">
-      Free Practice
-    </button>
 
-    <button id="mode-adaptive" class="btn-secondary btn-icon">
-      Adaptive Practice
-    </button>
+    <div class="mode-option">
+      <button id="mode-normal" class="btn-secondary btn-icon">
+        Free Practice
+      </button>
+      <p class="mode-desc">
+        Standard exam questions. Choose exam, length, and units.
+      </p>
+    </div>
 
-    <button id="mode-diagnostic" class="btn-secondary btn-icon">
-      Free Diagnostic Test
-    </button>
+    <div class="mode-option">
+      <button id="mode-adaptive" class="btn-secondary btn-icon">
+        Adaptive Practice
+      </button>
+      <p class="mode-desc">
+        Focuses on your weak areas automatically. Account required.
+      </p>
+    </div>
+
+    <div class="mode-option">
+      <button id="mode-diagnostic" class="btn-secondary btn-icon">
+        Free Diagnostic
+      </button>
+      <p class="mode-desc">
+        20-question test to estimate your score and find weak areas.
+      </p>
+    </div>
+
   </div>
 </div>
 
