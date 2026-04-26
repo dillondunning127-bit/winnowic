@@ -1316,3 +1316,128 @@ body::after {
   margin: 0 auto;
   line-height: 1.4;
 }
+
+/* TOOLTIP SYSTEM */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #1D3557;
+  color: white;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 999;
+}
+
+.tooltip-wrapper:hover .tooltip {
+  opacity: 1;
+}
+
+/* Hide tooltip on mobile (no hover) */
+@media (max-width: 600px) {
+  .tooltip {
+    display: none;
+  }
+}
+
+/* FEEDBACK SECTION (BOTTOM) */
+
+.feedback-section {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.feedback-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.feedback-desc {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+/* FORM POLISH */
+
+label {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+/* tighten spacing between selects */
+select {
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+#mode-selector-card {
+  margin-top: 10px;
+}
+
+#history-container {
+  margin-top: 30px;
+}
+
+/* ===== SOCIAL FULL-WIDTH SECTION ===== */
+
+.social-section {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+
+  margin-top: 40px;
+}
+
+/* CARD STYLE */
+.social-card {
+  background: white;
+  padding: 30px 20px;
+
+  text-align: center;
+
+  border-top: 5px solid #0B1F3B; /* 🔥 strong brand line */
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.08);
+}
+
+/* TEXT */
+.social-subtext {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* BUTTON ROW */
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* MAKE IT TOUCH BOTTOM */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+}
