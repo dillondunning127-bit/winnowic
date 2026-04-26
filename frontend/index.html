@@ -66,23 +66,19 @@
       <div id="top-bar-message" class="top-bar-message"></div>
 
       <!-- DIAGNOSTICS -->
-      <button id="diagnostics-btn" class="btn-secondary btn-icon">
-        <span class="icon-hover">
-            <img src="/assets/icon-chart-before.png" class="before">
-            <img src="/assets/icon-chart-after.png" class="after">
-        </span>
-           <span>Diagnostics</span>
-      </button>
+      <div class="tooltip-wrapper">
+  <button id="diagnostics-btn" class="btn-secondary btn-icon">
+    <span class="icon-hover">
+        <img src="/assets/icon-chart-before.png" class="before">
+        <img src="/assets/icon-chart-after.png" class="after">
+    </span>
+    <span>Diagnostics</span>
+  </button>
 
-      <!-- FEEDBACK -->
-      <button id="feedback-btn" class="btn-secondary btn-icon">
-        <span class="icon-hover">
-            <img src="/assets/icon-chat-before.png" class="before">
-            <img src="/assets/icon-chat-after.png" class="after">
-        </span>
-        <span>Feedback</span>
-      </button>
-
+  <div class="tooltip">
+    Track your progress & identify weak areas
+  </div>
+</div>
       <!-- UPGRADE -->
       <button id="upgrade-btn" class="primary-btn btn-icon">
         <img src="/assets/icon-rocket.png" class="icon">
@@ -121,7 +117,7 @@
         Free Diagnostic
       </button>
       <p class="mode-desc">
-         20-question test to estimate your AP / SAT score and find weak areas.
+        20-question test to estimate your AP / SAT score and find weak areas.
       </p>
     </div>
 
@@ -215,6 +211,22 @@
     
         <div class="card" id="history-container"><h3>Past Attempts</h3></div>
     
+<div class="feedback-section">
+  <p class="feedback-title">Have feedback?</p>
+  <p class="feedback-desc">
+    Help improve Winnowic — report bugs or suggest features.
+  </p>
+
+  <button id="feedback-btn" class="btn-secondary btn-icon">
+        <span class="icon-hover">
+            <img src="/assets/icon-chat-before.png" class="before">
+            <img src="/assets/icon-chat-after.png" class="after">
+        </span>
+        <span>Send Feedback</span>
+      </button>
+</div>
+
+
 <div id="section-transition" class="transition-overlay" style="display:none;">
   <div class="transition-card">
     <p id="transition-text"></p>
@@ -244,6 +256,30 @@
   <button id="submit-report" class="btn-primary">Submit</button>
 
 </div>
+  </div>
+</div>
+
+<div class="social-section">
+  <div class="social-card">
+    <h3>See Winnowic in action</h3>
+
+    <p class="social-subtext">
+      Watch how students use diagnostics to improve their scores
+    </p>
+
+    <div class="social-buttons">
+      <a href="https://www.instagram.com/trywinnowic/" target="_blank">
+        <button class="btn-secondary">Instagram</button>
+      </a>
+
+      <a href="https://www.tiktok.com/@trywinnowic?_r=1&_t=ZP-95qsSDf6A51" target="_blank">
+        <button class="btn-secondary">TikTok</button>
+      </a>
+
+      <a href="https://www.youtube.com/@Winnowic" target="_blank">
+        <button class="btn-secondary">YouTube</button>
+      </a>
+    </div>
   </div>
 </div>
 
