@@ -805,6 +805,8 @@ async function renderAllUnits(dataArray, exam) {
 
   const unit = "ALL"; // 🔥 important for snapshot loader
 
+calculateExamReadiness(exam);
+  
   const snapshots = await loadProgressSnapshots(exam, unit);
 
   const linelabels = snapshots.map(s => s.questions_answered);
