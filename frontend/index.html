@@ -1,38 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <title>Diagnostics</title>
-  <link rel="stylesheet" href="./style.css">
-  <script src="js/chart.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Winnowic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="/_vercel/insights/script.js"></script>
 </head>
+
 <body>
 
 <div class="container">
 
-  <!-- TOP BAR -->
-  <div class="top-bar">
-   <a href="index.html">
-  <button class="btn-secondary">← Back</button>
-</a>
-  </div>
-
-  <h1 class="logo">Diagnostics Dashboard</h1>
-
-<div class="card" style="text-align:center;">
-  <h2>See exactly what to study — and what to ignore</h2>
-  <p class="hero-subtext">
-    Winnowic Diagnostics analyzes your performance across every unit, predicts your score, 
-    and shows your biggest weaknesses so you can improve faster.
-  </p>
-
-  <div style="margin-top:10px; font-size:13px; color:#777;">
-    ✔ Score prediction & readiness tracking<br>
-    ✔ Unit-by-unit accuracy & mastery<br>
-    ✔ Progress tracking over time
-  </div>
+  <img src="/assets/logo-full.png" class="logo-img" alt="Winnowic">
+<div class="hero-text">
+  <h1>Tailored SAT + AP Study Tool</h1>
+  <p class="hero-subtext">Practice smarter, focus on weak areas, and track your progress</p>
 </div>
 
 <div class="upgrade-wrapper">
@@ -42,111 +26,269 @@
   </button>
 </div>
 
-<div id="preview-banner" class="preview-banner">
-  Preview Mode — Sample Data
+  <!-- AUTH CARD -->
+  <div id="auth-container" class="card">
+      <h3>User Info:</h3>
+
+      <input type="email" id="email-input" placeholder="Email" class="text-input">
+      <input type="password" id="password-input" placeholder="Password" class="text-input">
+
+      <button id="signup-btn" class="btn-secondary">Sign Up</button>
+      <button id="login-btn" class="btn-primary">Login</button>
+
+      <p id="user-status"></p>
+  </div>
+
+  <!-- QUIZ SECTION -->
+  <div id="quiz-section">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+
+      <!-- ACCOUNT MENU -->
+      <div class="account-menu">
+        <button id="account-gear" class="gear-btn" style="display:none;">
+            <img src="/assets/icon-gear.png" alt="Settings">
+        </button>
+
+        <div id="account-dropdown" class="account-dropdown" style="display:none;">
+            <div id="account-email" class="dropdown-email"></div>
+
+            <button id="logout-btn" class="dropdown-item btn-icon">
+                <img src="/assets/icon-x-circle.png" class="icon">
+                Log Out
+            </button>
+
+            <button id="cnclsub-btn" class="dropdown-item btn-icon">
+                <img src="/assets/icon-x-circle.png" class="icon">
+                Cancel Subscription
+            </button>
+
+            <button id="dltact-btn" class="dropdown-item danger btn-icon">
+                <img src="/assets/icon-trash.png" class="icon">
+                Delete Account
+            </button>
+        </div>
+      </div>
+
+      <div id="top-bar-message" class="top-bar-message"></div>
+
+      <!-- DIAGNOSTICS -->
+      <div class="tooltip-wrapper">
+  <button id="diagnostics-btn" class="btn-secondary btn-icon">
+    <span class="icon-hover">
+        <img src="/assets/icon-chart-before.png" class="before">
+        <img src="/assets/icon-chart-after.png" class="after">
+    </span>
+    <span>Diagnostics - See your improvement through Graphs & Analytics</span>
+  </button>
+
+  <div class="tooltip">
+    Track your progress & identify weak areas
+  </div>
+</div>
+      <!-- UPGRADE -->
+    </div>
+
+<!-- MODE SELECTOR (NEW - SAFE ADDITION) -->
+<div class="card" id="mode-selector-card">
+  <h2>Choose Mode</h2>
+  <p class="mode-subtitle">Start practicing based on your goal</p>
+
+  <div class="mode-buttons">
+
+    <div class="mode-option">
+      <button id="mode-normal" class="btn-secondary btn-icon">
+        Free Practice
+      </button>
+      <p class="mode-desc">
+        Standard exam questions. Choose exam, length, and units.
+      </p>
+    </div>
+
+    <div class="mode-option">
+      <button id="mode-adaptive" class="btn-secondary btn-icon">
+        Adaptive Practice
+      </button>
+      <p class="mode-desc">
+        Focuses on your weak areas automatically. Account required.
+      </p>
+    </div>
+
+    <div class="mode-option">
+      <button id="mode-diagnostic" class="btn-secondary btn-icon">
+        Free Diagnostic
+      </button>
+      <p class="mode-desc">
+        20-question test to estimate your AP / SAT score and find weak areas.
+      </p>
+    </div>
+
+  </div>
 </div>
 
-<div class="card" style="text-align:center; border:2px dashed #FF6B00; background:#fff7f0;">
-  <h3>Try Diagnostics (Preview)</h3>
-  <p style="font-size:14px; color:#555;">
-    See real student data before upgrading.
+    <!-- SETTINGS CARD -->
+    <div class="card">
+        <h2>Select Your Practice</h2>
+
+        <div class="timer-row">
+          <label class="toggle-container">
+            <span>Timer</span>
+            <input type="checkbox" id="timerToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+
+        <label>Exam:</label>
+        <select id="exam-select">
+            <option value="">-- Select Exam --</option>
+            <option value="AP_PRECALC">AP Precalculus</option>
+            <option value="AP_CALC_AB">AP Calc AB</option>
+            <option value="AP_CALC_BC">AP Calc BC</option>
+            <option value="SAT_MATH">SAT Math</option>
+        </select>
+
+        <label id="label-time">Quiz Length:</label>
+        <select id="time-select" disabled></select>
+     <label id="label-unit">Unit:</label>
+        <select id="unit-select" disabled></select>
+
+        <button id="start-quiz-btn" class="btn-primary btn-icon">
+            <img src="/assets/icon-play.png" class="icon">
+            Start Quiz
+        </button>
+
+        <div id="message"></div>
+    </div>
+
+    <!-- QUESTION CARD -->
+   <div id="question-card" class="card" style="display:none;">
+<div id="quiz-top-row">
+  <div id="timerDisplay">
+    <img src="/assets/icon-timer.png" class="icon" >
+    Time Remaining: <span id="timeRemaining">00:00</span>
+  </div>
+
+  <button id="report-btn" class="report-btn btn-icon">
+  <span class="icon-hover">
+    
+    <img src="/assets/icon-flag.png" class="icon">
+  </span>
+  <span>Report</span>
+</button>
+</div>
+
+
+        <div id="question-image-container">
+            <img id="question-image">
+        </div>
+
+        <h2 id="question"></h2>
+
+        <button id="choice-a" style="display:none"></button>
+        <button id="choice-b" style="display:none"></button>
+        <button id="choice-c" style="display:none"></button>
+        <button id="choice-d" style="display:none"></button>
+
+        <div id="grid-container" style="display:none">
+            <input id="grid-input">
+            <span id="grid-result"></span>
+            <button id="grid-submit">Submit</button>
+        </div>
+
+        <div id="explanation"></div>
+        <button id="next-btn"style="display:none;">Next</button>
+
+ <div class="progress-bar-bg">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div id="progress-container"></div>
+        <div id="exam-readiness"></div>
+        <div id="weak-areas-container"></div>
+
+    </div>
+
+    <!-- PROGRESS CARD -->
+    
+        <div class="card" id="history-container"><h3>Past Attempts</h3></div>
+    
+<div class="feedback-section">
+  <p class="feedback-title">Have feedback?</p>
+  <p class="feedback-desc">
+    Help improve Winnowic — report bugs or suggest features.
   </p>
 
-  <button id="preview-full" class="primary-btn" style="margin-top:10px;">
-    Preview: Full SAT Diagnostics
-  </button>
-
-  <button id="preview-unit" class="btn-secondary" style="margin-top:10px;">
-    Preview: SAT Geometry Unit
-  </button>
-</div>
-
-  <!-- SELECTORS CARD -->
-   
-  <div class="card">
-
-<p style="font-size:13px; color:#666; margin-bottom:10px;">
-  Select an exam and unit to view detailed performance insights.
-</p>
-
-    <label>Exam <span style="color:gray;">(select first)</span></label>
-    <select id="examSelect">
-      <option value="">Select Exam</option>
-      <option value="SAT_MATH">SAT Math</option>
-      <option value="AP_PRECALC">AP Precalculus</option>
-      <option value="AP_CALC_AB">AP Calc AB</option>
-      <option value="AP_CALC_BC">AP Calc BC</option>
-    </select>
-
-    <label>Unit</label>
-    <select id="unitSelect">
-      <option value="">Select Unit</option>
-    </select>
-
-  </div>
-
-  <!-- READINESS CARD -->
-  <div class="card" id="readiness-container" style="display:none;text-align:center;">
-
-    <div id="readinessChartContainer" style="display:none; margin:auto; position:relative; width:260px;">
-      <canvas id="readinessChart"></canvas>
-
-      <div id="chartCenterScore" style="
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%,-50%);
-        font-size:28px;
-        font-weight:bold;
-      ">
-        --
-      </div>
-    </div>
-
-    <div style="margin-top:20px;">
-  <canvas id="progressChart"></canvas>
-  <div id="progressInsight" style="margin-top:8px; font-weight:500;"></div>
-</div>
-
-   <div id = readinessPercentContainer>
-  <strong>Exam Readiness:</strong>
-  <span id="readinessScore"></span>
+  <button id="feedback-btn" class="btn-secondary btn-icon">
+        <span class="icon-hover">
+            <img src="/assets/icon-chat-before.png" class="before">
+            <img src="/assets/icon-chat-after.png" class="after">
+        </span>
+        <span>Send Feedback</span>
+      </button>
 </div>
 
 
-<div id="largestImprovement" style="margin-top:10px;font-weight:bold;"></div>
+<div id="section-transition" class="transition-overlay" style="display:none;">
+  <div class="transition-card">
+    <p id="transition-text"></p>
+    <button id="transition-continue" class="btn-primary">Continue</button>
+  </div>
+</div> 
   </div>
 
-  <!-- UNIT DETAILS CARD -->
-  <div id="diagnosticResults" class="card" style="display:none;">
+</div>
 
-    <h2 id="unitTitle"></h2>
 
-    <div>
-      <strong>Accuracy (Last 20):</strong>
-      <span id="accuracyScore"></span>
-    </div>
-
-    <div>
-      <strong>Current Streak:</strong>
-      <span id="streakScore"></span>
-    </div>
-
-    <div>
-      <strong>Mastery Level:</strong>
-      <div id="masteryBadge"></div>
-    </div>
-
-    <div class="progress-bar-bg" style="margin-top:10px;">
-      <div id="masteryBar"></div>
-    </div>
-
+<div id="report-popup" class="report-popup" style="display:none;">
+  
+  <div class="popup-header">
+    <span>Report</span>
+    <span id="close-report" class="close-x">✕</span>
   </div>
 
+  <select id="report-type" class="text-input">
+    <option value="incorrect">Incorrect Answer</option>
+    <option value="unclear">Unclear Wording</option>
+    <option value="other">Other</option>
+  </select>
+
+  <textarea id="report-message" placeholder="Optional details..." style="display:none;"></textarea>
+
+  <button id="submit-report" class="btn-primary">Submit</button>
+
+</div>
+  </div>
+</div>
+
+<div class="social-section">
+  <div class="social-card">
+    <h3>See Winnowic in action</h3>
+
+    <p class="social-subtext">
+      Watch how students use diagnostics to improve their scores
+    </p>
+
+    <div class="social-buttons">
+      <a href="https://www.instagram.com/trywinnowic/" target="_blank">
+        <button class="btn-secondary">Instagram</button>
+      </a>
+
+      <a href="https://www.tiktok.com/@trywinnowic?_r=1&_t=ZP-95qsSDf6A51" target="_blank">
+        <button class="btn-secondary">TikTok</button>
+      </a>
+
+      <a href="https://www.youtube.com/@Winnowic" target="_blank">
+        <button class="btn-secondary">YouTube</button>
+      </a>
+    </div>
+  </div>
 </div>
 
 </body>
-<script type="module" src="js/diagnostics-mini.js"></script>
-<script type="module" src="js/diagnostics.js"></script>
 
+<script type="module" src="./js/quizSettings.js"></script>
+<script type="module" src="./js/main.js"></script>
+<script type="module" src="./js/customer_manage.js"></script>
 </html>
