@@ -6,11 +6,53 @@ let readinessChart = null;
 let examSelect;
 let unitSelect;
 let resultsDiv;
+// 🔥 PREVIEW MODE STATE
+let PREVIEW_MODE = false;
+let PREVIEW_USER_ID = "d43d7ca0-7beb-4e58-b724-c4b3e993c317"; // 🔥 your Supabase user id
+let PREVIEW_EXAM = null;
+let PREVIEW_UNIT = null;
 
 window.addEventListener("DOMContentLoaded", async () => {
   // 🔥 Detect which page we're on
   const examSelectIndex = document.getElementById("exam-select");   // index.html
   const examSelectDiag = document.getElementById("examSelect");     // diagnostics.html
+
+// 🔥 PREVIEW BUTTONS
+const previewFullBtn = document.getElementById("preview-full");
+const previewUnitBtn = document.getElementById("preview-unit");
+if(previewUnitBtn){
+previewFullBtn.onclick = async () => {
+  PREVIEW_MODE = true;
+
+  enablePreviewUI();
+
+  PREVIEW_EXAM = "SAT_MATH";
+  PREVIEW_UNIT = "ALL";
+
+  examSelect.value = "SAT_MATH";
+  await loadUnits();
+
+  unitSelect.value = "ALL";
+  loadDiagnostics();
+};
+}
+if (previewUnitBtn) {
+  previewUnitBtn.onclick = async () => {
+  PREVIEW_MODE = true;
+
+  enablePreviewUI();
+
+  PREVIEW_EXAM = "SAT_MATH";
+  PREVIEW_UNIT = "GEOMETRY_TRIGONOMETRY";
+
+  examSelect.value = "SAT_MATH";
+  await loadUnits();
+
+  unitSelect.value = PREVIEW_UNIT;
+  loadDiagnostics();
+};
+}
+
 
   // Pick whichever exists
   examSelect = examSelectIndex || examSelectDiag;
@@ -287,10 +329,21 @@ let progressChart = null;
 
 
 async function loadProgressSnapshots(exam, unit) {
+
+  let userId;
+
+  if (PREVIEW_MODE) {
+    userId = PREVIEW_USER_ID;
+  } else {
+    const { data: { user } } = await supabase.auth.getUser();
+    userId = user.id;
+  }
+
   let query = supabase
     .from("progress_snapshots")
     .select("*")
     .eq("exam", exam)
+    .eq("user_id", userId) // 🔥 ADD THIS
     .order("questions_answered", { ascending: true });
 
   if (unit === "ALL") {
@@ -300,7 +353,6 @@ async function loadProgressSnapshots(exam, unit) {
   }
 
   const { data } = await query;
-
   return data || [];
 }
 
@@ -369,9 +421,9 @@ export async function renderDiagnostics(data) {
   // ✅ LOCKED EXAM CHECK (UNCHANGED)
   await updateExamLocks();
 
-  const hasAccess = await checkExamAccess(exam);
+  const hasAccess = await hasAccessToExam(exam);
 
-  if (!hasAccess) {
+if (!hasAccess) {
     resultsDiv.innerHTML = `
       <div class="paywall">
         <h3>Upgrade Required</h3>
@@ -390,12 +442,22 @@ export async function renderDiagnostics(data) {
   // 🔥 CLEAR
   resultsDiv.innerHTML = "";
 
+ let userId;
+
+if (PREVIEW_MODE) {
+  userId = PREVIEW_USER_ID;
+} else {
+  const res = await supabase.auth.getUser();
+  userId = res.data.user?.id;
+}
+
   // 🔥 GET ACCURACY DATA (UNCHANGED LOGIC)
   const { data: attempts } = await supabase
     .from("topic_attempts")
     .select("is_correct")
     .contains("exams", [getExamArrayValue(exam)]) // ✅ safer
     .eq("unit", data.unit)
+    .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(20);
 
@@ -470,11 +532,23 @@ let largestGap = {
   value: 0
 };
 
-const examArrayValue = getExamArrayValue(selectedExam);
+let userId;
 
+if (PREVIEW_MODE) {
+  userId = PREVIEW_USER_ID;
+} else {
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return 0;
 
+  if (!user) {
+    console.log("No user found");
+    return 0;
+  }
+
+  userId = user.id;
+}
+
+const examArrayValue = getExamArrayValue(selectedExam);
+  
   const { data: weights } = await supabase
     .from("exam_unit_weights")
     .select("*")
@@ -490,7 +564,7 @@ const examArrayValue = getExamArrayValue(selectedExam);
     const { data: attempts } = await supabase
       .from("topic_attempts")
       .select("is_correct")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .eq("unit", w.unit)
       .contains("exams",[examArrayValue])
       .order("created_at",{ascending:false})
@@ -704,7 +778,7 @@ export async function loadDiagnostics() {
   const selectedOption = examSelect.selectedOptions[0];
 
   // 🔒 FRONTEND LOCK CHECK
-  if (selectedOption?.dataset.locked === "true") {
+ if (selectedOption?.dataset.locked === "true" && !PREVIEW_MODE) {
     resultsDiv.innerHTML = `
       <div class="paywall">
         <p>Unlock this exam to view diagnostics.</p>
@@ -722,9 +796,9 @@ export async function loadDiagnostics() {
   }
 
   // 🔐 BACKEND ACCESS CHECK (NOW APPLIES TO ALL + SINGLE)
-  const hasAccess = await checkExamAccess(exam);
+  const hasAccess = await hasAccessToExam(exam);
 
-  if (!hasAccess) {
+if (!hasAccess) {
     resultsDiv.innerHTML = `
       <div class="paywall">
         <h3>Upgrade Required</h3>
@@ -750,22 +824,32 @@ export async function loadDiagnostics() {
     return;
   }
 
+let userId;
+
+  if (PREVIEW_MODE) {
+    userId = PREVIEW_USER_ID;
+  } else {
+    const { data: { user } } = await supabase.auth.getUser();
+    userId = user.id;
+  }
+
   // 🔥 ALL UNITS VIEW
   if (unit === "ALL") {
 
     const { data: allStats } = await supabase
       .from("topic_stats")
       .select("*")
-      .contains("exams", [examArrayValue]);
+      .contains("exams", [examArrayValue])
+      .eq("user_id", userId);
 
-    await renderAllUnits(allStats || [], exam); // line 749
+    await renderAllUnits(allStats || [], exam); // line 818
 
     return;
   }
 
   // 🔥 SINGLE UNIT VIEW
 
-  resultsDiv.style.display = "block"; largestImprovement
+resultsDiv.style.display = "block";
 document.getElementById("readiness-container").style.display = "block";
 document.getElementById("readinessPercentContainer").style.display = "none";
 document.getElementById("largestImprovement").style.display = "none";
@@ -774,10 +858,11 @@ document.getElementById("largestImprovement").style.display = "none";
     .select("*")
     .contains("exams", [examArrayValue])
     .eq("unit", unit)
+    .eq("user_id", userId)
     .maybeSingle();
 
   if (error) {
-    console.error(error);
+    console.error(error); //875
     resultsDiv.innerHTML = "<p>Error loading data.</p>";
     return;
   }
@@ -805,9 +890,9 @@ async function renderAllUnits(dataArray, exam) {
 
   const unit = "ALL"; // 🔥 important for snapshot loader
 
-calculateExamReadiness(exam);
-  
   const snapshots = await loadProgressSnapshots(exam, unit);
+
+calculateExamReadiness(exam);
 
   const linelabels = snapshots.map(s => s.questions_answered);
 
@@ -839,15 +924,25 @@ document.getElementById("largestImprovement").style.display = "block";
     const numB = parseInt(b.unit.match(/\d+/));
     return numA - numB;
   });
+let userId;
 
+  if (PREVIEW_MODE) {
+    userId = PREVIEW_USER_ID;
+  } else {
+    const { data: { user } } = await supabase.auth.getUser();
+    userId = user.id;
+  }
   // Get attempts
   const { data: attempts } = await supabase
     .from("topic_attempts")
     .select("unit, is_correct")
     .contains("exams", [examArrayValue])
+.eq("user_id", userId)
     .order("created_at", { ascending: false })
-    .limit(200);
+    .limit(1000);
 
+
+    
   const attemptsByUnit = {};
 
 
@@ -1055,4 +1150,82 @@ export async function updateExamLocks() {
       option.dataset.locked = "true";
     }
   }
+}
+
+async function hasAccessToExam(exam) {
+  // 🔥 Preview ALWAYS allowed
+  if (PREVIEW_MODE) return true;
+
+  // Normal flow
+  return await checkExamAccess(exam);
+}
+
+async function getEffectiveUserId() {
+  if (PREVIEW_MODE) 
+    return PREVIEW_USER_ID;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.id || null;
+}
+
+async function exitPreviewMode() {
+
+  // turn off preview state
+  PREVIEW_MODE = false;
+  PREVIEW_EXAM = null;
+  PREVIEW_UNIT = null;
+
+  // re-enable dropdowns
+  examSelect.disabled = false;
+  unitSelect.disabled = false;
+
+  // clear UI
+  resultsDiv.innerHTML = "";
+resultsDiv.style.display = "none";
+  const readinessEl = document.getElementById("readinessScore");
+  const centerScore = document.getElementById("chartCenterScore");
+
+  if (readinessEl) readinessEl.textContent = "";
+  if (centerScore) centerScore.textContent = "--";
+
+  const chartContainer = document.getElementById("readinessChartContainer");
+  if (chartContainer) chartContainer.style.display = "none";
+
+  document.getElementById("largestImprovement").style.display = "none";
+  document.getElementById("readinessPercentContainer").style.display = "none";
+  document.getElementById("readiness-container").style.display = "none";
+
+  // reset dropdowns (blank state)
+  examSelect.value = "";
+  unitSelect.innerHTML = `<option value="">Select Unit</option>`;
+
+  // hide preview banner
+  const banner = document.getElementById("preview-banner");
+  if (banner) {
+    banner.style.display = "none";
+    const btn = document.getElementById("exit-preview-btn");
+    if (btn) btn.remove();
+  }
+
+  // optional: reload clean state
+  await updateExamLocks();
+}
+
+function enablePreviewUI() {
+  const banner = document.getElementById("preview-banner");
+  banner.style.display = "block";
+
+  if (!document.getElementById("exit-preview-btn")) {
+    const exitBtn = document.createElement("button");
+    exitBtn.id = "exit-preview-btn";
+    exitBtn.innerText = "Turn off preview";
+    exitBtn.classList.add("exit-preview-btn");
+
+    exitBtn.onclick = exitPreviewMode;
+
+    banner.appendChild(exitBtn);
+  }
+
+  examSelect.disabled = true;
+  unitSelect.disabled = true;
 }
