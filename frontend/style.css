@@ -192,9 +192,12 @@ button:hover {
 }
 
 .upgrade-wrapper {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0; /* equal spacing top & bottom */
+    width: 100%;
+    margin: 20px 0;
+}
+#upgrade-btn-global {
+    width: 100%;
+    display: block;
 }
 .btn-secondary {
     background-color: transparent;
@@ -1440,4 +1443,24 @@ body {
 
 .container {
   flex: 1;
+}
+
+.preview-banner {
+  display: none;
+  background: #FF6B00;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.exit-preview-btn {
+  margin-left: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: #FF6B00;
+  font-weight: 600;
+  cursor: pointer;
 }
