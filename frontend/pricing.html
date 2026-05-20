@@ -3,84 +3,274 @@
 <head>
   <link rel="icon" type="image/png" href="/assets/favicon.png">
   <title>Upgrade</title>
+
   <link rel="stylesheet" href="style.css">
+
   <script src="https://js.stripe.com/v3/"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+ <script defer src="/_vercel/insights/script.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
+<body class="pricing-page">
 
-<!-- TOP BAR -->
-<button id="back-btn" class="btn-secondary back-btn">← Back</button>
-<h1 class="pricing-title">Upgrade Your Prep</h1>
-<p id="pricing-message" class="pricing-subtitle"></p>
+<div class="container">
 
-<div class="pricing-info">
-  <strong>Unlock full access</strong> to all SAT and AP practice features.
-</div>
+  <!-- HEADER -->
+  <div class="pricing-header">
 
-<div class="pricing-container">
+    <div>
 
-  <!-- FREE -->
-  <div class="plan">
-    <h2>Free</h2>
-    <p class="price">$0</p>
-    <ul>
-      <li>1 exam simulation per test</li>
-      <li>Limited question bank</li>
-      <li>Filters available</li>
-    </ul>
-  </div>
+      <div class="pricing-label">
+        WINNOWIC PREMIUM
+      </div>
 
-<!-- AP -->
-  <div class="plan">
-    <h2>AP 5's Deal</h2>
-    <p class="price">$5</p>
-    <p class="small-text">April–May only</p>
-    <ul>
-      <li>Access to one AP exam</li>
-      <li>Diagnostics included</li>
-      <li>Expires May 31</li>
-      <li>200+ questions per exam</li>
-    </ul>
+      <h1 class="pricing-title">
+        Upgrade Your Prep
+      </h1>
 
-    <div class="ap-buttons">
-      <button id="ap_calc_ab_btn" class="btn-secondary">AP Calc AB</button>
-      <button id="ap_calc_bc_btn" class="btn-secondary">AP Calc BC</button>
-      <button id="ap_precalc_btn" class="btn-secondary">AP Precalc</button>
+      <p id="pricing-message" class="pricing-subtitle">
+        Adaptive SAT preparation designed to help students study smarter,
+        improve faster, and understand exactly what to work on next.
+      </p>
+
     </div>
+
+    <button id="back-btn" class="btn-secondary pricing-back-btn">
+      ← Back
+    </button>
+
   </div>
 
-  <!-- SAT -->
-  <div class="plan highlight">
-    <h2>SAT Math</h2>
-    <p class="price">$6<span>/month</span></p>
-    <ul>
-      <li>Unlimited SAT questions (220+)</li>
-      <li>Diagnostics</li>
-      <li>Adaptive quizzes</li>
-    </ul>
-    <button id="sat-btn" class="btn-primary">Start SAT Plan</button>
+  <!-- HERO INFO -->
+  <div class="pricing-hero-card">
+
+    <div class="pricing-hero-content">
+
+      <div class="pricing-hero-title">
+        Built For Modern SAT Prep
+      </div>
+
+      <div class="pricing-hero-description">
+        Winnowic combines adaptive practice, detailed analytics,
+        progress tracking, and targeted review into one streamlined platform.
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- ALL -->
-  <div class="plan">
-    <h2>All Exams</h2>
-    <p class="price">$10<span>/month</span></p>
-    <ul>
-      <li>SAT + AP exams</li>
-      <li>Diagnostics</li>
-      <li>Adaptive quizzes</li>
-      <li>800+ SAT & AP Questions</li>
-    </ul>
-    <button id="all-exams-btn" class="btn-primary">Get Full Access</button>
+  <!-- PLANS -->
+  <div class="pricing-container">
+
+    <!-- FREE -->
+    <div class="plan modern-plan">
+
+      <div class="plan-badge neutral-badge">
+        FREE
+      </div>
+
+      <h2>Starter</h2>
+
+      <p class="price">
+        $0
+      </p>
+
+      <ul class="modern-feature-list">
+
+        <li>1 SAT simulation</li>
+
+        <li>Limited question bank</li>
+
+        <li>Question filters</li>
+
+        <li>Basic practice access</li>
+
+      </ul>
+
+    </div>
+
+    <!-- SAT -->
+    <div class="plan modern-plan sat-highlight">
+
+      <div class="plan-badge best-badge">
+        MOST POPULAR
+      </div>
+
+      <h2>SAT Math</h2>
+
+      <p class="price">
+        $6<span>/month</span>
+      </p>
+
+      <div class="plan-description">
+        Full premium SAT preparation with adaptive learning and advanced analytics.
+      </div>
+
+      <ul class="modern-feature-list premium-list">
+
+        <li>
+          <strong>500+ Hard SAT Math Questions</strong>
+        </li>
+
+        <li>
+          <a href="/quiz.html" class="feature-link">
+            Adaptive Quizzes
+          </a>
+          <span class="feature-subtext">
+            Questions dynamically target weaknesses
+          </span>
+        </li>
+
+        <li>
+          <a href="/diagnostics.html" class="feature-link">
+            Advanced Diagnostics & Analytics
+          </a>
+
+          <div class="feature-subpoints">
+            • Predicted SAT scoring<br>
+            • Readiness tracking<br>
+            • Unit-by-unit performance<br>
+            • Progress graphs<br>
+            • Weakness identification
+          </div>
+        </li>
+
+        <li>
+          Detailed streak tracking
+        </li>
+
+        <li>
+          Smart targeted review
+        </li>
+
+        <li>
+          Continuous improvement tracking
+        </li>
+
+      </ul>
+
+      <button id="sat-btn" class="btn-primary premium-main-btn">
+        Start SAT Plan
+      </button>
+
+    </div>
+
+    <!-- AP -->
+    <div class="plan modern-plan disabled-plan">
+
+      <div class="plan-badge locked-badge">
+        CURRENTLY UNAVAILABLE
+      </div>
+
+      <h2>AP 5's Deal</h2>
+
+      <p class="price disabled-price">
+        $5
+      </p>
+
+      <p class="small-text">
+        April–May only
+      </p>
+
+      <ul class="modern-feature-list">
+
+        <li>Access to one AP exam</li>
+
+        <li>Diagnostics included</li>
+
+        <li>200+ questions per exam</li>
+
+        <li>Expires May 31</li>
+
+      </ul>
+
+      <div class="locked-overlay-text">
+        AP exam season has ended for this year.
+      </div>
+
+      <div class="ap-buttons">
+
+        <button
+          id="ap_calc_ab_btn"
+          class="btn-secondary disabled-btn"
+          disabled
+        >
+          AP Calc AB
+        </button>
+
+        <button
+          id="ap_calc_bc_btn"
+          class="btn-secondary disabled-btn"
+          disabled
+        >
+          AP Calc BC
+        </button>
+
+        <button
+          id="ap_precalc_btn"
+          class="btn-secondary disabled-btn"
+          disabled
+        >
+          AP Precalc
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ALL -->
+    <div class="plan modern-plan disabled-plan">
+
+      <div class="plan-badge locked-badge">
+        TEMPORARILY DISABLED
+      </div>
+
+      <h2>All Exams</h2>
+
+      <p class="price disabled-price">
+        $10<span>/month</span>
+      </p>
+
+      <ul class="modern-feature-list">
+
+        <li>SAT + AP access</li>
+
+        <li>Adaptive quizzes</li>
+
+        <li>Advanced diagnostics</li>
+
+        <li>800+ SAT & AP questions</li>
+
+      </ul>
+
+      <div class="locked-overlay-text">
+        Full bundle returns next AP season.
+      </div>
+
+      <button
+        id="all-exams-btn"
+        class="btn-primary disabled-btn"
+        disabled
+      >
+        Currently Unavailable
+      </button>
+
+    </div>
+
   </div>
 
-</div>
+  <!-- DISCLAIMER -->
+  <div class="pricing-disclaimer modern-disclaimer">
 
-<div class="pricing-disclaimer">
-  MCQ and other exam content are not affiliated with or endorsed by the College Board. MCQ ONLY! No refunds once purchased. No cancelation fees. When canceling subscriptions (SAT or All Exams) you will be charged for the billing cycle in which the cancelation occured. Your subscription will immeadiately stop thereafter.
+    MCQ and other exam content are not affiliated with or endorsed by the College Board.
+    MCQ ONLY! No refunds once purchased. No cancelation fees.
+    When canceling subscriptions (SAT or All Exams) you will be charged for the billing
+    cycle in which the cancelation occured. Your subscription will immeadiately stop thereafter.
+
+  </div>
+
 </div>
 
 <script>
