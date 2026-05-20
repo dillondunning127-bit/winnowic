@@ -6,6 +6,7 @@
   <title>Diagnostics</title>
   <link rel="stylesheet" href="./style.css">
   <script src="js/chart.js"></script>
+   <script defer src="/_vercel/insights/script.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -13,31 +14,72 @@
 <div class="container">
 
   <!-- TOP BAR -->
-  <div class="top-bar">
-   <a href="index.html">
-  <button class="btn-secondary">← Back</button>
-</a>
+ <!-- TOP BAR -->
+<div class="top-bar diagnostics-topbar">
+
+  <div class="diagnostics-page-header">
+
+    <div class="diagnostics-header-accent"></div>
+
+    <div>
+      <div class="diagnostics-page-label">
+        Performance Analytics
+      </div>
+
+      <h1 class="diagnostics-page-title">
+        Diagnostics Dashboard
+      </h1>
+    </div>
+
   </div>
 
-  <h1 class="logo">Diagnostics Dashboard</h1>
+  <a href="index.html">
+    <button class="btn-secondary diagnostics-back-btn">
+      Back
+    </button>
+  </a>
 
-<div class="card" style="text-align:center;">
-  <h2>See exactly what to study — and what to ignore</h2>
-  <p class="hero-subtext">
-    Winnowic Diagnostics analyzes your performance across every unit, predicts your score, 
-    and shows your biggest weaknesses so you can improve faster.
+</div>
+
+  <section class="diagnostics-hero">
+
+  <div class="hero-badge">
+    Winnowic Premium Analytics
+  </div>
+
+  <h1 class="diagnostics-title">
+    Know Exactly What To Study.
+  </h1>
+
+  <p class="diagnostics-subtitle">
+    Winnowic analyzes every question you answer to predict your score,
+    identify weak units, and track improvement over time.
   </p>
 
-  <div style="margin-top:10px; font-size:13px; color:#777;">
-    ✔ Score prediction & readiness tracking<br>
-    ✔ Unit-by-unit accuracy & mastery<br>
-    ✔ Progress tracking over time
+  <div class="hero-feature-row">
+
+    <div class="hero-feature-card">
+      <div class="hero-feature-number">200+</div>
+      <div class="hero-feature-label">SAT Math Questions</div>
+    </div>
+
+    <div class="hero-feature-card">
+      <div class="hero-feature-number">Adaptive</div>
+      <div class="hero-feature-label">Weakness Targeting</div>
+    </div>
+
+    <div class="hero-feature-card">
+      <div class="hero-feature-number">Live</div>
+      <div class="hero-feature-label">Score Prediction</div>
+    </div>
+
   </div>
-</div>
+
+</section>
+
 
 <div class="upgrade-wrapper">
   <button id="upgrade-btn-global" class="primary-btn">
-    <img src="/assets/icon-rocket.png" class="icon">
     Pricing starting at just $5! - Adaptive Quizzes, Score Tracking/Breakdown and more!
   </button>
 </div>
@@ -46,31 +88,42 @@
   Preview Mode — Sample Data
 </div>
 
-<div class="card" style="text-align:center; border:2px dashed #FF6B00; background:#fff7f0;">
-  <h3>Try Diagnostics (Preview)</h3>
-  <p style="font-size:14px; color:#555;">
-    See real student data before upgrading.
-  </p>
-
-  <button id="preview-full" class="primary-btn" style="margin-top:10px;">
-    Preview: Full SAT Diagnostics
-  </button>
-
-  <button id="preview-unit" class="btn-secondary" style="margin-top:10px;">
-    Preview: SAT Geometry Unit
-  </button>
-</div>
-
   <!-- SELECTORS CARD -->
    
-  <div class="card">
+  <div class="card diagnostics-control-card">
 
-<p style="font-size:13px; color:#666; margin-bottom:10px;">
-  Select an exam and unit to view detailed performance insights.
-</p>
+  <div class="diagnostics-control-top">
 
-    <label>Exam <span style="color:gray;">(select first)</span></label>
-    <select id="examSelect">
+    <div>
+
+      <div class="diagnostics-control-badge">
+        Interactive Demo
+      </div>
+
+      <h2 class="diagnostics-control-title">
+        Explore Your Diagnostics
+      </h2>
+
+      <p class="diagnostics-control-description">
+        Click preview to see how premium features work with
+        sample real user data.
+      </p>
+
+    </div>
+
+    <button id="preview-full" class="primary-btn diagnostics-preview-btn">
+      Preview Diagnostics
+    </button>
+
+  </div>
+
+  <div class="diagnostics-selector-section">
+
+    <label class="modern-label">
+      Select Exam
+    </label>
+
+    <select id="examSelect" class="modern-select">
       <option value="">Select Exam</option>
       <option value="SAT_MATH">SAT Math</option>
       <option value="AP_PRECALC">AP Precalculus</option>
@@ -78,17 +131,58 @@
       <option value="AP_CALC_BC">AP Calc BC</option>
     </select>
 
-    <label>Unit</label>
-    <select id="unitSelect">
-      <option value="">Select Unit</option>
-    </select>
+  </div>
+
+</div>
+
+  <!-- READINESS CARD -->
+  <div class="analytics-dashboard card" id="readiness-container" style="display:none;text-align:center;">
+
+  <div class="readiness-top-section">
+
+  <!-- LEFT DESCRIPTION -->
+  <div class="analytics-description-panel">
+
+    <div class="analytics-mini-badge">
+      PERFORMANCE ANALYTICS
+    </div>
+
+    <h2 class="analytics-side-title">
+      Track your growth visually.
+    </h2>
+
+    <p class="analytics-side-text">
+      This is where you can monitor your progress and identify
+      which units are helping — or hurting — your predicted score.
+    </p>
+
+    <p class="analytics-side-text">
+      <strong>Hover over the donut chart</strong> to see how much each
+      unit contributes to your readiness score and how much improvement
+      remains.
+    </p>
 
   </div>
 
-  <!-- READINESS CARD -->
-  <div class="card" id="readiness-container" style="display:none;text-align:center;">
+  <!-- CENTER CHART -->
+  <div>
 
-    <div id="readinessChartContainer" style="display:none; margin:auto; position:relative; width:260px;">
+    <div class="chart-title-wrap">
+
+      <h2 class="readiness-main-title">
+        SAT Readiness Predictor
+      </h2>
+
+      <p class="readiness-main-subtitle">
+        Answer <strong>20 questions</strong> to begin generating
+        a predicted score and adaptive readiness insights.
+      </p>
+
+    </div>
+
+    <div id="readinessChartContainer"
+      style="display:none; margin:auto; position:relative; width:260px;">
+
       <canvas id="readinessChart"></canvas>
 
       <div id="chartCenterScore" style="
@@ -101,22 +195,73 @@
       ">
         --
       </div>
+
     </div>
 
-    <div style="margin-top:20px;">
-  <canvas id="progressChart"></canvas>
-  <div id="progressInsight" style="margin-top:8px; font-weight:500;"></div>
-</div>
-
-   <div id = readinessPercentContainer>
-  <strong>Exam Readiness:</strong>
-  <span id="readinessScore"></span>
-</div>
-
-
-<div id="largestImprovement" style="margin-top:10px;font-weight:bold;"></div>
   </div>
 
+  <!-- RIGHT SIDE -->
+  <div class="readiness-side-info">
+
+    <div class="readiness-info-card">
+
+      <div class="readiness-label">
+        Exam Readiness
+      </div>
+
+      <div id="readinessPercentContainer">
+        <span id="readinessScore"></span>
+      </div>
+
+    </div>
+
+    <div class="readiness-info-card">
+
+      <div class="readiness-label">
+        Largest Improvement
+      </div>
+
+      <div id="largestImprovement"
+        style="margin-top:10px;font-weight:bold;">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- PROGRESS CHART -->
+  <div class="progress-chart-card">
+
+  <div class="progress-chart-header">
+
+    <div class="progress-chart-badge">
+      LIVE TRACKING
+    </div>
+
+    <h2 class="progress-chart-title">
+      Progress Over Time
+    </h2>
+
+    <p class="progress-chart-subtitle">
+      This graph updates every <strong>20 questions</strong>.
+      Hover over individual points to see how your predicted
+      score and readiness have improved over time.
+    </p>
+
+  </div>
+
+  <canvas id="progressChart"></canvas>
+
+  <div id="progressInsight"
+    style="margin-top:14px; font-weight:500;">
+  </div>
+
+</div>
+</div>
+
+  
   <!-- UNIT DETAILS CARD -->
   <div id="diagnosticResults" class="card" style="display:none;">
 
@@ -144,7 +289,6 @@
   </div>
 
 </div>
-
 </body>
 <script type="module" src="js/diagnostics-mini.js"></script>
 <script type="module" src="js/diagnostics.js"></script>
