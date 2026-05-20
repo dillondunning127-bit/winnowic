@@ -8,85 +8,291 @@
     <link rel="stylesheet" href="./style.css">
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
-
+<button class="floating-cta" id="floating-cta">
+  Take SAT Questions Now
+</button>
 <body>
 
-<div class="container">
 
-  <img src="/assets/logo-full.png" class="logo-img" alt="Winnowic">
-<div class="hero-text">
-  <h1>Tailored SAT + AP Study Tool</h1>
-  <p class="hero-subtext">Practice smarter, focus on weak areas, and track your progress</p>
-</div>
+  <!-- ========================= -->
+<!-- TOP NAVIGATION -->
+<!-- ========================= -->
 
-<div class="upgrade-wrapper">
-  <button id="upgrade-btn-global" class="primary-btn">
-    <img src="/assets/icon-rocket.png" class="icon">
-    Pricing starting at just $5! - Adaptive Quizzes, Score Tracking/Breakdown and more!
-  </button>
-</div>
+<header class="site-header">
 
-  <!-- AUTH CARD -->
-  <div id="auth-container" class="card">
-      <h3>User Info:</h3>
+  <div class="header-left">
 
-      <input type="email" id="email-input" placeholder="Email" class="text-input">
-      <input type="password" id="password-input" placeholder="Password" class="text-input">
+    <!-- ACCOUNT MENU -->
+    <div class="account-menu">
+      <button id="account-gear" class="gear-btn" style="display:none;">
+          <img src="/assets/icon-gear.png" alt="Settings">
+      </button>
 
-      <button id="signup-btn" class="btn-secondary">Sign Up</button>
-      <button id="login-btn" class="btn-primary">Login</button>
+      <div id="account-dropdown" class="account-dropdown" style="display:none;">
+          <div id="account-email" class="dropdown-email"></div>
 
-      <p id="user-status"></p>
+          <button id="logout-btn" class="dropdown-item btn-icon">
+              <img src="/assets/icon-x-circle.png" class="icon">
+              Log Out
+          </button>
+
+          <button id="cnclsub-btn" class="dropdown-item btn-icon">
+              <img src="/assets/icon-x-circle.png" class="icon">
+              Cancel Subscription
+          </button>
+
+          <button id="dltact-btn" class="dropdown-item danger btn-icon">
+              <img src="/assets/icon-trash.png" class="icon">
+              Delete Account
+          </button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- QUIZ SECTION -->
-  <div id="quiz-section">
+  <div class="header-center">
+    <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+  </div>
 
-    <!-- TOP BAR -->
-    <div class="top-bar">
+<div class="header-right">
 
-      <!-- ACCOUNT MENU -->
-      <div class="account-menu">
-        <button id="account-gear" class="gear-btn" style="display:none;">
-            <img src="/assets/icon-gear.png" alt="Settings">
-        </button>
+  <button
+    id="diagnostics-btn"
+    class="premium-diagnostics-btn"
+    onclick="window.location.href='diagnostics.html'"
+  >
+    View Diagnostics
+  </button>
 
-        <div id="account-dropdown" class="account-dropdown" style="display:none;">
-            <div id="account-email" class="dropdown-email"></div>
+  <button id="header-auth-btn">
+    Create Account
+  </button>
 
-            <button id="logout-btn" class="dropdown-item btn-icon">
-                <img src="/assets/icon-x-circle.png" class="icon">
-                Log Out
-            </button>
+</div>
 
-            <button id="cnclsub-btn" class="dropdown-item btn-icon">
-                <img src="/assets/icon-x-circle.png" class="icon">
-                Cancel Subscription
-            </button>
+</header>
 
-            <button id="dltact-btn" class="dropdown-item danger btn-icon">
-                <img src="/assets/icon-trash.png" class="icon">
-                Delete Account
-            </button>
-        </div>
+<!-- ========================= -->
+<!-- HERO SECTION -->
+<!-- ========================= -->
+
+<section class="hero-section">
+
+  <div class="hero-content">
+
+    <h1 class="hero-title">
+      Tailored SAT + AP Practice That Adapts To You
+    </h1>
+
+    <p class="hero-subtext">
+      Practice smarter, focus on weak areas, and track your improvement with adaptive quizzes and diagnostics.
+    </p>
+
+    <div class="hero-buttons">
+
+      <button id="hero-start-btn" class="primary-btn">
+        Take SAT Questions NOW!
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- HOW IT WORKS -->
+<!-- ========================= -->
+
+<section class="how-section reveal-on-scroll">
+
+  <div class="how-header">
+    <h2>How Winnowic Works</h2>
+    <p>
+      Personalized SAT + AP prep designed to improve weak areas faster.
+    </p>
+  </div>
+
+  <div class="how-layout">
+
+    <!-- LEFT SIDE -->
+    <div class="how-grid">
+
+      <div class="how-card reveal-on-scroll">
+        <div class="how-card-header">
+        <div class="how-number">1</div>
+
+        <h3>Take Practice Quizzes</h3>
+</div>
+        <p>
+          Choose SAT or AP exams and practice with targeted questions.
+        </p>
       </div>
 
-      <div id="top-bar-message" class="top-bar-message"></div>
+      <div class="how-card reveal-on-scroll">
+        <div class="how-card-header">
+        <div class="how-number">2</div>
 
-      <!-- DIAGNOSTICS -->
-      <div class="tooltip-wrapper">
-  <button id="diagnostics-btn" class="btn-secondary btn-icon">
-    <span class="icon-hover">
-        <img src="/assets/icon-chart-before.png" class="before">
-        <img src="/assets/icon-chart-after.png" class="after">
-    </span>
-    <span>Diagnostics - See your improvement through Graphs & Analytics</span>
-  </button>
-
-  <div class="tooltip">
-    Track your progress & identify weak areas
-  </div>
+        <h3>Identify Weak Areas</h3>
 </div>
+        <p>
+          Diagnostics and analytics show exactly what needs improvement.
+        </p>
+      </div>
+
+      <div class="how-card reveal-on-scroll">
+        <div class="how-card-header">
+        <div class="how-number">3</div>
+
+        <h3>Improve Faster</h3>
+</div>
+        <p>
+          Adaptive practice focuses on concepts you struggle with most.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="how-video">
+
+      <!-- YOUTUBE EMBED -->
+      <iframe
+        src="https://www.youtube.com/embed/L9Lq_mPNJYo"
+        title="Winnowic Demo"
+        frameborder="0"
+        allowfullscreen>
+      </iframe>
+
+      <!-- OR LOCAL VIDEO -->
+      <!--
+      <video controls>
+        <source src="videos/winnowic-demo.mp4" type="video/mp4">
+      </video>
+      -->
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DIAGNOSTICS PREVIEW -->
+<!-- ========================= -->
+
+<section class="stats-section reveal-on-scroll">
+
+  <div class="stats-content">
+
+    <div class="stats-left">
+
+      <span class="stats-label">
+        PERFORMANCE ANALYTICS
+      </span>
+
+      <h2>
+        Track Your Improvement Over Time
+      </h2>
+
+      <p>
+        Winnowic diagnostics help students identify weak areas, estimate scores, and improve faster with targeted practice.
+      </p>
+
+      <div class="stat-row">
+
+        <div class="stat-box">
+          <div class="stat-number" data-target="92">0</div>
+          <div class="stat-text">
+            Practice Accuracy Tracking
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-number" data-target="4">0</div>
+          <div class="stat-text">
+            Major Exams Supported
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="stats-right">
+
+      <div class="analytics-preview">
+
+        <div class="fake-chart">
+
+          <div class="chart-line"></div>
+
+          <div class="chart-dot dot-1"></div>
+          <div class="chart-dot dot-2"></div>
+          <div class="chart-dot dot-3"></div>
+          <div class="chart-dot dot-4"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MAIN CONTENT -->
+
+
+
+<div class="premium-hero">
+
+  <div class="premium-text">
+    <p class="premium-badge">Winnowic Premium</p>
+
+    <h2>
+      Smarter SAT Prep Built Around
+      <span>Your Weaknesses</span>
+    </h2>
+
+    <p class="premium-description">
+      Unlock adaptive quizzes, advanced diagnostics, score tracking,
+      improvement history, streaks, and targeted practice built from your real performance.
+    </p>
+
+    <div class="premium-features">
+      <div class="feature-pill">500+ Hard SAT Math Questions</div>
+      <div class="feature-pill">Adaptive Weakness Targeting</div>
+      <div class="feature-pill">Track Progress Over Time</div>
+      <div class="feature-pill">Unit Accuracy Breakdowns</div>
+      <div class="feature-pill">Improvement Calculators</div>
+      <div class="feature-pill">Current + Best Streaks</div>
+    </div>
+  </div>
+
+  <div class="premium-actions">
+
+    <button id="upgrade-btn-global" class="premium-upgrade-btn">
+      Upgrade to Premium — Starting at $5
+    </button>
+
+    <button
+      id="diagnostics-btn"
+      class="premium-diagnostics-btn"
+      onclick="window.location.href='diagnostics.html'"
+    >
+      View Diagnostics Demo
+    </button>
+
+  </div>
+
+</div>
+
+<div class="container">
+<div id="quiz-container" class="card quiz-shell">
+  <!-- QUIZ SECTION -->
+<div id="quiz-section" class="scroll-target">
       <!-- UPGRADE -->
     </div>
 
@@ -129,16 +335,20 @@
 
     <!-- SETTINGS CARD -->
     <div class="card">
-        <h2>Select Your Practice</h2>
+      <div class="practice-header">
 
-        <div class="timer-row">
-          <label class="toggle-container">
-            <span>Timer</span>
-            <input type="checkbox" id="timerToggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
+  <h2>Select Your Practice</h2>
 
+  <div class="timer-row">
+    <label class="toggle-container">
+      <span>Timer</span>
+      <input type="checkbox" id="timerToggle" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+</div>
+<div class="quiz-select-row">
 
         <label>Exam:</label>
         <select id="exam-select">
@@ -153,7 +363,7 @@
         <select id="time-select" disabled></select>
      <label id="label-unit">Unit:</label>
         <select id="unit-select" disabled></select>
-
+</div>
         <button id="start-quiz-btn" class="btn-primary btn-icon">
             <img src="/assets/icon-play.png" class="icon">
             Start Quiz
@@ -169,7 +379,10 @@
     <img src="/assets/icon-timer.png" class="icon" >
     Time Remaining: <span id="timeRemaining">00:00</span>
   </div>
-
+<div class="top-right-controls">
+  <button id="flag-btn" class="flag-btn" aria-label="Flag Question">
+  <span class="flag-icon"></span>
+</button>
   <button id="report-btn" class="report-btn btn-icon">
   <span class="icon-hover">
     
@@ -178,19 +391,20 @@
   <span>Report</span>
 </button>
 </div>
-
+</div>
+<div id="progress-container"></div>
 
         <div id="question-image-container">
             <img id="question-image">
         </div>
 
         <h2 id="question"></h2>
-
+<div class="answers-grid">
         <button id="choice-a" style="display:none"></button>
         <button id="choice-b" style="display:none"></button>
         <button id="choice-c" style="display:none"></button>
         <button id="choice-d" style="display:none"></button>
-
+</div>
         <div id="grid-container" style="display:none">
             <input id="grid-input">
             <span id="grid-result"></span>
@@ -198,22 +412,34 @@
         </div>
 
         <div id="explanation"></div>
-        <button id="next-btn"style="display:none;">Next</button>
+
+<div class="question-nav-controls">
+    <button id="prev-btn">Previous</button>
+    <button id="next-nav-btn">Next</button>
+</div>
 
  <div class="progress-bar-bg">
             <div id="progress-bar"></div>
         </div>
-
-        <div id="progress-container"></div>
+<div id="question-palette"></div>
         <div id="exam-readiness"></div>
         <div id="weak-areas-container"></div>
-
+        <div id="review-container"></div>
     </div>
 
     <!-- PROGRESS CARD -->
     
         <div class="card" id="history-container"><h3>Past Attempts</h3></div>
-    
+
+<div id="section-transition" class="transition-overlay" style="display:none;">
+  <div class="transition-card">
+    <p id="transition-text"></p>
+    <button id="transition-continue" class="btn-primary">Continue</button>
+  </div>
+</div> 
+  </div>
+</div>
+
 <div class="feedback-section">
   <p class="feedback-title">Have feedback?</p>
   <p class="feedback-desc">
@@ -227,17 +453,6 @@
         </span>
         <span>Send Feedback</span>
       </button>
-</div>
-
-
-<div id="section-transition" class="transition-overlay" style="display:none;">
-  <div class="transition-card">
-    <p id="transition-text"></p>
-    <button id="transition-continue" class="btn-primary">Continue</button>
-  </div>
-</div> 
-  </div>
-
 </div>
 
 
@@ -261,7 +476,7 @@
 </div>
   </div>
 </div>
-
+</div>
 <div class="social-section">
   <div class="social-card">
     <h3>See Winnowic in action</h3>
