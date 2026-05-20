@@ -5525,3 +5525,221 @@ left: 10px;
 .how-number {
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+
+/* =========================
+   GLOBAL
+========================= */
+
+body {
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.site-header {
+  padding: 0.7rem 0.8rem;
+  gap: 0.5rem;
+}
+
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  gap: 0.45rem;
+  flex-shrink: 1;
+}
+
+.header-logo {
+  height: 34px;
+  max-width: 120px;
+  object-fit: contain;
+}
+
+#diagnostics-btn,
+#header-auth-btn {
+  font-size: 0.72rem;
+  padding: 0.5rem 0.7rem;
+  white-space: nowrap;
+}
+
+#header-auth-btn {
+  max-width: 110px;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero-section {
+  padding-top: 5.5rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+}
+
+.hero-content {
+  width: 100%;
+}
+
+.hero-title {
+  font-size: 2.2rem;
+  line-height: 1.1;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.hero-subtext {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.hero-buttons {
+  width: 100%;
+}
+
+.primary-btn {
+  width: 100%;
+  max-width: 320px;
+  font-size: 1rem;
+}
+
+/* =========================
+   HOW SECTION
+========================= */
+
+.how-layout {
+  flex-direction: column;
+}
+
+.how-video-wrapper {
+  width: 100%;
+}
+
+.how-video-wrapper iframe {
+  width: 100%;
+  height: 220px;
+}
+
+.how-grid {
+  width: 100%;
+}
+
+/* =========================
+   DIAGNOSTICS PAGE FIX
+========================= */
+
+.diagnostics-container,
+.diagnostics-page,
+.dashboard-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* =========================
+   PRICING PAGE
+========================= */
+
+.pricing-page {
+  overflow-x: hidden;
+}
+
+.pricing-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.pricing-title {
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.pricing-subtitle {
+  font-size: 1rem;
+}
+
+.pricing-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.plan {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.modern-plan {
+  padding: 1.4rem;
+}
+
+.price {
+  font-size: 2.2rem;
+}
+
+.modern-feature-list {
+  padding-left: 1rem;
+}
+
+.premium-main-btn,
+.ap-buttons button,
+#all-exams-btn {
+  width: 100%;
+}
+
+.ap-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.pricing-back-btn {
+  width: 100%;
+}
+
+.pricing-disclaimer {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  padding-bottom: 2rem;
+}
+
+/* =========================
+   BUTTON OVERFLOW FIXES
+========================= */
+
+button {
+  max-width: 100%;
+}
+
+/* =========================
+   PREVENT RANDOM SIDE SCROLL
+========================= */
+
+img,
+iframe,
+video {
+  max-width: 100%;
+}
+
+}
