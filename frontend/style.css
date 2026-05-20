@@ -5810,3 +5810,92 @@ video {
   }
 
 }
+
+.diagnostics-preview-btn{
+
+  width:fit-content !important;
+
+  min-width:0 !important;
+
+  max-width:100%;
+
+  flex:0 0 auto;
+
+  padding:0 18px !important;
+
+  height:52px;
+
+  white-space:nowrap;
+}
+
+.diagnostics-control-top{
+  align-items:flex-start;
+}
+
+.diagnostics-control-top > *{
+  min-width:0;
+}
+
+.unit-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  gap:14px;
+
+  min-width:0;
+}
+
+.unit-card-header > div:first-child{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+.unit-card-title{
+  overflow-wrap:break-word;
+  word-break:break-word;
+
+  min-width:0;
+}
+
+.unit-card-right{
+
+  display:flex;
+  align-items:center;
+
+  gap:8px;
+
+  flex-shrink:0;
+
+  margin-left:auto;
+}
+
+@media (max-width: 700px){
+
+  .unit-card-header{
+    gap:10px;
+  }
+
+  .unit-streak-pill{
+
+    padding:6px 10px;
+
+    font-size:11px;
+
+    min-width:unset;
+
+    max-width:120px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .unit-expand-btn{
+
+    width:36px;
+    height:36px;
+
+    flex-shrink:0;
+  }
+
+}
