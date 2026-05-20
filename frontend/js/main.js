@@ -1,9 +1,19 @@
 import { initAuthListener, login, logout, signUp } from './auth.js';
-import { loadQuestions, selectAnswer, nextQuestion} from './quiz.js';
+import {
+    loadQuestions,
+    selectAnswer,
+    nextQuestion,
+    toggleFlag,
+    goToQuestion,
+    getCurrentQuestionIndex
+} from './quiz.js';
 import { supabase } from './supabase.js';
 import { initQuizSettings } from "./quizSettings.js";
 import { checkExamAccess, getUserExams } from "./subscription.js";
 import { startQuiz } from "./quiz.js";
+import {
+    checkSectionCompletion
+} from "./quiz.js";
 let currentMode = "normal";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -31,6 +41,17 @@ modeDiagnostic.addEventListener("click", () => setMode("diagnostic"));
 examSelect.addEventListener("change", () => {
     updateStartButtonState();
 });
+
+document.getElementById("prev-btn")
+.addEventListener("click", () => {
+
+    goToQuestion(getCurrentQuestionIndex() - 1); // line 48
+
+});
+
+document.getElementById("flag-btn")
+.addEventListener("click", toggleFlag);
+
 
 document.getElementById("mode-normal").addEventListener("click", () => {
     currentMode = "normal";
@@ -390,4 +411,134 @@ setTimeout(() => {
 
     document.getElementById("next-btn")?.addEventListener("click", nextQuestion);
     updateStartButtonState();
+
+    /* ========================= */
+/* HERO CTA SCROLL */
+/* ========================= */
+
+const heroStartBtn = document.getElementById("hero-start-btn");
+
+if (heroStartBtn) {
+
+  heroStartBtn.addEventListener("click", () => {
+
+    const target = document.getElementById("quiz-section");
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+  });
+
+}
+
+/* ========================= */
+/* SCROLL REVEAL ANIMATIONS */
+/* ========================= */
+
+const revealElements = document.querySelectorAll(".reveal-on-scroll");
+
+const revealObserver = new IntersectionObserver(
+
+  (entries) => {
+
+    entries.forEach((entry) => {
+
+      if (entry.isIntersecting) {
+
+        entry.target.classList.add("reveal-visible");
+
+      }
+
+    });
+
+  },
+
+  {
+    threshold: 0.12
+  }
+
+);
+
+revealElements.forEach((el) => {
+  revealObserver.observe(el);
+});
+
+/* ========================= */
+/* ANIMATED STATS */
+/* ========================= */
+
+const statNumbers = document.querySelectorAll(".stat-number");
+
+const statObserver = new IntersectionObserver(
+
+  (entries) => {
+
+    entries.forEach((entry) => {
+
+      if (!entry.isIntersecting) return;
+
+      const el = entry.target;
+
+      const target = Number(el.dataset.target);
+
+      let current = 0;
+
+      const increment = target / 40;
+
+      const updateCounter = () => {
+
+        current += increment;
+
+        if (current >= target) {
+
+          el.textContent = target;
+
+        } else {
+
+          el.textContent = Math.floor(current);
+
+          requestAnimationFrame(updateCounter);
+
+        }
+
+      };
+
+      updateCounter();
+
+      statObserver.unobserve(el);
+
+    });
+
+  },
+
+  {
+    threshold: 0.4
+  }
+
+);
+
+statNumbers.forEach((stat) => {
+  statObserver.observe(stat);
+});
+
+const floatingCTA = document.getElementById("floating-cta");
+const quizSection = document.getElementById("quiz-section");
+
+if (floatingCTA && quizSection) {
+  floatingCTA.addEventListener("click", () => {
+    quizSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  });
+}
+
+document.getElementById("header-auth-btn").onclick = () => {
+  window.location.href = "/auth.html?mode=signup";
+};
+
 });
