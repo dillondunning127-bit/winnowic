@@ -1,4 +1,12 @@
 /* ===== GLOBAL ===== */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
 body {
     font-family: 'Inter', sans-serif;
 scroll-behavior: smooth;
@@ -1954,9 +1962,9 @@ border-bottom-right-radius: 40px;
   transform: translateY(-10px);
 
   animation: heroFloat 4s ease-in-out infinite;
+}
 
-  @keyframes heroFloat {
-
+@keyframes heroFloat {
   0% {
     transform: translateY(-10px);
   }
@@ -1968,8 +1976,6 @@ border-bottom-right-radius: 40px;
   100% {
     transform: translateY(-10px);
   }
-
-}
 }
 
 @keyframes authFade {
@@ -2563,7 +2569,7 @@ border-bottom-right-radius: 40px;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-    position: center
+    
 }
 
 .floating-cta:hover {
@@ -2670,6 +2676,12 @@ border-bottom-right-radius: 40px;
 body {
     margin: 0;
     min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+}
+
+.auth-page {
+    min-height: 100vh;
 
     background:
         linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
@@ -2678,7 +2690,16 @@ body {
     background-size: cover;
     background-position: center;
 
-    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img,
+select,
+input,
+button {
+    max-width: 100%;
 }
 
 .auth-card {
