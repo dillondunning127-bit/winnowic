@@ -4,13 +4,12 @@ import { checkExamAccess } from "./subscription.js";
 let readinessChart = null;
 
 let examSelect;
-let unitSelect;
+
 let resultsDiv;
 // 🔥 PREVIEW MODE STATE
 let PREVIEW_MODE = false;
 let PREVIEW_USER_ID = "d43d7ca0-7beb-4e58-b724-c4b3e993c317"; // 🔥 your Supabase user id
 let PREVIEW_EXAM = null;
-let PREVIEW_UNIT = null;
 
 window.addEventListener("DOMContentLoaded", async () => {
   // 🔥 Detect which page we're on
@@ -19,45 +18,25 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 // 🔥 PREVIEW BUTTONS
 const previewFullBtn = document.getElementById("preview-full");
-const previewUnitBtn = document.getElementById("preview-unit");
-if(previewUnitBtn){
+
+if(previewFullBtn){
 previewFullBtn.onclick = async () => {
   PREVIEW_MODE = true;
 
   enablePreviewUI();
 
   PREVIEW_EXAM = "SAT_MATH";
-  PREVIEW_UNIT = "ALL";
 
   examSelect.value = "SAT_MATH";
-  await loadUnits();
-
-  unitSelect.value = "ALL";
+ 
   loadDiagnostics();
 };
 }
-if (previewUnitBtn) {
-  previewUnitBtn.onclick = async () => {
-  PREVIEW_MODE = true;
 
-  enablePreviewUI();
-
-  PREVIEW_EXAM = "SAT_MATH";
-  PREVIEW_UNIT = "GEOMETRY_TRIGONOMETRY";
-
-  examSelect.value = "SAT_MATH";
-  await loadUnits();
-
-  unitSelect.value = PREVIEW_UNIT;
-  loadDiagnostics();
-};
-}
 
 
   // Pick whichever exists
   examSelect = examSelectIndex || examSelectDiag;
-
-  unitSelect = document.getElementById("unitSelect");
   resultsDiv = document.getElementById("diagnosticResults");
 
   // 🚨 HARD GUARD — if no examSelect, STOP
@@ -76,16 +55,10 @@ if (previewUnitBtn) {
 
   await updateExamLocks();
 if (examSelect) {
-  examSelect.addEventListener("change", loadUnits);
+  examSelect.addEventListener("change", loadDiagnostics);
 }
 
-if (unitSelect) {
-  unitSelect.addEventListener("change", loadDiagnostics);
-} // line 37
 // 🔥 ALSO LOAD ON INITIAL PAGE LOAD
-if (examSelect) {
-  await loadUnits();
-}
 });
 
 async function loadSnapshots(exam, unit) {
@@ -197,132 +170,176 @@ export async function updateUserStats(user, exam, isCorrect) {
 }
 
 export async function maybeCreateSnapshot({ user, exam, unit }) {
+
+const examArrayValue = getExamArrayValue(exam);
+
+console.log("examArrayValue RAW:", examArrayValue);
+console.log("isArray?", Array.isArray(examArrayValue));
+
+if (!examArrayValue) {
+  console.error("Missing examArrayValue", exam);
+  return;
+}
+
+  console.log("SNAPSHOT USER:", user);
+
+if (!user || !user.id) {
+  console.error("❌ snapshot blocked: missing user");
+  return;
+}
   try {
     console.log("🔥 snapshot trigger fired", { user, exam, unit });
 
-    // 1. Get total attempts for this exam (ARRAY SAFE QUERY)
-    const { data: attempts, count, error: attemptsError } = await supabase
-      .from("topic_attempts")
-      .select("is_correct", { count: "exact" })
-      .eq("user_id", user.id)
-      .contains("exams", [exam]);
-if (count % 20 !== 0) return;
-    if (attemptsError) {
-      console.error("❌ attempts query error:", attemptsError);
-      return;
-    }
-
-    console.log("📊 topic_attempt count:", count);
-
-    if (!count || count < 20) return;
-
-    // 2. Calculate accuracy directly (NO user_stats table)
-    const total_attempted = attempts?.length || 0;
-    const total_correct = attempts?.filter(a => a.is_correct).length || 0;
-
-   const accuracy =
-  total_attempted === 0
-    ? 0
-    : Number(total_correct / total_attempted);
-
-    if (!Number.isFinite(accuracy)) {
-  console.error("❌ Invalid accuracy:", accuracy);
-  return;
-}
-    // 3. Get predicted score safely
-// 3. Get predicted score safely (FINAL FIX)
-let predicted_score = null;
-
-const safeAccuracy = Number(accuracy);
-
-if (Number.isFinite(safeAccuracy)) {
-
-  // 🔥 FIX: convert + ROUND to clean SQL-safe number
-  const readinessPercent = await calculateExamReadiness(exam);
-
-  const { data: scoreRow, error: scoreError } = await supabase
-    .from("exam_score_lookup")
-    .select("predicted_score, percent_correct")
-    .eq("exam", exam)
-    .lte("percent_correct", readinessPercent)
-    .order("percent_correct", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (scoreError) {
-    console.error("❌ score lookup error:", scoreError);
-  }
-
-  if (scoreRow) {
-    predicted_score = scoreRow.predicted_score;
-  }
-
-} else {
-  console.error("❌ skipping score lookup due to invalid accuracy");
-}
-
-    // 4. Insert GLOBAL snapshot (ALL units)
-    const { error: insertError1 } = await supabase
-      .from("progress_snapshots")
-      .insert({
-        user_id: user.id,
-        exam,
-        unit: null,
-        questions_answered: total_attempted,
-        accuracy,
-        predicted_score
-      });
-
-    if (insertError1) {
-      console.error("❌ snapshot insert error (global):", insertError1);
-    }
-
-    // 5. UNIT snapshot (only if valid unit exists)
-    // 🔥 COUNT UNIT ATTEMPTS CORRECTLY
-}
-  catch (err) {
-    console.error("❌ maybeCreateSnapshot crashed:", err);
-  }
-  
-// 🔥 GET LAST 20 UNIT ATTEMPTS (THIS WAS MISSING)
-const { data: unitAttempts } = await supabase
+    const { data: attempts, error: attemptsError } = await supabase
   .from("topic_attempts")
   .select("is_correct")
   .eq("user_id", user.id)
-  .contains("exams", [exam])
-  .eq("unit", unit)
-  .order("created_at", { ascending: false })
-  .limit(20);
+.contains("exams",[examArrayValue]);
 
-// 🔥 COUNT TOTAL UNIT ATTEMPTS
-const { count: unitCount } = await supabase
-  .from("topic_attempts")
-  .select("*", { count: "exact", head: true })
+const count = attempts?.length || 0;
+
+    if (attemptsError) {
+  console.error("attemptsError:", attemptsError);
+  return;
+}
+
+    if (!count || count < 20) return;
+
+const snapshotThreshold =
+  Math.floor(count / 20) * 20;
+
+const { data: existingSnapshot } = await supabase
+  .from("progress_snapshots")
+  .select("id")
   .eq("user_id", user.id)
-  .contains("exams", [exam])
-  .eq("unit", unit);
+  .eq("exam", exam)
+  .is("unit", null)
+  .eq("questions_answered", snapshotThreshold)
+  .maybeSingle();
 
-// Only snapshot every 20 UNIT attempts
-if (unitCount % 20 === 0 && unitCount >= 20 && unitAttempts?.length === 20) {
+if (existingSnapshot) return;
 
-  const correct = unitAttempts.filter(x => x.is_correct).length;
-  const unitAccuracy = correct / 20;
+    const total_attempted = attempts.length;
+    const total_correct = attempts.filter(a => a.is_correct).length;
 
-  const { error: unitInsertError } = await supabase
+    const accuracy = total_correct / total_attempted;
+
+    let predicted_score = null;
+
+    const readinessPercent = await calculateExamReadiness(exam);
+
+    const { data: scoreRow } = await supabase
+      .from("exam_score_lookup")
+      .select("predicted_score")
+      .eq("exam", exam)
+      .lte("percent_correct", readinessPercent)
+      .order("percent_correct", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (scoreRow) predicted_score = scoreRow.predicted_score;
+
+    await supabase.from("progress_snapshots").insert({
+      user_id: user.id,
+      exam,
+      unit: null,
+      questions_answered: snapshotThreshold,
+      accuracy,
+      predicted_score
+    });
+
+    // =========================
+// UNIT SNAPSHOTS (AUTO DETECT ALL UNITS)
+// =========================
+
+const { data: allUnits, error: unitsError } = await supabase
+  .from("topic_attempts")
+  .select("unit")
+  .eq("user_id", user.id)
+  .contains("exams", [examArrayValue]);
+
+if (unitsError) {
+  console.error("unitsError:", unitsError);
+  return;
+}
+
+// distinct unique units only
+const uniqueUnits = [
+  ...new Set(
+    allUnits
+      ?.map(x => x.unit)
+      .filter(Boolean)
+  )
+];
+
+for (const unitName of uniqueUnits) {
+
+  const { data: unitAttempts } = await supabase
+    .from("topic_attempts")
+    .select("is_correct")
+    .eq("user_id", user.id)
+    .eq("unit", unitName)
+    .contains("exams", [examArrayValue])
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  const { count: unitCount } = await supabase
+    .from("topic_attempts")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .eq("unit", unitName)
+    .contains("exams", [examArrayValue]);
+console.log("UNIT DEBUG:", {
+  unitName,
+  unitCount,
+  attemptsLength: unitAttempts?.length
+});
+  if (
+  unitCount &&
+  unitCount >= 20 &&
+  unitAttempts?.length === 20
+) {
+
+  const unitSnapshotThreshold =
+    Math.floor(unitCount / 20) * 20;
+
+  // prevent duplicates
+  const { data: existingUnitSnapshot } = await supabase
+    .from("progress_snapshots")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("exam", exam)
+    .eq("unit", unitName)
+    .eq("questions_answered", unitSnapshotThreshold)
+    .maybeSingle();
+
+  if (existingUnitSnapshot) continue;
+
+  const correct =
+    unitAttempts.filter(x => x.is_correct).length;
+
+  await supabase
     .from("progress_snapshots")
     .insert({
       user_id: user.id,
       exam,
-      unit,
-      questions_answered: unitCount,
-      accuracy: unitAccuracy,
+      unit: unitName,
+      questions_answered: unitSnapshotThreshold,
+      accuracy: correct / 20,
       predicted_score: null
     });
 
-  if (unitInsertError) {
-    console.error("❌ unit snapshot insert error:", unitInsertError);
-  }
+  console.log(
+    "✅ UNIT SNAPSHOT CREATED:",
+    unitName,
+    unitSnapshotThreshold
+  );
 }
+}
+
+  } catch (err) {
+    console.error("snapshot crashed:", err);
+  }
 }
 
 let progressChart = null;
@@ -414,7 +431,7 @@ pointBorderColor: "#FF6B00",
 export async function renderDiagnostics(data) {
 
   const exam = examSelect.value;
-  const unit = unitSelect.value;
+  
 
   const selectedOption = examSelect.selectedOptions[0];
 
@@ -689,10 +706,12 @@ return readinessPercent;
 export async function loadUnits() {
 
   const exam = examSelect.value;
-  unitSelect.innerHTML = `
+  if (unitSelect) {
+  unitSelect.innerHTML =  `
+  
   <option value="">Select Unit</option>
   <option value="ALL">All Units</option>
-`;
+`};
 
   if (!exam) return;
 
@@ -741,28 +760,26 @@ uniqueUnits.forEach(unit => {
 
   option.textContent =
     unit.replaceAll("_", " ").replace("UNIT", "Unit ");
-
+if(unitSelect){
   unitSelect.appendChild(option);
-
+}
 });
 }
 
 export async function loadDiagnostics() {
 
-  if (!examSelect || !unitSelect || !resultsDiv) {
+  if (!examSelect || !resultsDiv) {
     console.log("Elements not ready yet");
     return;
   }
 
   const exam = examSelect.value;
-  const unit = unitSelect.value;
   const examArrayValue = getExamArrayValue(exam);
 
   const chartContainer = document.getElementById("readinessChartContainer");
   const readinessEl = document.getElementById("readinessScore");
   const centerScore = document.getElementById("chartCenterScore");
 
-  // 🔥 RESET UI EVERY TIME
   resultsDiv.innerHTML = "";
   resultsDiv.style.display = "none";
 
@@ -818,12 +835,6 @@ if (!hasAccess) {
 
   // ❗ NOW safe to render anything
 
-  if (!unit) {
-    resultsDiv.innerHTML = "<p>Please select a unit.</p>";
-    resultsDiv.style.display = "block";
-    return;
-  }
-
 let userId;
 
   if (PREVIEW_MODE) {
@@ -832,59 +843,16 @@ let userId;
     const { data: { user } } = await supabase.auth.getUser();
     userId = user.id;
   }
-
-  // 🔥 ALL UNITS VIEW
-  if (unit === "ALL") {
-
+  
     const { data: allStats } = await supabase
-      .from("topic_stats")
-      .select("*")
-      .contains("exams", [examArrayValue])
-      .eq("user_id", userId);
+  .from("topic_stats")
+  .select("*")
+  .contains("exams", [examArrayValue])
+  .eq("user_id", userId);
 
-    await renderAllUnits(allStats || [], exam); // line 818
+await renderAllUnits(allStats || [], exam);
 
     return;
-  }
-
-  // 🔥 SINGLE UNIT VIEW
-
-resultsDiv.style.display = "block";
-document.getElementById("readiness-container").style.display = "block";
-document.getElementById("readinessPercentContainer").style.display = "none";
-document.getElementById("largestImprovement").style.display = "none";
-  let { data, error } = await supabase
-    .from("topic_stats")
-    .select("*")
-    .contains("exams", [examArrayValue])
-    .eq("unit", unit)
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (error) {
-    console.error(error); //875
-    resultsDiv.innerHTML = "<p>Error loading data.</p>";
-    return;
-  }
-
-  if (!data) {
-    data = {
-      unit: unit,
-      current_streak: 0,
-      best_streak: 0
-    };
-  }
-
-const snapshots = await loadProgressSnapshots(exam, unit);
-
-const linelabels = snapshots.map(s => s.questions_answered);
-
-const dataPoints =
-  unit === "ALL"
-    ? snapshots.map(s => s.predicted_score)
-    : snapshots.map(s => Math.round(s.accuracy * 100));
-    renderProgressChart(linelabels, dataPoints, unit === "ALL" ? "Score" : "Accuracy %");
-  renderDiagnostics(data);
 }
 async function renderAllUnits(dataArray, exam) {
 
@@ -899,7 +867,26 @@ calculateExamReadiness(exam);
   const scoreData = snapshots.map(s => Math.round(s.predicted_score || 0));
 
   const container = document.getElementById("diagnosticResults");
-  container.innerHTML = "";
+  container.innerHTML = `
+
+  <div class="units-section-header">
+
+    <div class="units-section-badge">
+      Unit Performance Analytics
+    </div>
+
+    <h2 class="units-section-title">
+      Track Every Unit Individually
+    </h2>
+
+    <p class="units-section-description">
+      Updates every <strong>20 questions</strong> of a unit (like Algebra) so you can track how you're improving not just overall,
+      but within your <strong>specific areas to study effectively and efficiently.</strong>
+    </p>
+
+  </div>
+
+`;
   container.style.display = "block";
 document.getElementById("readinessPercentContainer").style.display = "block";
   const chartContainer = document.getElementById("readinessChartContainer");
@@ -988,49 +975,188 @@ renderProgressChart(linelabels, scoreData, "Predicted Score");
 div.classList.add("unit-card");
 
     div.innerHTML = `
-  <div style="
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    background: white;
-    border-left: 5px solid ${
-      percent >= 75 ? "#2E7D32" :
-      percent >= 60 ? "#FF8F00" :
-      "#C62828"
-    };
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  ">
+  <div class="unit-card-modern">
 
-    <div style="font-weight:600; font-size:15px;">
-      ${formatUnit(w.unit)} — ${percent}%
+    <!-- TOP ROW -->
+    <div class="unit-card-header">
+
+      <div class="unit-card-left">
+        <div class="unit-card-title">
+          ${formatUnit(w.unit)}
+        </div>
+
+        <div class="unit-card-subtitle">
+          ${percent}% Accuracy
+        </div>
+      </div>
+
+      <div class="unit-card-right">
+
+        <div class="unit-streak-pill">
+          ${streak} Question Streak
+        </div>
+
+        <button class="unit-expand-btn">
+          <div class="expand-arrow">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <polyline points="6 9 12 15 18 9"></polyline>
+  </svg>
+</div>
+        </button>
+
+      </div>
+
     </div>
 
-    <div style="font-size:13px; color:#666; margin-top:4px;">
-      Streak: ${streak}
+    <!-- PROGRESS BAR -->
+    <div class="unit-progress-bg">
+      <div class="unit-progress-fill"
+        style="
+          width:${percent}%;
+          background:${
+            percent >= 75 ? "#2E7D32" :
+            percent >= 60 ? "#FF8F00" :
+            "#C62828"
+          };
+        ">
+      </div>
     </div>
 
-    <div style="
-      width: 100%;
-      background: #eee;
-      height: 8px;
-      border-radius: 4px;
-      margin-top: 8px;
-    ">
-      <div style="
-        width: ${percent}%;
-        height: 100%;
-        border-radius: 4px;
-        background: ${
-          percent >= 75 ? "#2E7D32" :
-          percent >= 60 ? "#FF8F00" :
-          "#C62828"
-        };
-      "></div>
+    <!-- DROPDOWN -->
+    <div class="unit-dropdown">
+
+      <div class="unit-dropdown-grid">
+
+        <div class="unit-dropdown-stat">
+          <div class="dropdown-stat-label">
+            Current Streak
+          </div>
+
+          <div class="dropdown-stat-value">
+            ${stats?.current_streak || 0}
+          </div>
+        </div>
+
+        <div class="unit-dropdown-stat">
+          <div class="dropdown-stat-label">
+            Best Streak
+          </div>
+
+          <div class="dropdown-stat-value">
+            ${stats?.best_streak || 0}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="unit-mini-chart-wrapper">
+        <canvas id="chart-${w.unit}"></canvas>
+      </div>
+
     </div>
 
   </div>
 `;
 container.appendChild(div);
+const expandBtn = div.querySelector(".unit-expand-btn");
+const dropdown = div.querySelector(".unit-dropdown");
+const arrow = div.querySelector(".expand-arrow");
+
+let expanded = false;
+
+expandBtn.addEventListener("click", async () => {
+
+  expanded = !expanded;
+
+  dropdown.classList.toggle("open");
+
+  arrow.style.transform = expanded
+    ? "rotate(180deg)"
+    : "rotate(0deg)";
+
+  // ONLY render chart first open
+  if (expanded && !dropdown.dataset.loaded) {
+
+    const unitSnapshots = await loadProgressSnapshots(exam, w.unit);
+
+    const labels = unitSnapshots.map(s => s.questions_answered);
+
+    const points = unitSnapshots.map(s =>
+      Math.round((s.accuracy || 0) * 100)
+    );
+
+    const canvas = document.getElementById(`chart-${w.unit}`);
+
+    if (canvas) {
+
+      new Chart(canvas.getContext("2d"), {
+
+        type: "line",
+
+        data: {
+          labels,
+          datasets: [{
+            data: points,
+            borderColor: "#FF6B00",
+            pointBackgroundColor: "#FF6B00",
+pointBorderColor: "#FF6B00",
+            borderWidth: 3,
+            tension: 0.25,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+
+        options: {
+
+          responsive: true,
+
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+
+          scales: {
+
+            x: {
+              title: {
+                display: true,
+                text: "Questions Answered"
+              }
+            },
+
+            y: {
+              min: 0,
+              max: 100,
+
+              title: {
+                display: true,
+                text: "Accuracy %"
+              }
+            }
+
+          }
+
+        }
+
+      });
+
+    }
+
+    dropdown.dataset.loaded = "true";
+  }
+
+});
   }
 
 
@@ -1173,11 +1299,10 @@ async function exitPreviewMode() {
   // turn off preview state
   PREVIEW_MODE = false;
   PREVIEW_EXAM = null;
-  PREVIEW_UNIT = null;
 
   // re-enable dropdowns
   examSelect.disabled = false;
-  unitSelect.disabled = false;
+
 
   // clear UI
   resultsDiv.innerHTML = "";
@@ -1197,7 +1322,6 @@ resultsDiv.style.display = "none";
 
   // reset dropdowns (blank state)
   examSelect.value = "";
-  unitSelect.innerHTML = `<option value="">Select Unit</option>`;
 
   // hide preview banner
   const banner = document.getElementById("preview-banner");
@@ -1227,5 +1351,4 @@ function enablePreviewUI() {
   }
 
   examSelect.disabled = true;
-  unitSelect.disabled = true;
 }
