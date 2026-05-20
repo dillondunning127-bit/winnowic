@@ -5796,22 +5796,7 @@ video {
 
 }
 
-.premium-diagnostics-btn{
 
-  width:fit-content !important;
-
-  min-width:0 !important;
-
-  max-width:100%;
-
-  flex:0 0 auto;
-
-  padding:0 18px !important;
-
-  height:52px;
-
-  white-space:nowrap;
-}
 
 .diagnostics-control-top{
   align-items:flex-start;
@@ -5887,16 +5872,19 @@ video {
 
 .premium-diagnostics-btn {
 
-  width: auto !important;
-  min-width: unset !important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  padding: 10px 14px !important;
+  width:auto;
 
-  font-size: 14px;
+  min-width:max-content;
 
-  white-space: nowrap;
+  padding:10px 18px !important;
 
-  flex-shrink: 1;
+  white-space:nowrap;
+
+  font-size:14px;
 }
 
 @media (max-width: 768px) {
@@ -5906,51 +5894,60 @@ video {
   .topbar,
   .header-inner {
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 
-    gap: 14px;
+    gap:14px;
   }
 
-  .header-center {
-    order: 1;
+  /* logo row */
+  .header-center{
 
-    width: 100%;
+    order:1;
 
-    display: flex;
-    justify-content: center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:12px;
+
+    width:100%;
   }
 
-  .header-right {
-    order: 2;
-
-    width: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
+  /* gear button LEFT of logo */
+  .header-center .gear-btn{
+    order:1;
   }
 
-  .premium-diagnostics-btn {
-    width: auto !important;
-    min-width: 0 !important;
-
-    padding: 10px 14px !important;
-
-    font-size: 14px;
+  .header-center .header-logo{
+    order:2;
   }
 
-  .gear-btn {
-    flex-shrink: 0;
+  /* bottom buttons */
+  .header-right{
+
+    order:2;
+
+    width:100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+  }
+}
+
+@media (max-width: 768px){
+
+  .premium-diagnostics-btn{
+
+    min-width:0;
+
+    padding:10px 14px !important;
   }
 
-  .header-logo {
-    max-width: 180px;
-    height: auto;
-  }
 }
