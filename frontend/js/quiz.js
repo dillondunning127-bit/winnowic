@@ -5,10 +5,15 @@ import { getExamArrayValue } from "./diagnostics.js";
 import { maybeCreateSnapshot } from "./diagnostics.js";
 import { updateUserStats } from "./diagnostics.js";
 let usedQuestionIds = new Set();
+let allQuizQuestions = [];
 let answerResults = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let currentQuestions = [];
+let userAnswers = {};
+let flaggedQuestions = new Set();
+let quizSubmitted = false;
+let shuffledQuestionData = {};
 let totalQuestions = 0;
 let sectionQuestionCount = 0;
 let sectionQuestionsLoaded = 0;
@@ -26,6 +31,9 @@ let quizConfig = {
     unit: null,
     length: null
 };
+let answeredQuestions = new Set();
+let sectionStartIndex = 0;
+let reviewMode = false;
 import { stopTimer } from "./quizSettings.js";
 
 export async function startQuiz(mode, externalConfig = null) {
@@ -39,7 +47,7 @@ quizConfig = {
     
   console.log("ENTRY:", mode, externalConfig);
     resetQuizState();
-
+showQuizControls();
  let exam;
 
 if (mode === "diagnostic") {
@@ -116,7 +124,7 @@ console.log("Loading sections for:", exam, quizConfig.length);
     unit,
     quizConfig.length
 );
-    console.log("Loaded sections:", examSections);
+    
 }
 
 async function startDiagnosticFlow() {
@@ -176,6 +184,23 @@ async function startAdaptiveFlow() {
 
 
 export function resetQuizState() {
+    reviewMode = false;
+    isTransitioning = false;
+    const overlay = document.getElementById("section-transition");
+if (overlay) overlay.style.display = "none";
+allQuizQuestions = [];
+userAnswers = {};
+flaggedQuestions = new Set();
+quizSubmitted = false;
+shuffledQuestionData = {};
+answerResults = [];
+score = 0;
+answeredQuestions = new Set();
+flaggedQuestions = new Set();
+userAnswers = {};
+const palette = document.getElementById("question-palette");
+if (palette) palette.innerHTML = "";
+
 
     // HARD RESET EVERYTHING (no conditional safety nonsense)
     usedQuestionIds = new Set();
@@ -231,10 +256,14 @@ export async function loadExamSections(exam, quizLength) {
 
 }
  
+function isQuestionInCurrentSection(index) {
+    return true; // temporary placeholder we will refine
+}
+
 export function goToNextSection() {
 
   currentSectionIndex++;
-
+sectionStartIndex = currentQuestions.length;
   if (currentSectionIndex >= examSections.length) {
     finishQuiz();
     return;
@@ -252,12 +281,18 @@ currentQuestionIndex = 0;
     await loadQuestions(exam, unit);
   }
 });
+
+answeredQuestions = new Set();
+flaggedQuestions = new Set();
+renderQuestionPalette();
+renderQuestionNav();
 }
 
 export function showSectionTransition(section, onContinue) {
 
   isTransitioning = true;
-
+answeredQuestions = new Set();
+flaggedQuestions = new Set();
   const overlay = document.getElementById("section-transition");
   const text = document.getElementById("transition-text");
   const btn = document.getElementById("transition-continue");
@@ -287,6 +322,9 @@ currentQuestionIndex = 0;   // 🔥 ADD THIS
   let continued = false;
 
   function proceed() {
+    currentQuestions = [];
+renderQuestionPalette();
+renderQuestionNav();
     if (continued) return;
     continued = true;
 
@@ -296,7 +334,7 @@ currentQuestionIndex = 0;   // 🔥 ADD THIS
 
     questionsInCurrentSection = section.question_count;
     startSectionTimer(section.section_time_seconds);
-
+updateNextButtonState();
     if (onContinue) onContinue();
   }
 
@@ -306,6 +344,7 @@ currentQuestionIndex = 0;   // 🔥 ADD THIS
 
 export async function loadQuestions(exam, unit, quizLength = null) {
  const questionCard = document.getElementById("question-card");
+ renderQuestionPalette();
   if (questionCard) questionCard.style.display = "block";
     if (!examSections || examSections.length === 0) {
         console.error("No sections configured for this exam.");  ///line 274 
@@ -318,7 +357,7 @@ export async function loadQuestions(exam, unit, quizLength = null) {
     document.getElementById("progress-container").textContent = "";
 
     document.getElementById("explanation").textContent = "";
-    document.getElementById("next-btn").style.display = "none";
+   
 
     const section = examSections[currentSectionIndex];
 
@@ -427,7 +466,11 @@ export async function loadQuestions(exam, unit, quizLength = null) {
     selectedQuestions.forEach(q => usedQuestionIds.add(q.id));
 
     // update globals
+    selectedQuestions.forEach(q => {
+    q.sectionIndex = currentSectionIndex;
+});
     currentQuestions = selectedQuestions;
+    allQuizQuestions.push(...selectedQuestions);
     currentQuestionIndex = 0;
 
     showQuestion();
@@ -471,15 +514,64 @@ function shuffleAnswers(questionObj) {
 
     let newCorrectIndex = answers.findIndex(a => a.letter === correctLetter);
 
-    questionObj.correctanswer = ["A","B","C","D"][newCorrectIndex];
 
     return answers;
 }
 
+function prepareQuestion(questionObj) {
+
+    if (shuffledQuestionData[questionObj.id]) {
+        return shuffledQuestionData[questionObj.id];
+    }
+
+    const answers = [
+        { letter: "A", text: questionObj.choice_a },
+        { letter: "B", text: questionObj.choice_b },
+        { letter: "C", text: questionObj.choice_c },
+        { letter: "D", text: questionObj.choice_d }
+    ];
+
+    for (let i = answers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [answers[i], answers[j]] = [answers[j], answers[i]];
+    }
+
+    const correctOriginal = questionObj.correctanswer;
+
+    const correctIndex =
+        answers.findIndex(a => a.letter === correctOriginal);
+
+    const prepared = {
+        shuffledAnswers: answers,
+        correctLetter: ["A","B","C","D"][correctIndex]
+    };
+
+    shuffledQuestionData[questionObj.id] = prepared;
+
+    return prepared;
+}
+
+function renderExplanation(questionObj) {
+    const box = document.getElementById("explanation");
+    if (!box) return;
+
+    if (!reviewMode) {
+        box.textContent = "";
+        return;
+    }
+
+    box.innerHTML = `
+        <div class="explanation-box">
+            ${questionObj.explanation || "No explanation available."}
+        </div>
+    `;
+}
+
 function showQuestion() {
+    
 const reportBtn = document.getElementById("report-btn");
 if (reportBtn) reportBtn.style.display = "inline-flex";
-    animateQuestionChange();
+  
 
     const questionObj = currentQuestions[currentQuestionIndex];
 window.currentQuestionId = questionObj.id;
@@ -496,13 +588,16 @@ window.currentQuestionId = questionObj.id;
     btn.style.display = "block";
 
     // RESET ALL VISUAL STATES
-    btn.style.backgroundColor = "";
+    btn.classList.remove("choice-selected");
     btn.style.opacity = "1";
     btn.style.transform = "scale(1)";
 
     btn.disabled = false;
 });
-
+if (questionObj && !shuffledQuestionData[questionObj.id]) {
+    console.warn("Forcing prepareQuestion fallback:", questionObj.id);
+    prepareQuestion(questionObj);
+}
     // IMAGE SUPPORT
     const imageContainer = document.getElementById("question-image-container");
     const imageElement = document.getElementById("question-image");
@@ -529,7 +624,8 @@ window.currentQuestionId = questionObj.id;
     });
 
     gridContainer.style.display = "block";
-
+gridInput.disabled = false;
+document.getElementById("grid-submit").disabled = false;
     gridInput.value = "";
     gridInput.style.border = ""; // reset border
     document.getElementById("grid-result").textContent = ""; // reset checkmark
@@ -538,7 +634,8 @@ window.currentQuestionId = questionObj.id;
 
         gridContainer.style.display = "none";
 
-        const shuffled = shuffleAnswers(questionObj);
+        const prepared = prepareQuestion(questionObj);
+const shuffled = prepared.shuffledAnswers;
 
 document.getElementById("choice-a").textContent = shuffled[0].text;
 document.getElementById("choice-b").textContent = shuffled[1].text;
@@ -546,213 +643,618 @@ document.getElementById("choice-c").textContent = shuffled[2].text;
 document.getElementById("choice-d").textContent = shuffled[3].text;
 
     }
+ renderSavedAnswer();
+renderExplanation(questionObj);
+renderQuestionNav();
+renderQuestionPalette();
+updateNextButtonState();
+syncFlagButton();
 }
 
-export async function nextQuestion() {
+function renderQuestionPalette() {
+    
+    const palette = document.getElementById("question-palette");
+    if (!palette) return;
 
-    if (isTransitioning) return;
+    palette.innerHTML = "";
 
-    const section = examSections[currentSectionIndex];
+    currentQuestions
+    .filter(q => q.sectionIndex === currentSectionIndex)
+    .forEach((q, index) => {
 
-    currentQuestionIndex++;
-    sectionQuestionsLoaded++;
+        const btn = document.createElement("button");
+        
+        btn.classList.add("palette-btn");
+        btn.classList.remove(
+    "palette-current",
+    "palette-answered",
+    "palette-flagged",
+    "palette-wrong"
+);
+btn.style.backgroundColor = "";
+btn.style.borderColor = "";
+btn.style.color = "";
+        btn.textContent = index + 1;
 
-    // =========================
-    // SECTION COMPLETE
-    // =========================
-    if (sectionQuestionsLoaded >= section.question_count) {
+        const userAnswer = userAnswers[q.id];
+        const prepared = shuffledQuestionData[q.id];
 
-        currentSectionIndex++;
+        if (reviewMode) {
+            let correct;
 
-        if (currentSectionIndex >= examSections.length) {
-            showFinalScore();
-            return;
+if (q.question_format === "GRID") {
+    correct = String(q.correct_numeric_answer).trim();
+} else {
+    correct = prepared.correctLetter;
+}
+
+            if (!userAnswer) {
+                btn.style.backgroundColor = "#9ca3af"; // gray unanswered
+            } else if (String(userAnswer).trim() === correct) {
+                btn.classList.add("palette-answered"); // green correct
+            } else {
+                btn.classList.add("palette-wrong"); // red wrong
+            }
+        } else {
+
+          
+           // CURRENT always wins
+if (index === currentQuestionIndex) {
+    btn.classList.add("palette-current");
+}
+
+// FLAGGED overrides answered
+else if (flaggedQuestions.has(index)) {
+    btn.classList.add("palette-flagged");
+}
+
+else if (answeredQuestions.has(index)) {
+    btn.classList.add("palette-answered");
+}
         }
 
-        const nextSection = examSections[currentSectionIndex];
-
-        sectionQuestionsLoaded = 0;
-        currentQuestionIndex = 0;
-
-        showSectionTransition(nextSection, async () => {
-
-            if (isAdaptiveMode) {
-                await loadAdaptiveQuestionsForSection();
-            } else {
-                await loadQuestions(exam, unit);
-            }
+        btn.addEventListener("click", () => {
+            currentQuestionIndex = index;
+            showQuestion();
+            updateNextButtonState();
         });
+
+        palette.appendChild(btn);
+    });
+}
+
+export function toggleFlag() {
+
+    if (flaggedQuestions.has(currentQuestionIndex)) {
+        flaggedQuestions.delete(currentQuestionIndex);
+    } else {
+        flaggedQuestions.add(currentQuestionIndex);
+    }
+    document.getElementById("flag-btn")
+    .classList.toggle(
+        "flagged",
+        flaggedQuestions.has(currentQuestionIndex)
+    );
+renderQuestionPalette();
+    renderQuestionNav();
+}
+
+function syncFlagButton() {
+    const btn = document.getElementById("flag-btn");
+    if (!btn) return;
+
+    btn.classList.toggle(
+        "flagged",
+        flaggedQuestions.has(currentQuestionIndex)
+    );
+}
+
+function renderQuestionNav() {
+
+    const container =
+        document.getElementById("question-nav-grid");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    currentQuestions.forEach((q, index) => {
+
+        const btn = document.createElement("button");
+
+        btn.textContent = index + 1;
+
+        if (userAnswers[q.id] !== undefined) {
+            btn.style.backgroundColor = "#3b82f6";
+        }
+
+        if (flaggedQuestions.has(index)) {
+            btn.style.border = "3px solid orange";
+        }
+
+        if (index === currentQuestionIndex) {
+            btn.style.transform = "scale(1.1)";
+        }
+btn.classList.remove(
+    "palette-current",
+    "palette-answered",
+    "palette-flagged",
+    "palette-wrong"
+);
+btn.onclick = () => {
+    if (reviewMode) {
+        showQuestion(); // reuse main renderer safely
+    } else {
+        goToQuestion(index);
+    }
+};
+        container.appendChild(btn);
+    });
+}
+
+function showReviewQuestion(index) {
+    const q = questions[index];
+
+    const card = document.getElementById("question-card");
+
+    let explanationHTML = "";
+
+    if (reviewMode) {
+        explanationHTML = `
+            <div class="review-explanation">
+                ${q.explanation || ""}
+            </div>
+        `;
+    }
+
+    card.innerHTML = `
+        <div class="review-question">${q.question}</div>
+
+        <div class="answers-grid">
+            ${renderChoices(q, index)}
+        </div>
+
+        ${explanationHTML}
+    `;
+}
+
+export function goToQuestion(index) {
+
+    if (index < 0) return;
+    if (index >= currentQuestions.length) return;
+
+    const targetQuestion = currentQuestions[index];
+
+    if (!targetQuestion) return;
+
+    // ONLY allow current section navigation
+    if (targetQuestion.sectionIndex !== currentSectionIndex) {
+        return; // BLOCK CROSS SECTION ACCESS
+    }
+
+    
+  currentQuestionIndex = index;
+showQuestion();
+updateNextButtonState();
+syncFlagButton();
+}
+
+function renderSavedAnswer() {
+    const questionObj = currentQuestions[currentQuestionIndex];
+    const saved = userAnswers[questionObj.id];
+    const prepared = shuffledQuestionData[questionObj.id];
+
+    const buttonMap = {
+        A: "choice-a",
+        B: "choice-b",
+        C: "choice-c",
+        D: "choice-d"
+    };
+
+    // RESET
+["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
+
+    const btn = document.getElementById(id);
+
+    btn.style.backgroundColor = "";
+    btn.style.border = "";
+    btn.style.boxShadow = "";
+    btn.style.color = "";
+    btn.style.opacity = "1";
+
+    btn.disabled = false;
+});
+
+    // GRID MODE
+    if (questionObj.question_format === "GRID") {
+
+        const input = document.getElementById("grid-input");
+        const result = document.getElementById("grid-result");
+
+        if (!saved) return;
+
+        if (reviewMode) {
+            const correct = String(questionObj.correct_numeric_answer).trim();
+const userValue = String(saved).trim();
+
+           if (userValue === correct) {
+
+    input.style.border = "2px solid green";
+    input.style.color = "green";
+
+    input.value = `"${correct}" is Correct`;
+
+} else {
+
+    input.style.border = "2px solid red";
+    input.style.color = "red";
+
+    input.value = `You answered "${userValue}" | Correct: "${correct}"`;
+}
+        }
 
         return;
     }
 
-    // =========================
-    // NEXT QUESTION SAME SECTION
-    // =========================
-    document.getElementById("next-btn").style.display = "none";
-    document.getElementById("explanation").textContent = "";
+    // MULTIPLE CHOICE
 
-    showQuestion();
+    if (!saved || !prepared) return;
+
+    const correct = prepared.correctLetter;
+
+    const correctBtn = document.getElementById(buttonMap[correct]);
+    const selectedBtn = document.getElementById(buttonMap[saved]);
+
+    if (reviewMode) {
+
+["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
+    document.getElementById(id).disabled = true;
+});
+
+const gridInput = document.getElementById("grid-input");
+const gridSubmit = document.getElementById("grid-submit");
+
+if (gridInput) gridInput.disabled = true;
+if (gridSubmit) gridSubmit.disabled = true;
+
+    // reset styles first
+
+    const allBtns = document.querySelectorAll("#choice-a,#choice-b,#choice-c,#choice-d");
+allBtns.forEach(btn => {
+    btn.style = "";
+});
+
+    const correct = prepared.correctLetter;
+
+    // ALWAYS show correct answer (green)
+    if (correctBtn) {
+        correctBtn.style.backgroundColor = "rgba(34, 197, 94, 0.18)";
+        correctBtn.style.border = "1px solid rgba(34, 197, 94, 0.6)";
+        correctBtn.style.boxShadow = "0 0 12px rgba(34, 197, 94, 0.35)";
+        correctBtn.style.color = "#2e7d32";
+    }
+
+    // WRONG selection (red overlay)
+    if (saved !== correct && selectedBtn) {
+        selectedBtn.style.backgroundColor = "rgba(239, 68, 68, 0.18)";
+        selectedBtn.style.border = "1px solid rgba(239, 68, 68, 0.6)";
+        selectedBtn.style.boxShadow = "0 0 12px rgba(239, 68, 68, 0.35)";
+        selectedBtn.style.color = "#b91c1c";
+    }
+
+    return;
+}
+
+    // NORMAL MODE (existing behavior)
+    if (selectedBtn) {
+        selectedBtn.style.backgroundColor = "rgba(59,130,246,0.15)";
+selectedBtn.style.border = "1px solid rgba(59,130,246,0.6)";
+selectedBtn.style.boxShadow = "0 0 12px rgba(59,130,246,0.35)";
+selectedBtn.style.color = "#1d4ed8";
+    }
+}
+
+export async function nextQuestion() {
+    if (isTransitioning) return;
+
+    if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex += 1;
+        showQuestion();
+        updateNextButtonState();
+    }
+}
+
+function showQuizControls() {
+
+    const ids = [
+        "prev-btn",
+        "next-nav-btn",
+        "flag-btn",
+        "report-btn"
+    ];
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "";
+    });
+
+    const nav = document.querySelector(".question-nav-controls");
+    if (nav) nav.style.display = "flex";
+}
+
+function hideQuizControls() {
+    const ids = [
+        "prev-btn",
+        "next-nav-btn",
+        "flag-btn",
+        "report-btn"
+    ];
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
+    });
+
+    const nav = document.querySelector(".question-nav-controls");
+    if (nav) nav.style.display = "none";
+}
+
+export function checkSectionCompletion() {
+
+    const unanswered = [];
+
+    currentQuestions.forEach((q, index) => {
+        if (userAnswers[index] === undefined) {
+            unanswered.push(index + 1);
+        }
+    });
+
+    // unanswered questions remain
+    if (unanswered.length > 0) {
+
+        const proceed = confirm(
+            `You still have ${unanswered.length} unanswered question(s).\n\nSubmit anyway?`
+        );
+
+        if (!proceed) return;
+    }
+
+    completeCurrentSection();
+}
+
+async function completeCurrentSection() {
+
+    currentSectionIndex++;
+
+    // ALL SECTIONS COMPLETE
+    if (currentSectionIndex >= examSections.length) {
+
+       await gradeQuiz();
+reviewMode = true;
+
+renderQuestionPalette();
+renderQuestionNav();
+showQuestion();
+
+await finalizeQuizData();
+
+showFinalScore();
+        return;
+    }
+
+    // NEXT SECTION
+    const nextSection = examSections[currentSectionIndex];
+
+    currentQuestionIndex = 0;
+    sectionQuestionsLoaded = 0;
+
+    showSectionTransition(nextSection, async () => {
+
+        if (isAdaptiveMode) {
+            await loadAdaptiveQuestionsForSection();
+        } else {
+            await loadQuestions(exam, unit);
+        }
+    });
+    answeredQuestions = new Set();
+flaggedQuestions = new Set();
+renderQuestionPalette();
+renderQuestionNav();
+}
+
+async function gradeQuiz() {
+reviewMode = true;
+renderQuestionPalette();
+renderQuestionNav();
+showQuestion();
+    score = 0;
+    answerResults = [];
+
+    allQuizQuestions.forEach((questionObj, index) => {
+
+       const prepared = shuffledQuestionData[questionObj.id];
+
+if (!prepared) {
+    console.error("Missing prepared question:", questionObj.id);
+    return;
+}
+
+let correctAnswer;
+
+if (questionObj.question_format === "GRID") {
+    correctAnswer = String(questionObj.correct_numeric_answer).trim();
+} else {
+    correctAnswer = prepared.correctLetter;
+}
+
+       const userAnswer =
+    userAnswers[questionObj.id];
+
+       const isCorrect =
+    String(userAnswer).trim() === correctAnswer;
+
+        if (isCorrect) {
+            score++;
+        }
+
+        answerResults.push({
+            question_id: questionObj.id,
+            unit: questionObj.unit,
+            correct: isCorrect,
+            user_answer: userAnswer,
+            correct_answer: correctAnswer
+        });
+    });
+}
+
+async function finalizeQuizData() {
+
+    console.log(
+        "AUTH CHECK:",
+        await supabase.auth.getSession()
+    );
+
+    const { data: { user } } =
+        await supabase.auth.getUser();
+
+    console.log("USER INSIDE FINALIZE:", user);
+
+    if (!user) {
+        console.error("NO USER IN FINALIZE");
+        return;
+    }
+
+    if (!user) return;
+
+    // =========================
+    // SAVE QUESTION ATTEMPTS
+    // =========================
+
+    const topicAttempts = answerResults.map(r => ({
+
+        user_id: user.id,
+
+        question_id: r.question_id,
+
+        unit: r.unit,
+
+        is_correct: r.correct,
+
+        exams: [getExamArrayValue(quizConfig.exam)]
+
+    }));
+
+    if (topicAttempts.length > 0) {
+console.log("TOPIC ATTEMPTS INSERT:", topicAttempts);
+        await supabase
+            .from("topic_attempts")
+            .insert(topicAttempts);
+    }
+
+    // =========================
+    // UPDATE AGGREGATED STATS
+    // =========================
+
+    for (const result of answerResults) {
+
+        await updateUserStats(
+    user,
+    quizConfig.exam,
+    result.correct
+);
+    }
+
+    // =========================
+    // CREATE SNAPSHOT
+    // =========================
+
+    await maybeCreateSnapshot({
+    user,
+    exam: quizConfig.exam,
+    unit: quizConfig.unit
+});
+console.log("FINALIZE USER CHECK:", user);
+}
+
+function updateNextButtonState() {
+    const prevBtn = document.getElementById("prev-btn");
+
+if (prevBtn) {
+
+    // hide on first question
+    if (currentQuestionIndex === 0 && !reviewMode) {
+        prevBtn.style.display = "none";
+    } else {
+        prevBtn.style.display = "";
+    }
+
+}
+    const nextBtn = document.getElementById("next-nav-btn");
+
+    if (!nextBtn) return;
+
+    const isLastQuestion =
+    currentQuestionIndex >= currentQuestions.length - 1;
+
+    const isLastSection =
+        currentSectionIndex === examSections.length - 1;
+
+    if (!isLastQuestion) {
+        nextBtn.textContent = "Next";
+        nextBtn.onclick = nextQuestion;
+        return;
+    }
+
+    // LAST QUESTION OF SECTION
+    if (!isLastSection) {
+        nextBtn.textContent = "Proceed to Next Section";
+        nextBtn.onclick = () => {
+            checkSectionCompletion();
+        };
+        return;
+    }
+
+    // LAST QUESTION OF LAST SECTION
+    nextBtn.textContent = "Submit Quiz";
+    nextBtn.onclick = submitQuiz;
+}
+
+async function submitQuiz() {
+reviewMode = true;
+    if (quizSubmitted) return;
+    quizSubmitted = true;
+
+   await gradeQuiz();
+reviewMode = true;
+
+renderQuestionPalette();
+renderQuestionNav();
+showQuestion();
+
+await finalizeQuizData();
+hideQuizControls();
+    await showFinalScore();
 }
 
 export async function selectAnswer(letter) {
 
-if (isTransitioning) return;
+answeredQuestions.add(currentQuestionIndex);
 
-if (!currentQuestions || !currentQuestions[currentQuestionIndex]) {
-    console.error("No question available at index:", currentQuestionIndex);
-    return;
-}
+    if (isTransitioning) return;
 
     const questionObj = currentQuestions[currentQuestionIndex];
-    
-    // GRAPH SUPPORT
-const imageContainer = document.getElementById("question-image-container");
-const imageElement = document.getElementById("question-image");
 
-if (questionObj.image_url) {
-    imageElement.src = questionObj.image_url;
-    imageContainer.style.display = "block";
-} else {
-    imageContainer.style.display = "none";
-}
     if (!questionObj) return;
 
-    const buttons = {
-        A: document.getElementById("choice-a"),
-        B: document.getElementById("choice-b"),
-        C: document.getElementById("choice-c"),
-        D: document.getElementById("choice-d"),
-    };
+    userAnswers[questionObj.id] = letter;
 
-    Object.values(buttons).forEach(btn => {
-    btn.disabled = true;
-    btn.style.opacity = "0.6";
-});
+    renderSavedAnswer();
 
-   let isCorrect;
+renderQuestionPalette();
 
-if (questionObj.question_format === "GRID") {
+    renderQuestionNav();
 
-    const userAnswer = letter.trim();
-    const correct = questionObj.correct_numeric_answer.toString();
-
-    isCorrect = userAnswer === correct;
-
-   const gridInput = document.getElementById("grid-input");
-    
-    const gridResult = document.getElementById("grid-result");
-
-if (isCorrect) {
-    gridInput.style.border = "3px solid green";
-    gridResult.textContent = "✔";
-} else {
-    gridInput.style.border = "3px solid red";
-    gridResult.textContent = "✖";
-}
-    
-} else {
-
-    const correct = (questionObj.correctanswer || "").toUpperCase();
-letter = letter.toUpperCase();
-
-    if (letter === correct) {
-
-    isCorrect = true;
-
-    if (buttons[letter]) {
-        buttons[letter].style.backgroundColor = "green";
-    }
-
-} else {
-
-    isCorrect = false;
-
-    if (buttons[letter]) {
-        buttons[letter].style.backgroundColor = "red";
-    }
-
-    if (buttons[correct]) {
-        buttons[correct].style.backgroundColor = "green";
-    }
-
-}
-}
-
-if (isCorrect) {
-    score++;
-}
-
-answerResults.push({
-    unit: questionObj.unit,
-    correct: isCorrect ? 1 : 0
-});
-// Highlight selected answer more clearly
-if (buttons[letter]) {
-    buttons[letter].style.transform = "scale(1.03)";
-}
-    // 🔥 Update diagnostic topic stats
-    
-// 🔥 Insert individual attempt
-const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-// 🚫 NOT LOGGED IN → BLOCK AFTER FIRST QUESTION
-if (!user) {
-
-
-    // ❗ allow quiz to continue, just skip DB writes
-    console.log("Anonymous mode: skipping DB tracking");
-}
-if (!user) {
-    console.log("No user → skip adaptive");
-}
-const examsArray = Array.isArray(questionObj.exams)
-    ? questionObj.exams
-    : [questionObj.exams];
-if (user) {
-   const { data, error } = await supabase.from("topic_attempts").insert([
-{
-    user_id: user.id,
-    exams: examsArray,
-    unit: questionObj.unit,
-    is_correct: isCorrect
-}
-]);
-console.log("INSERT RESULT:", data, error);
-}
-
-   if (user) {
-    
-  const { error: statsError } = await supabase.rpc(
-    'increment_unit_stats',
-    {
-      p_exam: questionObj.exams[0],
-      p_unit: questionObj.unit,
-      p_is_correct: isCorrect,
-      p_user: user.id
-    }
-  );
-
-  if (statsError) {
-    console.error("Error updating topic stats:", statsError);
-  } else {
-    const exam = questionObj.exams[0];
-    const readiness = await calculateExamReadiness(exam);
-
-    document.getElementById("exam-readiness").textContent =
-      `Exam Readiness: ${readiness}%`;
-  }
-}
-const exam = questionObj.exams[0];
-const unit = questionObj.unit;
-if(user) {
-await updateUserStats(user, exam, isCorrect);
-await maybeCreateSnapshot({ user, exam, unit });
-}
-    document.getElementById("explanation").textContent =
-        questionObj.explanation || "No explanation provided.";
-
-    document.getElementById("next-btn").style.display = "block";
+    updateNextButtonState();
 }
 
 
@@ -824,10 +1326,8 @@ if (isDiagnosticMode) {
     document.getElementById("question").textContent =
         `Quiz finished! Your score: ${score} / ${total}`;
 
-document.getElementById("next-btn").style.display = "none";
+
 document.getElementById("grid-container").style.display = "none";
-document.getElementById("grid-input").value = "";
-document.getElementById("grid-result").textContent = "";
 document.getElementById("explanation").textContent = "";
 document.getElementById("question-image-container").style.display = "none";
     ["choice-a", "choice-b", "choice-c", "choice-d"].forEach(id => {
@@ -863,7 +1363,20 @@ if (!user || !user.id) {
 
 // always refresh UI (logged in OR not)
 loadHistory(user?.id ?? null);
+hideQuizControls();
+const prevBtn = document.getElementById("prev-btn");
 
+if (prevBtn) {
+    prevBtn.style.display = "";
+    prevBtn.onclick = () => {
+        reviewMode = true;
+
+        currentQuestionIndex =
+            currentQuestions.length - 1;
+
+        showQuestion();
+    };
+}
     // reset index so new quiz can start clean
     currentQuestionIndex = 0;
     score = 0;
@@ -1050,7 +1563,7 @@ if (!stats || stats.length === 0) {
   document.getElementById("progress-bar").style.width = "0%";
   document.getElementById("progress-container").textContent = "";
   document.getElementById("explanation").textContent = "";
-  document.getElementById("next-btn").style.display = "none";
+
 
   ["choice-a", "choice-b", "choice-c", "choice-d"].forEach(id => {
     const el = document.getElementById(id);
@@ -1124,8 +1637,11 @@ if (!section) {
   const selectedQuestions = filtered
     .sort(() => Math.random() - 0.5)
     .slice(0, section.question_count);
-
+selectedQuestions.forEach(q => {
+    q.sectionIndex = currentSectionIndex;
+});
   currentQuestions = selectedQuestions;
+  allQuizQuestions.push(...selectedQuestions);
   currentQuestionIndex = 0;
   sectionQuestionsLoaded = 0;
 resetQuestionUI();
@@ -1140,10 +1656,12 @@ function resetQuestionUI() {
   document.getElementById("progress-container").textContent = "";
 
   document.getElementById("explanation").textContent = "";
-  document.getElementById("next-btn").style.display = "none";
-
   ["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = "block";
   });
+}
+
+export function getCurrentQuestionIndex() {
+    return currentQuestionIndex;
 }
