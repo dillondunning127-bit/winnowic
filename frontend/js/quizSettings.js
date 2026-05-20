@@ -59,6 +59,7 @@ if (!selectedTime) {
 }
 
     if (!selectedExam) {
+        alert("Select an exam");
         return;
     }
 
@@ -75,6 +76,7 @@ if (!selectedTime) {
 const quizLength = parseInt(quizLengthValue);
 
 if (isNaN(quizLength)) {
+    alert("Select a quiz length");
     return;
 }
 
