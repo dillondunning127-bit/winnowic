@@ -5884,3 +5884,73 @@ video {
   }
 
 }
+
+.premium-diagnostics-btn {
+
+  width: auto !important;
+  min-width: unset !important;
+
+  padding: 10px 14px !important;
+
+  font-size: 14px;
+
+  white-space: nowrap;
+
+  flex-shrink: 1;
+}
+
+@media (max-width: 768px) {
+
+  .site-header,
+  .header,
+  .topbar,
+  .header-inner {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 14px;
+  }
+
+  .header-center {
+    order: 1;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+  }
+
+  .header-right {
+    order: 2;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+  }
+
+  .premium-diagnostics-btn {
+    width: auto !important;
+    min-width: 0 !important;
+
+    padding: 10px 14px !important;
+
+    font-size: 14px;
+  }
+
+  .gear-btn {
+    flex-shrink: 0;
+  }
+
+  .header-logo {
+    max-width: 180px;
+    height: auto;
+  }
+}
