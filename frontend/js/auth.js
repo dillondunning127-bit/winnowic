@@ -20,6 +20,8 @@ async function updateUpgradeButton(user) {
 
     if (!user) {
         upgradeBtn.style.display = "block";
+        submitBtn.disabled = false;
+submitBtn.textContent = "Login";
         return;
     }
 
@@ -44,21 +46,30 @@ export function handleLoggedInUser(user) {
         gearBtn.style.display = "block";
     }
 
-    const loginBtn = document.getElementById("login-btn");
-    const signupBtn = document.getElementById("signup-btn");
+    const loginBtn = document.getElementById("login-tab");
+    const signupBtn = document.getElementById("signup-tab");
 
     if (loginBtn) loginBtn.style.display = "none";
     if (signupBtn) signupBtn.style.display = "none";
     updateUpgradeButton(user);
 }
 
-export function showQuizUI() {
-    document.getElementById("quiz-section").style.display = "block";
-}
-
 export async function signUp() {
-    const email = document.getElementById("email-input").value;
-    const password = document.getElementById("password-input").value;
+ 
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+    setAuthLoading(true);
+       if (!email || !password) {
+    const msg = document.getElementById("auth-message");
+
+    msg.textContent = "Please enter an email and password.";
+    msg.style.color = "#ff6b6b";
+
+    return;
+}
+submitBtn.disabled = true;
+submitBtn.textContent = "Creating Account...";
+
 
     const { data, error } = await supabase.auth.signUp({
         email,
@@ -66,41 +77,101 @@ export async function signUp() {
     });
 
     if (error) {
-        alert(error.message);
+        const msg = document.getElementById("auth-message");
+setAuthLoading(false);
+msg.textContent = error.message;
+msg.style.color = "#ff6b6b";
+msg.style.marginTop = "10px";
+        submitBtn.disabled = false;
+submitBtn.textContent = "Create Account";
         return;
     }
 
+submitBtn.textContent = "Creating...";
     if (data.session) {
         handleLoggedInUser(data.user);
-        showQuizUI();
         loadHistory(data.user.id);
+        submitBtn.classList.add("success");
+submitBtn.innerHTML = "✓ Account Created!";
+
+setTimeout(() => {
+    setAuthLoading(false);
+    window.location.href = "index.html#quiz-section";
+}, 700);
+document.getElementById("auth-message").textContent = "";
     }
 }
 
 export async function login() {
-    const email = document.getElementById("email-input").value;
-    const password = document.getElementById("password-input").value;
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+     if (!email || !password) {
+    const msg = document.getElementById("auth-message");
+setAuthLoading(true);
+    msg.textContent = "Please enter an email and password.";
+    msg.style.color = "#ff6b6b";
 
+    return;
+}
+submitBtn.disabled = true;
+submitBtn.textContent = "Logging In...";
     const { data, error } = await supabase.auth.signInWithPassword({  
         email,
         password
     });
 
     if (error) {
+         setAuthLoading(false);
+        const msg = document.getElementById("auth-message");
+msg.textContent = error.message;
+msg.style.color = "#ff6b6b";
+msg.style.marginTop = "10px";
+        submitBtn.disabled = false;
+submitBtn.textContent = "Login";
+        return;
+    }
+submitBtn.classList.add("success");
+submitBtn.textContent = "✓ Logged In!";
+    handleLoggedInUser(data.user);
+    loadHistory(data.user.id);
+    setTimeout(() => {
+         setAuthLoading(false);
+    window.location.href = "index.html#quiz-section";
+}, 700);
+    document.getElementById("auth-message").textContent = "";
+}
+
+export async function resetPassword() {
+
+    const email =
+        document.getElementById("auth-email").value;
+
+    if (!email) {
+        alert("Please enter your email first.");
+        return;
+    }
+
+    const { error } =
+        await supabase.auth.resetPasswordForEmail(email, {
+
+            redirectTo:
+                window.location.origin + "/auth.html"
+
+        });
+
+    if (error) {
         alert(error.message);
         return;
     }
 
-    handleLoggedInUser(data.user);
-    showQuizUI();
-    loadHistory(data.user.id);
+    alert("Password reset email sent!");
 }
 
 export async function logout() {
     await supabase.auth.signOut();
 
-    document.getElementById("login-btn").style.display = "inline-block";
-    document.getElementById("signup-btn").style.display = "inline-block";
+    document.getElementById("login-tab").style.display = "inline-block";
+    document.getElementById("signup-tab").style.display = "inline-block";
     document.getElementById("account-email").textContent = "";
 
     ["choice-a", "choice-b", "choice-c", "choice-d"].forEach(id => {
@@ -125,25 +196,22 @@ export function initAuthListener() {
             loadHistory(user.id);
 updateUpgradeButton(user);
             // hide inputs
-            document.getElementById("email-input").style.display = "none";
-            document.getElementById("password-input").style.display = "none";
+            document.getElementById("auth-email").style.display = "none";
+            document.getElementById("auth-password").style.display = "none";
 
             // 🔥 HIDE ENTIRE AUTH CARD
             if (authContainer) authContainer.style.display = "none";
 
         } else {
 updateExamLocks();
-            const loginBtn = document.getElementById("login-btn");
-            const signupBtn = document.getElementById("signup-btn");
+            const loginBtn = document.getElementById("login-tab");
+            const signupBtn = document.getElementById("signup-tab");
 updateUpgradeButton(null);
             if (loginBtn) loginBtn.style.display = "inline-block";
             if (signupBtn) signupBtn.style.display = "inline-block";
 
             const emailEl = document.getElementById("account-email");
             if (emailEl) emailEl.textContent = "";
-
-            document.getElementById("email-input").style.display = "inline-block";
-            document.getElementById("password-input").style.display = "inline-block";
 
             const gear = document.getElementById("account-gear");
             if (gear) gear.style.display = "none";
@@ -170,4 +238,89 @@ if (gearBtn && dropdown) {
             dropdown.style.display = "none";
         }
     });
+}
+
+// AUTH PAGE LOGIC
+const loginTab = document.getElementById("login-tab");
+const signupTab = document.getElementById("signup-tab");
+const submitBtn = document.getElementById("auth-submit-btn");
+const authTitle = document.getElementById("auth-title");
+
+let authMode = "login";
+
+function setAuthLoading(isLoading) {
+
+    if (!submitBtn) return;
+
+    submitBtn.disabled = isLoading;
+
+    if (isLoading) {
+        submitBtn.textContent = "Loading...";
+        submitBtn.style.opacity = "0.7";
+        submitBtn.style.cursor = "not-allowed";
+    } else {
+
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
+
+        submitBtn.textContent =
+            authMode === "login"
+                ? "Login"
+                : "Create Account";
+    }
+}
+
+if (loginTab) {
+    loginTab.classList.add("active");
+}
+// SWITCH TO LOGIN
+if (loginTab) {
+    loginTab.addEventListener("click", () => {
+        authMode = "login";
+
+        authTitle.textContent = "Welcome Back";
+        submitBtn.textContent = "Login";
+
+        loginTab.classList.add("active");
+        signupTab.classList.remove("active");
+    });
+}
+
+// SWITCH TO SIGNUP
+if (signupTab) {
+    signupTab.addEventListener("click", () => {
+        authMode = "signup";
+
+        authTitle.textContent = "Create Account";
+        submitBtn.textContent = "Create Account";
+
+        signupTab.classList.add("active");
+        loginTab.classList.remove("active");
+    });
+}
+
+// SUBMIT BUTTON
+if (submitBtn) {
+    submitBtn.addEventListener("click", async () => {
+
+        if (authMode === "login") {
+            await login();
+        } else {
+            await signUp();
+        }
+
+    });
+}
+
+const forgotPasswordLink =
+    document.getElementById("forgot-password-link");
+
+if (forgotPasswordLink) {
+
+    forgotPasswordLink.addEventListener("click", async () => {
+
+        await resetPassword();
+
+    });
+
 }
