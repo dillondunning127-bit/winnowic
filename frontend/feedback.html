@@ -6,43 +6,80 @@
   <title>General Feedback</title>
   <link rel="stylesheet" href="./style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 
-<body>
+<body class="feedback-page">
 
-<!-- BACK BUTTON -->
-<button id="back-btn" class="btn-secondary back-btn">← Back</button>
+<div class="container">
 
-<h1 class="page-title">General Feedback</h1>
-<p class="page-subtitle">Comments and concerns</p>
+  <!-- HEADER -->
+  <div class="feedback-header">
 
-<!-- INFO CARD -->
-<div class="card feedback-card">
-  
-  <p>
-    You can suggest improvements, new features, or anything that would
-    make your experience better.
-  </p>
+    <div>
+      <div class="feedback-label">
+        WINNOWIC FEEDBACK
+      </div>
 
-  <p>
-    Your feedback directly improves the platform — thank you.
-  </p>
-</div>
+      <h1 class="page-title">
+        Help Improve Winnowic
+      </h1>
 
-<!-- INPUT CARD -->
-<div class="card feedback-card">
+      <p class="page-subtitle">
+        Suggest features, report issues, or share ideas that would improve your experience.
+      </p>
+    </div>
 
-  <textarea 
-    id="feedback-input"
-    rows="8"
-    placeholder="Write your feedback here..."
-  ></textarea>
+    <button id="back-btn" class="btn-secondary feedback-back-btn">
+      ← Back
+    </button>
 
-  <button id="submit-feedback-btn" class="btn-primary">
-    Submit Feedback
-  </button>
+  </div>
 
-  <p id="feedback-message"></p>
+  <!-- INFO CARD -->
+  <div class="card feedback-card feedback-info-card">
+
+    <div class="feedback-info-title">
+      Your Feedback Matters
+    </div>
+
+    <p>
+      Every suggestion helps improve the platform for future students.
+      Whether it's a bug, UI idea, analytics improvement, or study feature —
+      we read everything carefully.
+    </p>
+
+  </div>
+
+  <!-- INPUT CARD -->
+  <div class="card feedback-card feedback-input-card">
+
+    <div class="feedback-input-header">
+      <div>
+        <h2>Submit Feedback</h2>
+        <p>
+          Clear, detailed feedback helps us improve faster.
+        </p>
+      </div>
+    </div>
+
+    <textarea 
+      id="feedback-input"
+      rows="8"
+      placeholder="Example: It would be helpful if diagnostics showed improvement by difficulty level over time..."
+    ></textarea>
+
+    <div class="feedback-actions">
+
+      <button id="submit-feedback-btn" class="btn-primary modern-submit-btn">
+        Submit Feedback
+      </button>
+
+      <p id="feedback-message"></p>
+
+    </div>
+
+  </div>
 
 </div>
 
