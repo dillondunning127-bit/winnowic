@@ -1,12 +1,9 @@
 /* ===== GLOBAL ===== */
 html, body {
   width: 100%;
-  overflow-x: hidden;
+  
 }
 
-* {
-  box-sizing: border-box;
-}
 body {
     font-family: 'Inter', sans-serif;
 scroll-behavior: smooth;
@@ -1014,7 +1011,6 @@ margin-bottom: 8px;
     border-radius: 50%;
 }
 
-#diagnostics-btn span:last-child,
 #report-btn span:last-child {
     position: relative;
     
@@ -1806,7 +1802,7 @@ body {
 
 .site-header {
   width: 100%;
-
+max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4601,27 +4597,19 @@ button:active {
 
   min-width:unset;
 
-  padding:0 22px;
+  padding:0 8px;
 
   height:56px;
 
   font-size:16px;
   font-weight:700;
 
-  border-radius:16px !important;
+  border-radius:16px;
 
   white-space:nowrap;
 
   box-shadow:
     0 10px 24px rgba(255,107,0,0.18);
-}
-
-@media (min-width: 900px){
-
-  .diagnostics-preview-btn{
-    min-width:180px;
-  }
-
 }
 
 .diagnostics-selector-section{
@@ -5597,10 +5585,7 @@ body {
    HEADER
 ========================= */
 
-.site-header {
-  padding: 0.7rem 0.8rem;
-  gap: 0.5rem;
-}
+
 
 .header-left,
 .header-center,
@@ -5811,7 +5796,7 @@ video {
 
 }
 
-.diagnostics-preview-btn{
+.premium-diagnostics-btn{
 
   width:fit-content !important;
 
