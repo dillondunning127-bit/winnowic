@@ -4182,6 +4182,7 @@ button:active {
 }
 
 .unit-streak-pill{
+
   background:#FFF1E8;
   color:#FF6B00;
 
@@ -4190,19 +4191,33 @@ button:active {
   font-size:13px;
   font-weight:600;
 
+  padding:10px 16px;
 
-  min-width: 190px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  padding: 10px 18px;
+  white-space:nowrap;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-width:100%;
 
-  white-space: nowrap;
-
+  min-width:0;
 }
+.unit-card-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
 
+  min-width:0;
+}
+.unit-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+
+  min-width:0;
+}
 .unit-expand-btn{
   width:40px;
   height:40px;
@@ -4582,7 +4597,11 @@ button:active {
 
 .diagnostics-preview-btn{
 
-  min-width:220px;
+  width:auto;
+
+  min-width:unset;
+
+  padding:0 22px;
 
   height:56px;
 
@@ -4591,8 +4610,18 @@ button:active {
 
   border-radius:16px !important;
 
+  white-space:nowrap;
+
   box-shadow:
     0 10px 24px rgba(255,107,0,0.18);
+}
+
+@media (min-width: 900px){
+
+  .diagnostics-preview-btn{
+    min-width:180px;
+  }
+
 }
 
 .diagnostics-selector-section{
@@ -5762,5 +5791,22 @@ iframe,
 video {
   max-width: 100%;
 }
+
+}
+
+@media (max-width: 700px){
+
+  .unit-card-header{
+    align-items:flex-start;
+  }
+
+  .unit-card-right{
+    flex-shrink:0;
+  }
+
+  .unit-streak-pill{
+    font-size:12px;
+    padding:8px 12px;
+  }
 
 }
