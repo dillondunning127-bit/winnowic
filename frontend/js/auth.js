@@ -34,7 +34,7 @@ submitBtn.textContent = "Login";
     }
 }
 
-export function handleLoggedInUser(user) {
+export async function handleLoggedInUser(user) {
     const emailEl = document.getElementById("account-email");
     const gearBtn = document.getElementById("account-gear");
 
@@ -51,6 +51,14 @@ export function handleLoggedInUser(user) {
 
     if (loginBtn) loginBtn.style.display = "none";
     if (signupBtn) signupBtn.style.display = "none";
+
+    // Upgrade button — after gear so gear always shows regardless
+    const headerUpgradeBtn = document.getElementById('header-upgrade-btn');
+    if (headerUpgradeBtn) {
+        const exams = await getUserExams();
+        headerUpgradeBtn.style.display = exams.includes('ALL') ? 'none' : 'block';
+    }
+
     updateUpgradeButton(user);
 }
 
@@ -196,8 +204,11 @@ export function initAuthListener() {
             loadHistory(user.id);
 updateUpgradeButton(user);
             // hide inputs
-            document.getElementById("auth-email").style.display = "none";
-            document.getElementById("auth-password").style.display = "none";
+            // Whatever is on line 199, e.g.:
+const el = document.getElementById("auth-email");
+if (el) el.style.display = "none";  // add the if check
+            const pwEl = document.getElementById("auth-password");
+if (pwEl) pwEl.style.display = "none";
 
             // 🔥 HIDE ENTIRE AUTH CARD
             if (authContainer) authContainer.style.display = "none";
@@ -215,6 +226,9 @@ updateUpgradeButton(null);
 
             const gear = document.getElementById("account-gear");
             if (gear) gear.style.display = "none";
+            // Show upgrade button to logged-out users too
+const headerUpgradeBtn = document.getElementById('header-upgrade-btn');
+if (headerUpgradeBtn) headerUpgradeBtn.style.display = 'block';
 
             // 🔥 SHOW AUTH CARD AGAIN
             if (authContainer) authContainer.style.display = "block";
