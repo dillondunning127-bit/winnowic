@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <script defer src="/_vercel/insights/script.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <button class="floating-cta" id="floating-cta">
   Take SAT Questions Now
@@ -19,57 +20,73 @@
 <!-- ========================= -->
 
 <header class="site-header">
-
-  <div class="header-left">
-
-    <!-- ACCOUNT MENU -->
-    <div class="account-menu">
-      <button id="account-gear" class="gear-btn" style="display:none;">
-          <img src="/assets/icon-gear.png" alt="Settings">
-      </button>
-
-      <div id="account-dropdown" class="account-dropdown" style="display:none;">
-          <div id="account-email" class="dropdown-email"></div>
-
-          <button id="logout-btn" class="dropdown-item btn-icon">
-              <img src="/assets/icon-x-circle.png" class="icon">
-              Log Out
-          </button>
-
-          <button id="cnclsub-btn" class="dropdown-item btn-icon">
-              <img src="/assets/icon-x-circle.png" class="icon">
-              Cancel Subscription
-          </button>
-
-          <button id="dltact-btn" class="dropdown-item danger btn-icon">
-              <img src="/assets/icon-trash.png" class="icon">
-              Delete Account
-          </button>
-      </div>
+ 
+    <!-- LEFT: gear + upgrade -->
+    <div class="header-left">
+ 
+        <div class="account-menu" style="position:relative;">
+            <button id="account-gear" class="gear-btn" style="display:none;"
+                    aria-label="Account settings">
+                <i data-lucide="settings"></i>
+            </button>
+ 
+            <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                <div id="account-email" class="dropdown-email"></div>
+ 
+                <button id="logout-btn" class="dropdown-item">
+                    <i data-lucide="log-out"></i>
+                    Log Out
+                </button>
+ 
+                <button id="cnclsub-btn" class="dropdown-item">
+                    <i data-lucide="x-circle"></i>
+                    Cancel Subscription
+                </button>
+ 
+                <button id="dltact-btn" class="dropdown-item danger">
+                    <i data-lucide="trash-2"></i>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+ 
+        <button
+            id="header-upgrade-btn"
+            class="header-upgrade-btn"
+            onclick="window.location.href='/pricing.html'"
+            style="display:none;">
+            Upgrade to Premium
+        </button>
+ 
     </div>
+ 
+    <!-- CENTER: logo + TM -->
+    <!-- index.html: no link wrapper -->
+    <div class="header-center">
+        <div class="logo-tm-wrap">
+            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+            <sup class="logo-tm-mark">™</sup>
+        </div>
+    </div>
+   
+    <div class="header-right">
+ 
+<button class="header-nav-link"
+        onclick="window.location.href='/quiz.html'">
+    Study Questions
+</button>
 
-  </div>
-
-  <div class="header-center">
-    <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-  </div>
-
-<div class="header-right">
-
-  <button
-    id="diagnostics-btn"
-    class="premium-diagnostics-btn"
-    onclick="window.location.href='diagnostics.html'"
-  >
-    View Diagnostics
-  </button>
-
-  <button id="header-auth-btn">
-    Create Account
-  </button>
-
-</div>
-
+        <button class="header-nav-link"
+                onclick="window.location.href='diagnostics.html'">
+            Diagnostics
+        </button>
+ 
+        <button id="header-auth-btn" class="header-auth-link">
+            Create Account
+        </button>
+ 
+    </div>
+ 
 </header>
 
 <!-- ========================= -->
@@ -289,173 +306,6 @@
 
 </div>
 
-<div class="container">
-<div id="quiz-container" class="card quiz-shell">
-  <!-- QUIZ SECTION -->
-<div id="quiz-section" class="scroll-target">
-      <!-- UPGRADE -->
-    </div>
-
-<!-- MODE SELECTOR (NEW - SAFE ADDITION) -->
-<div class="card" id="mode-selector-card">
-  <h2>Choose Mode</h2>
-  <p class="mode-subtitle">Start practicing based on your goal</p>
-
-  <div class="mode-buttons">
-
-    <div class="mode-option">
-      <button id="mode-normal" class="btn-secondary btn-icon">
-        Free Practice
-      </button>
-      <p class="mode-desc">
-        Standard exam questions. Choose exam, length, and units.
-      </p>
-    </div>
-
-    <div class="mode-option">
-      <button id="mode-adaptive" class="btn-secondary btn-icon">
-        Adaptive Practice
-      </button>
-      <p class="mode-desc">
-        Focuses on your weak areas automatically. Account required.
-      </p>
-    </div>
-
-    <div class="mode-option">
-      <button id="mode-diagnostic" class="btn-secondary btn-icon">
-        Free Diagnostic
-      </button>
-      <p class="mode-desc">
-        20-question test to estimate your AP / SAT score and find weak areas.
-      </p>
-    </div>
-
-  </div>
-</div>
-
-    <!-- SETTINGS CARD -->
-    <div class="card">
-      <div class="practice-header">
-
-  <h2>Select Your Practice</h2>
-
-  <div class="timer-row">
-    <label class="toggle-container">
-      <span>Timer</span>
-      <input type="checkbox" id="timerToggle" checked>
-      <span class="slider"></span>
-    </label>
-  </div>
-
-</div>
-<div class="quiz-select-row">
-
-        <label>Exam:</label>
-        <select id="exam-select">
-            <option value="">-- Select Exam --</option>
-            <option value="AP_PRECALC">AP Precalculus</option>
-            <option value="AP_CALC_AB">AP Calc AB</option>
-            <option value="AP_CALC_BC">AP Calc BC</option>
-            <option value="SAT_MATH">SAT Math</option>
-        </select>
-
-        <label id="label-time">Quiz Length:</label>
-        <select id="time-select" disabled></select>
-     <label id="label-unit">Unit:</label>
-        <select id="unit-select" disabled></select>
-</div>
-        <button id="start-quiz-btn" class="btn-primary btn-icon">
-            <img src="/assets/icon-play.png" class="icon">
-            Start Quiz
-        </button>
-
-        <div id="message"></div>
-    </div>
-
-    <!-- QUESTION CARD -->
-   <div id="question-card" class="card" style="display:none;">
-<div id="quiz-top-row">
-  <div id="timerDisplay">
-    <img src="/assets/icon-timer.png" class="icon" >
-    Time Remaining: <span id="timeRemaining">00:00</span>
-  </div>
-<div class="top-right-controls">
-  <button id="flag-btn" class="flag-btn" aria-label="Flag Question">
-  <span class="flag-icon"></span>
-</button>
-  <button id="report-btn" class="report-btn btn-icon">
-  <span class="icon-hover">
-    
-    <img src="/assets/icon-flag.png" class="icon">
-  </span>
-  <span>Report</span>
-</button>
-</div>
-</div>
-<div id="progress-container"></div>
-
-        <div id="question-image-container">
-            <img id="question-image">
-        </div>
-
-        <h2 id="question"></h2>
-<div class="answers-grid">
-        <button id="choice-a" style="display:none"></button>
-        <button id="choice-b" style="display:none"></button>
-        <button id="choice-c" style="display:none"></button>
-        <button id="choice-d" style="display:none"></button>
-</div>
-        <div id="grid-container" style="display:none">
-            <input id="grid-input">
-            <span id="grid-result"></span>
-            <button id="grid-submit">Submit</button>
-        </div>
-
-        <div id="explanation"></div>
-
-<div class="question-nav-controls">
-    <button id="prev-btn">Previous</button>
-    <button id="next-nav-btn">Next</button>
-</div>
-
- <div class="progress-bar-bg">
-            <div id="progress-bar"></div>
-        </div>
-<div id="question-palette"></div>
-        <div id="exam-readiness"></div>
-        <div id="weak-areas-container"></div>
-        <div id="review-container"></div>
-    </div>
-
-    <!-- PROGRESS CARD -->
-    
-        <div class="card" id="history-container"><h3>Past Attempts</h3></div>
-
-<div id="section-transition" class="transition-overlay" style="display:none;">
-  <div class="transition-card">
-    <p id="transition-text"></p>
-    <button id="transition-continue" class="btn-primary">Continue</button>
-  </div>
-</div> 
-  </div>
-</div>
-
-<div class="feedback-section">
-  <p class="feedback-title">Have feedback?</p>
-  <p class="feedback-desc">
-    Help improve Winnowic — report bugs or suggest features.
-  </p>
-
-  <button id="feedback-btn" class="btn-secondary btn-icon">
-        <span class="icon-hover">
-            <img src="/assets/icon-chat-before.png" class="before">
-            <img src="/assets/icon-chat-after.png" class="after">
-        </span>
-        <span>Send Feedback</span>
-      </button>
-</div>
-
-
 <div id="report-popup" class="report-popup" style="display:none;">
   
   <div class="popup-header">
@@ -474,9 +324,7 @@
   <button id="submit-report" class="btn-primary">Submit</button>
 
 </div>
-  </div>
-</div>
-</div>
+ 
 <div class="social-section">
   <div class="social-card">
     <h3>See Winnowic in action</h3>
@@ -500,10 +348,29 @@
     </div>
   </div>
 </div>
-
+<footer class="site-footer">
+ 
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+    </div>
+ 
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+    </nav>
+ 
+</footer>
+<script type="module" src="/js/auth.js"></script>
+<script type="module" src="/js/index.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
 </body>
 
-<script type="module" src="./js/quizSettings.js"></script>
-<script type="module" src="./js/main.js"></script>
-<script type="module" src="./js/customer_manage.js"></script>
 </html>
