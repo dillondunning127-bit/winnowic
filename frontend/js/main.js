@@ -14,7 +14,13 @@ import { startQuiz } from "./quiz.js";
 import {
     checkSectionCompletion
 } from "./quiz.js";
+import { renderGoalBanner } from './goals.js';
 let currentMode = "normal";
+
+import { getUserGoal, saveUserGoal, getDaysUntilTest } from './goals.js';
+import { getDailyBatch } from './dailyBatch.js';
+import { initQuizBanner } from './quizBanner.js';
+
 
 window.addEventListener("DOMContentLoaded", async () => {
     console.log("App loaded");
@@ -34,9 +40,82 @@ window.addEventListener("DOMContentLoaded", async () => {
 const modeNormal = document.getElementById("mode-normal");
 const modeAdaptive = document.getElementById("mode-adaptive");
 const modeDiagnostic = document.getElementById("mode-diagnostic");
+const modeDaily = document.getElementById("mode-daily");
+
 modeNormal.addEventListener("click", () => setMode("normal"));
 modeAdaptive.addEventListener("click", () => setMode("adaptive"));
 modeDiagnostic.addEventListener("click", () => setMode("diagnostic"));
+modeDaily.addEventListener("click", () => setMode("daily_batch"));
+
+
+// After user state loads:
+async function initGoalBanner(user, exam) {
+  const banner = document.getElementById('goal-banner');
+  if (!banner || !user || !exam) return;
+
+  banner.style.display = 'block';
+  const goal = await getUserGoal(exam);
+
+  if (goal) {
+    const days = getDaysUntilTest(goal.test_date);
+    document.getElementById('goal-display').innerHTML = `
+      <strong>🎯 Goal:</strong> ${goal.exam.replace('_',' ')} — 
+      Target: ${goal.target_score} &nbsp;|&nbsp; 
+      <strong>${days} days until your test</strong>
+      <button id="edit-goal-btn" class="btn-secondary" style="margin-left:12px;">Edit</button>
+    `;
+    document.getElementById('set-goal-btn').style.display = 'none';
+    document.getElementById('edit-goal-btn')
+      ?.addEventListener('click', () => {
+        document.getElementById('goal-form').style.display = 'block';
+      });
+  } else {
+    document.getElementById('set-goal-btn').style.display = 'block';
+    document.getElementById('set-goal-btn')
+      .addEventListener('click', () => {
+        document.getElementById('goal-form').style.display = 'block';
+      });
+  }
+
+  document.getElementById('save-goal-btn')
+    ?.addEventListener('click', async () => {
+      const date = document.getElementById('goal-date').value;
+      const score = document.getElementById('goal-score').value;
+      await saveUserGoal(exam, date, parseInt(score));
+      initGoalBanner(user, exam); // refresh
+      document.getElementById('goal-form').style.display = 'none';
+    });
+}
+
+
+examSelect.addEventListener("change", async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user && examSelect.value) {
+        const { renderGoalBanner } = await import('./goals.js');
+        renderGoalBanner(
+            document.getElementById('goal-banner-card'),
+            examSelect.value
+        );
+    }
+});
+
+examSelect.addEventListener('change', async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user && examSelect.value) {
+        initQuizBanner(examSelect.value);
+        renderGoalBanner(
+            document.getElementById('goal-banner-card'),
+            examSelect.value
+        );
+    }
+});
+
+// Call when exam changes:
+examSelect.addEventListener('change', async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  initGoalBanner(user, examSelect.value);
+});
+
 
 examSelect.addEventListener("change", () => {
     updateStartButtonState();
@@ -65,6 +144,14 @@ document.getElementById("mode-diagnostic").addEventListener("click", () => {
     currentMode = "diagnostic";
 });
 
+// Inside DOMContentLoaded in main.js
+const params = new URLSearchParams(window.location.search);
+const paramExam = params.get('exam');
+const paramMode = params.get('mode');
+
+if (paramExam) selectExamCard(paramExam);
+if (paramMode) setMode(paramMode);
+
 function launchQuiz(mode) {
     const exam = document.getElementById("exam-select").value;
 
@@ -88,11 +175,13 @@ function setMode(mode) {
     modeNormal.classList.remove("active-mode");
     modeAdaptive.classList.remove("active-mode");
     modeDiagnostic.classList.remove("active-mode");
+    modeDaily.classList.remove("active-mode");
 
     // highlight selected
     if (mode === "normal") modeNormal.classList.add("active-mode");
     if (mode === "adaptive") modeAdaptive.classList.add("active-mode");
     if (mode === "diagnostic") modeDiagnostic.classList.add("active-mode");
+    if (mode === "daily_batch") modeDaily.classList.add("active-mode");
 
     console.log("Mode set to:", currentMode);
     updateUIForMode(); // 🔥 ADD THIS LINE
@@ -129,6 +218,13 @@ function updateUIForMode() {
         unitSelect.style.display = "none";
         unitLabel.style.display = "none"; // 🔥 hide label too
     }
+
+if (currentMode === "daily_batch") {
+    timeSelect.style.display = "none";
+    unitSelect.style.display = "none";
+    timeLabel.style.display = "none";
+    unitLabel.style.display = "none";
+}
 
     // DIAGNOSTIC
     if (currentMode === "diagnostic") {
@@ -419,20 +515,9 @@ setTimeout(() => {
 const heroStartBtn = document.getElementById("hero-start-btn");
 
 if (heroStartBtn) {
-
   heroStartBtn.addEventListener("click", () => {
-
-    const target = document.getElementById("quiz-section");
-
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }
-
+    window.location.href = '/quiz.html';
   });
-
 }
 
 /* ========================= */
@@ -530,10 +615,7 @@ const quizSection = document.getElementById("quiz-section");
 
 if (floatingCTA && quizSection) {
   floatingCTA.addEventListener("click", () => {
-    quizSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+    window.location.href = '/quiz.html';
   });
 }
 
@@ -541,4 +623,11 @@ document.getElementById("header-auth-btn").onclick = () => {
   window.location.href = "/auth.html?mode=signup";
 };
 
+
+if (user) {
+    // If an exam is already selected (e.g. from a previous session),
+    // init the banner immediately
+    const exam = document.getElementById('exam-select')?.value;
+    if (exam) initQuizBanner(exam);
+}
 });
