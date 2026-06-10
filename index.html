@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Winnowic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<button class="floating-cta" id="floating-cta">
+  Take SAT Questions Now
+</button>
+<body>
+
+
+  <!-- ========================= -->
+<!-- TOP NAVIGATION -->
+<!-- ========================= -->
+
+<header class="site-header">
+ 
+    <!-- LEFT: gear + upgrade -->
+    <div class="header-left">
+ 
+        <div class="account-menu" style="position:relative;">
+            <button id="account-gear" class="gear-btn" style="display:none;"
+                    aria-label="Account settings">
+                <i data-lucide="settings"></i>
+            </button>
+ 
+            <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                <div id="account-email" class="dropdown-email"></div>
+ 
+                <button id="logout-btn" class="dropdown-item">
+                    <i data-lucide="log-out"></i>
+                    Log Out
+                </button>
+ 
+                <button id="cnclsub-btn" class="dropdown-item">
+                    <i data-lucide="x-circle"></i>
+                    Cancel Subscription
+                </button>
+ 
+                <button id="dltact-btn" class="dropdown-item danger">
+                    <i data-lucide="trash-2"></i>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+ 
+        <button
+            id="header-upgrade-btn"
+            class="header-upgrade-btn"
+            onclick="window.location.href='/pricing.html'"
+            style="display:none;">
+            Upgrade to Premium
+        </button>
+ 
+    </div>
+ 
+    <!-- CENTER: logo + TM -->
+    <!-- index.html: no link wrapper -->
+    <div class="header-center">
+        <div class="logo-tm-wrap">
+            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+            <sup class="logo-tm-mark">™</sup>
+        </div>
+    </div>
+   
+    <div class="header-right">
+ 
+<button class="header-nav-link"
+        onclick="window.location.href='/quiz.html'">
+    Study Questions
+</button>
+
+        <button class="header-nav-link"
+                onclick="window.location.href='diagnostics.html'">
+            Diagnostics
+        </button>
+ 
+        <button id="header-auth-btn" class="header-auth-link">
+            Create Account
+        </button>
+ 
+    </div>
+ 
+</header>
+
+<!-- ========================= -->
+<!-- HERO SECTION -->
+<!-- ========================= -->
+
+<section class="hero-section">
+
+  <div class="hero-content">
+
+    <h1 class="hero-title">
+      Tailored SAT + AP Practice That Adapts To You
+    </h1>
+
+    <p class="hero-subtext">
+      Practice smarter, focus on weak areas, and track your improvement with adaptive quizzes and diagnostics.
+    </p>
+
+    <div class="hero-buttons">
+
+      <button id="hero-start-btn" class="primary-btn">
+        Take SAT Questions NOW!
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- HOW IT WORKS -->
+<!-- ========================= -->
+
+<section class="how-section reveal-on-scroll">
+
+  <div class="how-header">
+    <h2>How Winnowic Works</h2>
+    <p>
+      Personalized SAT + AP prep designed to improve weak areas faster.
+    </p>
+  </div>
+
+  <div class="how-layout">
+
+    <!-- LEFT SIDE -->
+    <div class="how-grid">
+
+      <div class="how-card reveal-on-scroll">
+        <div class="how-card-header">
+        <div class="how-number">1</div>
+
+        <h3>Take Practice Quizzes</h3>
+</div>
+        <p>
+          Choose SAT or AP exams and practice with targeted questions.
+        </p>
+      </div>
+
+      <div class="how-card reveal-on-scroll">
+        <div class="how-card-header">
+        <div class="how-number">2</div>
+
+        <h3>Identify Weak Areas</h3>
+</div>
+        <p>
+          Diagnostics and analytics show exactly what needs improvement.
+        </p>
+      </div>
+
+      <div class="how-card reveal-on-scroll">
+        <div class="how-card-header">
+        <div class="how-number">3</div>
+
+        <h3>Improve Faster</h3>
+</div>
+        <p>
+          Adaptive practice focuses on concepts you struggle with most.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="how-video">
+
+      <!-- YOUTUBE EMBED -->
+      <iframe
+        src="https://www.youtube.com/embed/L9Lq_mPNJYo"
+        title="Winnowic Demo"
+        frameborder="0"
+        allowfullscreen>
+      </iframe>
+
+      <!-- OR LOCAL VIDEO -->
+      <!--
+      <video controls>
+        <source src="videos/winnowic-demo.mp4" type="video/mp4">
+      </video>
+      -->
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DIAGNOSTICS PREVIEW -->
+<!-- ========================= -->
+
+<section class="stats-section reveal-on-scroll">
+
+  <div class="stats-content">
+
+    <div class="stats-left">
+
+      <span class="stats-label">
+        PERFORMANCE ANALYTICS
+      </span>
+
+      <h2>
+        Track Your Improvement Over Time
+      </h2>
+
+      <p>
+        Winnowic diagnostics help students identify weak areas, estimate scores, and improve faster with targeted practice.
+      </p>
+
+      <div class="stat-row">
+
+        <div class="stat-box">
+          <div class="stat-number" data-target="92">0</div>
+          <div class="stat-text">
+            Practice Accuracy Tracking
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-number" data-target="4">0</div>
+          <div class="stat-text">
+            Major Exams Supported
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="stats-right">
+
+      <div class="analytics-preview">
+
+        <div class="fake-chart">
+
+          <div class="chart-line"></div>
+
+          <div class="chart-dot dot-1"></div>
+          <div class="chart-dot dot-2"></div>
+          <div class="chart-dot dot-3"></div>
+          <div class="chart-dot dot-4"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MAIN CONTENT -->
+
+
+
+<div class="premium-hero">
+
+  <div class="premium-text">
+    <p class="premium-badge">Winnowic Premium</p>
+
+    <h2>
+      Smarter SAT Prep Built Around
+      <span>Your Weaknesses</span>
+    </h2>
+
+    <p class="premium-description">
+      Unlock adaptive quizzes, advanced diagnostics, score tracking,
+      improvement history, streaks, and targeted practice built from your real performance.
+    </p>
+
+    <div class="premium-features">
+      <div class="feature-pill">500+ Hard SAT Math Questions</div>
+      <div class="feature-pill">Adaptive Weakness Targeting</div>
+      <div class="feature-pill">Track Progress Over Time</div>
+      <div class="feature-pill">Unit Accuracy Breakdowns</div>
+      <div class="feature-pill">Improvement Calculators</div>
+      <div class="feature-pill">Current + Best Streaks</div>
+    </div>
+  </div>
+
+  <div class="premium-actions">
+
+    <button id="upgrade-btn-global" class="premium-upgrade-btn">
+      Upgrade to Premium — Starting at $5
+    </button>
+
+    <button
+      id="diagnostics-btn"
+      class="premium-diagnostics-btn"
+      onclick="window.location.href='diagnostics.html'"
+    >
+      View Diagnostics Demo
+    </button>
+
+  </div>
+
+</div>
+
+<div id="report-popup" class="report-popup" style="display:none;">
+  
+  <div class="popup-header">
+    <span>Report</span>
+    <span id="close-report" class="close-x">✕</span>
+  </div>
+
+  <select id="report-type" class="text-input">
+    <option value="incorrect">Incorrect Answer</option>
+    <option value="unclear">Unclear Wording</option>
+    <option value="other">Other</option>
+  </select>
+
+  <textarea id="report-message" placeholder="Optional details..." style="display:none;"></textarea>
+
+  <button id="submit-report" class="btn-primary">Submit</button>
+
+</div>
+ 
+<div class="social-section">
+  <div class="social-card">
+    <h3>See Winnowic in action</h3>
+
+    <p class="social-subtext">
+      Watch how students use diagnostics to improve their scores
+    </p>
+
+    <div class="social-buttons">
+      <a href="https://www.instagram.com/trywinnowic/" target="_blank">
+        <button class="btn-secondary">Instagram</button>
+      </a>
+
+      <a href="https://www.tiktok.com/@trywinnowic?_r=1&_t=ZP-95qsSDf6A51" target="_blank">
+        <button class="btn-secondary">TikTok</button>
+      </a>
+
+      <a href="https://www.youtube.com/@Winnowic" target="_blank">
+        <button class="btn-secondary">YouTube</button>
+      </a>
+    </div>
+  </div>
+</div>
+<footer class="site-footer">
+ 
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+    </div>
+ 
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+    </nav>
+ 
+</footer>
+<script type="module" src="/js/auth.js"></script>
+<script type="module" src="/js/index.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+</body>
+
+</html>

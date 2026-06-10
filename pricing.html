@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <title>Upgrade</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+ <script defer src="/_vercel/insights/script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+
+<body class="pricing-page">
+
+<header class="site-header">
+ 
+    <!-- LEFT: gear + upgrade -->
+    <div class="header-left">
+ 
+        <div class="account-menu" style="position:relative;">
+            <button id="account-gear" class="gear-btn" style="display:none;"
+                    aria-label="Account settings">
+                <i data-lucide="settings"></i>
+            </button>
+ 
+            <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                <div id="account-email" class="dropdown-email"></div>
+ 
+                <button id="logout-btn" class="dropdown-item">
+                    <i data-lucide="log-out"></i>
+                    Log Out
+                </button>
+ 
+                <button id="cnclsub-btn" class="dropdown-item">
+                    <i data-lucide="x-circle"></i>
+                    Cancel Subscription
+                </button>
+ 
+                <button id="dltact-btn" class="dropdown-item danger">
+                    <i data-lucide="trash-2"></i>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+ 
+        <button
+            id="header-upgrade-btn"
+            class="header-upgrade-btn"
+            onclick="window.location.href='/pricing.html'"
+            style="display:none;">
+            Upgrade to Premium
+        </button>
+ 
+    </div>
+ 
+    <div class="header-center">
+        <a href="/index.html" class="logo-tm-wrap">
+            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+            <sup class="logo-tm-mark">™</sup>
+        </a>
+    </div>
+ 
+    <!-- RIGHT: nav links + auth -->
+    <div class="header-right">
+ 
+<button class="header-nav-link"
+        onclick="window.location.href='/quiz.html'">
+    Study Questions
+</button>
+
+        <button class="header-nav-link"
+                onclick="window.location.href='diagnostics.html'">
+            Diagnostics
+        </button>
+ 
+        <button id="header-auth-btn" class="header-auth-link">
+            Create Account
+        </button>
+ 
+    </div>
+ 
+</header>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="pricing-header">
+
+    <div>
+
+      <div class="pricing-label">
+        WINNOWIC PREMIUM
+      </div>
+
+      <h1 class="pricing-title">
+        Upgrade Your Prep
+      </h1>
+
+      <p id="pricing-message" class="pricing-subtitle">
+        Adaptive SAT preparation designed to help students study smarter,
+        improve faster, and understand exactly what to work on next.
+      </p>
+
+    </div>
+
+    <button id="back-btn" class="btn-secondary pricing-back-btn">
+      ← Back
+    </button>
+
+  </div>
+
+  <!-- HERO INFO -->
+  <div class="pricing-hero-card">
+
+    <div class="pricing-hero-content">
+
+      <div class="pricing-hero-title">
+        Built For Modern SAT Prep
+      </div>
+
+      <div class="pricing-hero-description">
+        Winnowic combines adaptive practice, detailed analytics,
+        progress tracking, and targeted review into one streamlined platform.
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- PLANS -->
+  <div class="pricing-container">
+
+    <!-- FREE -->
+    <div class="plan modern-plan">
+
+      <div class="plan-badge neutral-badge">
+        FREE
+      </div>
+
+      <h2>Starter</h2>
+
+      <p class="price">
+        $0
+      </p>
+
+      <ul class="modern-feature-list">
+
+        <li>1 SAT simulation</li>
+
+        <li>Limited question bank</li>
+
+        <li>Question filters</li>
+
+        <li>Basic practice access</li>
+
+      </ul>
+
+    </div>
+
+    <!-- SAT -->
+    <div class="plan modern-plan sat-highlight">
+
+      <div class="plan-badge best-badge">
+        MOST POPULAR
+      </div>
+
+      <h2>SAT Math</h2>
+
+      <p class="price">
+        $6<span>/month</span>
+      </p>
+
+      <div class="plan-description">
+        Full premium SAT preparation with adaptive learning and advanced analytics.
+      </div>
+
+      <ul class="modern-feature-list premium-list">
+
+        <li>
+          <strong>500+ Hard SAT Math Questions</strong>
+        </li>
+
+        <li>
+          <a href="/quiz.html" class="feature-link">
+            Adaptive Quizzes
+          </a>
+          <span class="feature-subtext">
+            Questions dynamically target weaknesses
+          </span>
+        </li>
+
+        <li>
+          <a href="/diagnostics.html" class="feature-link">
+            Advanced Diagnostics & Analytics
+          </a>
+
+          <div class="feature-subpoints">
+            • Predicted SAT scoring<br>
+            • Readiness tracking<br>
+            • Unit-by-unit performance<br>
+            • Progress graphs<br>
+            • Weakness identification
+          </div>
+        </li>
+
+        <li>
+          Detailed streak tracking
+        </li>
+
+        <li>
+          Smart targeted review
+        </li>
+
+        <li>
+          Continuous improvement tracking
+        </li>
+
+      </ul>
+
+      <button id="sat-btn" class="btn-primary premium-main-btn">
+        Start SAT Plan
+      </button>
+
+    </div>
+
+    <!-- AP -->
+    <div class="plan modern-plan disabled-plan">
+
+      <div class="plan-badge locked-badge">
+        CURRENTLY UNAVAILABLE
+      </div>
+
+      <h2>AP 5's Deal</h2>
+
+      <p class="price disabled-price">
+        $5
+      </p>
+
+      <p class="small-text">
+        April–May only
+      </p>
+
+      <ul class="modern-feature-list">
+
+        <li>Access to one AP exam</li>
+
+        <li>Diagnostics included</li>
+
+        <li>200+ questions per exam</li>
+
+        <li>Expires May 31</li>
+
+      </ul>
+
+      <div class="locked-overlay-text">
+        AP exam season has ended for this year.
+      </div>
+
+      <div class="ap-buttons">
+
+        <button
+          id="ap_calc_ab_btn"
+          class="btn-secondary disabled-btn"
+          disabled
+        >
+          AP Calc AB
+        </button>
+
+        <button
+          id="ap_calc_bc_btn"
+          class="btn-secondary disabled-btn"
+          disabled
+        >
+          AP Calc BC
+        </button>
+
+        <button
+          id="ap_precalc_btn"
+          class="btn-secondary disabled-btn"
+          disabled
+        >
+          AP Precalc
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ALL -->
+    <div class="plan modern-plan disabled-plan">
+
+      <div class="plan-badge locked-badge">
+        TEMPORARILY DISABLED
+      </div>
+
+      <h2>All Exams</h2>
+
+      <p class="price disabled-price">
+        $10<span>/month</span>
+      </p>
+
+      <ul class="modern-feature-list">
+
+        <li>SAT + AP access</li>
+
+        <li>Adaptive quizzes</li>
+
+        <li>Advanced diagnostics</li>
+
+        <li>800+ SAT & AP questions</li>
+
+      </ul>
+
+      <div class="locked-overlay-text">
+        Full bundle returns next AP season.
+      </div>
+
+      <button
+        id="all-exams-btn"
+        class="btn-primary disabled-btn"
+        disabled
+      >
+        Currently Unavailable
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="pricing-disclaimer modern-disclaimer">
+
+    MCQ and other exam content are not affiliated with or endorsed by the College Board.
+    MCQ ONLY! No refunds once purchased. No cancelation fees.
+    When canceling subscriptions (SAT or All Exams) you will be charged for the billing
+    cycle in which the cancelation occured. Your subscription will immeadiately stop thereafter.
+
+  </div>
+
+</div>
+
+<script>
+  const backBtn = document.getElementById("back-btn");
+
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      if (document.referrer) {
+        window.history.back();
+      } else {
+        window.location.href = "/index.html";
+      }
+    });
+  }
+</script>
+
+<footer class="site-footer">
+ 
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+    </div>
+ 
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+    </nav>
+ 
+</footer>
+
+<script type="module" src="/js/stripe.js"></script>
+<script type="module" src="/js/auth.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+
+</body>
+</html>

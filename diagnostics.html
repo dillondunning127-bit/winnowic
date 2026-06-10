@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Diagnostics</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="js/chart.js"></script>
+   <script defer src="/_vercel/insights/script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+ 
+    <!-- LEFT: gear + upgrade -->
+    <div class="header-left">
+ 
+        <div class="account-menu" style="position:relative;">
+            <button id="account-gear" class="gear-btn" style="display:none;"
+                    aria-label="Account settings">
+                <i data-lucide="settings"></i>
+            </button>
+ 
+            <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                <div id="account-email" class="dropdown-email"></div>
+ 
+                <button id="logout-btn" class="dropdown-item">
+                    <i data-lucide="log-out"></i>
+                    Log Out
+                </button>
+ 
+                <button id="cnclsub-btn" class="dropdown-item">
+                    <i data-lucide="x-circle"></i>
+                    Cancel Subscription
+                </button>
+ 
+                <button id="dltact-btn" class="dropdown-item danger">
+                    <i data-lucide="trash-2"></i>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+ 
+        <button
+            id="header-upgrade-btn"
+            class="header-upgrade-btn"
+            onclick="window.location.href='/pricing.html'"
+            style="display:none;">
+            Upgrade to Premium
+        </button>
+ 
+    </div>
+ 
+    <div class="header-center">
+        <a href="/index.html" class="logo-tm-wrap">
+            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+            <sup class="logo-tm-mark">™</sup>
+        </a>
+    </div>
+ 
+    <!-- RIGHT: nav links + auth -->
+    <div class="header-right">
+ 
+<button class="header-nav-link"
+        onclick="window.location.href='/quiz.html'">
+    Study Questions
+</button>
+ 
+        <button id="header-auth-btn" class="header-auth-link">
+            Create Account
+        </button>
+ 
+    </div>
+ 
+</header>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+ <!-- TOP BAR -->
+<div class="top-bar diagnostics-topbar">
+
+  <div class="diagnostics-page-header">
+
+    <div class="diagnostics-header-accent"></div>
+
+    <div>
+      <div class="diagnostics-page-label">
+        Performance Analytics
+      </div>
+
+      <h1 class="diagnostics-page-title">
+        Diagnostics Dashboard
+      </h1>
+    </div>
+
+  </div>
+
+  <a href="index.html">
+    <button class="btn-secondary diagnostics-back-btn">
+      Back
+    </button>
+  </a>
+
+</div>
+
+  <section class="diagnostics-hero">
+
+  <div class="hero-badge">
+    Winnowic Premium Analytics
+  </div>
+
+  <h1 class="diagnostics-title">
+    Know Exactly What To Study.
+  </h1>
+
+  <p class="diagnostics-subtitle">
+    Winnowic analyzes every question you answer to predict your score,
+    identify weak units, and track improvement over time.
+  </p>
+
+  <div class="hero-feature-row">
+
+    <div class="hero-feature-card">
+      <div class="hero-feature-number">500+</div>
+      <div class="hero-feature-label">SAT Math Questions</div>
+    </div>
+
+    <div class="hero-feature-card">
+      <div class="hero-feature-number">Adaptive</div>
+      <div class="hero-feature-label">Weakness Targeting</div>
+    </div>
+
+    <div class="hero-feature-card">
+      <div class="hero-feature-number">Live</div>
+      <div class="hero-feature-label">Score Prediction</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<div class="upgrade-wrapper">
+  <button id="upgrade-btn-global" class="primary-btn">
+    Pricing starting at just $5! - Adaptive Quizzes, Score Tracking/Breakdown and more!
+  </button>
+</div>
+
+<div id="preview-banner" class="preview-banner">
+  Preview Mode — Sample Data
+</div>
+
+  <!-- SELECTORS CARD -->
+   
+  <div class="card diagnostics-control-card">
+
+  <div class="diagnostics-control-top">
+
+    <div>
+
+      <div class="diagnostics-control-badge">
+        Interactive Demo
+      </div>
+
+      <h2 class="diagnostics-control-title">
+        Explore Your Diagnostics
+      </h2>
+
+      <p class="diagnostics-control-description">
+        Click preview to see how premium features work with
+        sample real user data.
+      </p>
+
+    </div>
+
+    <button id="preview-full" class="primary-btn diagnostics-preview-btn">
+      Preview Diagnostics
+    </button>
+
+  </div>
+
+  <div class="diagnostics-selector-section">
+
+    <label class="modern-label">
+      Select Exam
+    </label>
+
+    <select id="examSelect" class="modern-select">
+      <option value="">Select Exam</option>
+      <option value="SAT_MATH">SAT Math</option>
+      <option value="AP_PRECALC">AP Precalculus</option>
+      <option value="AP_CALC_AB">AP Calc AB</option>
+      <option value="AP_CALC_BC">AP Calc BC</option>
+    </select>
+
+  </div>
+
+</div>
+
+  <!-- READINESS CARD -->
+  <div class="analytics-dashboard card" id="readiness-container" style="display:none;text-align:center;">
+
+  <div class="readiness-top-section">
+
+  <!-- LEFT DESCRIPTION -->
+  <div class="analytics-description-panel">
+
+    <div class="analytics-mini-badge">
+      PERFORMANCE ANALYTICS
+    </div>
+
+    <h2 class="analytics-side-title">
+      Track your growth visually.
+    </h2>
+
+    <p class="analytics-side-text">
+      This is where you can monitor your progress and identify
+      which units are helping — or hurting — your predicted score.
+    </p>
+
+    <p class="analytics-side-text">
+      <strong>Hover over the donut chart</strong> to see how much each
+      unit contributes to your readiness score and how much improvement
+      remains.
+    </p>
+
+  </div>
+
+  <!-- CENTER CHART -->
+  <div>
+
+    <div class="chart-title-wrap">
+
+      <h2 class="readiness-main-title">
+        SAT Readiness Predictor
+      </h2>
+
+      <p class="readiness-main-subtitle">
+        Answer <strong>20 questions</strong> to begin generating
+        a predicted score and adaptive readiness insights.
+      </p>
+
+    </div>
+
+    <div id="readinessChartContainer"
+      style="display:none; margin:auto; position:relative; width:260px;">
+
+      <canvas id="readinessChart"></canvas>
+
+      <div id="chartCenterScore" style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        font-size:28px;
+        font-weight:bold;
+      ">
+        --
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="readiness-side-info">
+
+    <div class="readiness-info-card">
+
+      <div class="readiness-label">
+        Exam Readiness
+      </div>
+
+      <div id="readinessPercentContainer">
+        <span id="readinessScore"></span>
+      </div>
+
+    </div>
+
+    <div class="readiness-info-card">
+
+      <div class="readiness-label">
+        Largest Improvement
+      </div>
+
+      <div id="largestImprovement"
+        style="margin-top:10px;font-weight:bold;">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- PROGRESS CHART -->
+  <div class="progress-chart-card">
+
+  <div class="progress-chart-header">
+
+    <div class="progress-chart-badge">
+      LIVE TRACKING
+    </div>
+
+    <h2 class="progress-chart-title">
+      Progress Over Time
+    </h2>
+
+    <p class="progress-chart-subtitle">
+      This graph updates every <strong>20 questions</strong>.
+      Hover over individual points to see how your predicted
+      score and readiness have improved over time.
+    </p>
+
+  </div>
+
+  <canvas id="progressChart"></canvas>
+
+  <div id="progressInsight"
+    style="margin-top:14px; font-weight:500;">
+  </div>
+
+</div>
+</div>
+
+  
+  <!-- UNIT DETAILS CARD -->
+  <div id="diagnosticResults" class="card" style="display:none;">
+
+    <h2 id="unitTitle"></h2>
+
+    <div>
+      <strong>Accuracy (Last 20):</strong>
+      <span id="accuracyScore"></span>
+    </div>
+
+    <div>
+      <strong>Current Streak:</strong>
+      <span id="streakScore"></span>
+    </div>
+
+    <div>
+      <strong>Mastery Level:</strong>
+      <div id="masteryBadge"></div>
+    </div>
+
+    <div class="progress-bar-bg" style="margin-top:10px;">
+      <div id="masteryBar"></div>
+    </div>
+
+  </div>
+
+</div>
+<footer class="site-footer">
+ 
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+    </div>
+ 
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+    </nav>
+ 
+</footer>
+<script type="module" src="js/diagnostics-mini.js"></script>
+<script type="module" src="js/diagnostics.js"></script>
+<script type="module" src="/js/auth.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+</body>
+</html>

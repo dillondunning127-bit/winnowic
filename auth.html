@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <title>Winnowic Auth</title>
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script defer src="/_vercel/insights/script.js"></script>
+   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-tabs">
+            <button id="login-tab">Login</button>
+            <button id="signup-tab">Create Account</button>
+        </div>
+
+        <h2 id="auth-title">Welcome Back</h2>
+
+        <input type="email" id="auth-email" placeholder="Email">
+
+        <input type="password" id="auth-password" placeholder="Password">
+
+        <p id="forgot-password-link">Forgot Password?</p>
+
+        <button id="auth-submit-btn">
+            Login
+        </button>
+
+        <p id="auth-message"></p>
+
+    </div>
+
+</div>
+
+<script type="module" src="./js/auth.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+
+</body>
+</html>
