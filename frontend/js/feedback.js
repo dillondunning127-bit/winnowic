@@ -1,4 +1,6 @@
 import { supabase } from "./supabase.js";
+import { initAuthListener } from './auth.js';
+initAuthListener();
 
 document.addEventListener("DOMContentLoaded", () => {
 
