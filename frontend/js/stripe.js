@@ -46,7 +46,8 @@ async function startCheckout(priceId, exam, productType) {
       priceId,
       userId: user.id,
       exam,
-      productType
+      productType,
+      post_id: new URLSearchParams(window.location.search).get('post_id') || ''
     })
   });
 
