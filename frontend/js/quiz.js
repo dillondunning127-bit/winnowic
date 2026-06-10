@@ -4,6 +4,10 @@ import { checkExamAccess } from "./subscription.js";
 import { getExamArrayValue } from "./diagnostics.js";
 import { maybeCreateSnapshot } from "./diagnostics.js";
 import { updateUserStats } from "./diagnostics.js";
+// In quiz.js — add at top
+import { startSession, endSession } from './sessions.js';
+import { getDailyBatch, markBatchComplete } from './dailyBatch.js';
+getDailyBatch('SAT_MATH').then(console.log);
 let usedQuestionIds = new Set();
 let allQuizQuestions = [];
 let answerResults = [];
@@ -34,6 +38,7 @@ let quizConfig = {
 let answeredQuestions = new Set();
 let sectionStartIndex = 0;
 let reviewMode = false;
+let currentSessionId = null;
 import { stopTimer } from "./quizSettings.js";
 
 export async function startQuiz(mode, externalConfig = null) {
@@ -44,7 +49,7 @@ quizConfig = {
     unit: null,
     length: null
 };
-    
+   
   console.log("ENTRY:", mode, externalConfig);
     resetQuizState();
 showQuizControls();
@@ -81,6 +86,7 @@ if (!length || isNaN(length)) {
         unit,
         length
     };
+    await startSession(quizConfig.exam, mode);
 console.log("QUIZ CONFIG:", quizConfig);
     if (mode === "adaptive") {
         return startAdaptiveFlow();
@@ -89,7 +95,7 @@ console.log("QUIZ CONFIG:", quizConfig);
     if (mode === "diagnostic") {
         return startDiagnosticFlow();
     }
-
+if (mode === "daily_batch") return startBatchFlow();
     return startNormalFlow();
 }
 
@@ -151,6 +157,72 @@ quizConfig.examForQuestions = originalExam;
     }
 
     return startNormalFlow();
+}
+
+async function startBatchFlow() {
+    isAdaptiveMode = false;
+ 
+    const exam = quizConfig.exam;
+ 
+    // ── 1. Get or generate today's batch ──
+    const batch = await getDailyBatch(exam);
+ 
+    if (!batch || !batch.question_ids || batch.question_ids.length === 0) {
+        console.error("startBatchFlow: no batch available for", exam);
+        document.getElementById("message").textContent =
+            "No daily batch available. Try selecting an exam first.";
+        return;
+    }
+ 
+    // Store batch ID on quizConfig so finalizeQuizData can mark it complete
+    quizConfig.batchId = batch.id;
+ 
+    // ── 2. Fetch full question objects by ID array ──
+    // Uses .in() — bypasses exam/unit/section filters entirely
+    const { data, error } = await supabase
+        .from("questions")
+        .select("*")
+        .in("id", batch.question_ids)
+        .eq("is_active", true);
+ 
+    if (error || !data || data.length === 0) {
+        console.error("startBatchFlow: question fetch failed", error);
+        document.getElementById("message").textContent =
+            "Could not load today's questions. Please try again.";
+        return;
+    }
+ 
+    // ── 3. Preserve the batch order (getDailyBatch stores IDs in priority order) ──
+    const questionMap = Object.fromEntries(data.map(q => [q.id, q]));
+    const ordered = batch.question_ids
+        .map(id => questionMap[id])
+        .filter(Boolean); // drop any IDs that no longer exist in questions table
+ 
+    // ── 4. Set globals directly (same pattern as end of loadQuestions) ──
+    ordered.forEach(q => {
+        q.sectionIndex = 0; // batch has no sections
+        usedQuestionIds.add(q.id);
+    });
+ 
+    currentQuestions      = ordered;
+    allQuizQuestions      = [...ordered]; // fresh — batch is its own quiz
+    currentQuestionIndex  = 0;
+    totalQuestions        = ordered.length;
+ 
+    // ── 5. Show quiz UI (same as loadQuestions does) ──
+    const questionCard = document.getElementById("question-card");
+    if (questionCard) questionCard.style.display = "block";
+ 
+    document.getElementById("progress-bar").style.width = "0%";
+    document.getElementById("progress-container").textContent = "";
+    document.getElementById("explanation").textContent = "";
+ 
+    // Hide timer — daily batch is untimed
+    const timerDisplay = document.getElementById("timerDisplay");
+    if (timerDisplay) timerDisplay.style.display = "none";
+ 
+    renderQuestionPalette();
+    showQuestion();
 }
 
 async function startAdaptiveFlow() {
@@ -1151,6 +1223,10 @@ console.log("TOPIC ATTEMPTS INSERT:", topicAttempts);
             .insert(topicAttempts);
     }
 
+     if (quizConfig.mode === "daily_batch" && quizConfig.batchId) { 
+        await markBatchComplete(quizConfig.batchId, answerResults.length);
+ }
+
     // =========================
     // UPDATE AGGREGATED STATS
     // =========================
@@ -1179,25 +1255,33 @@ console.log("FINALIZE USER CHECK:", user);
 function updateNextButtonState() {
     const prevBtn = document.getElementById("prev-btn");
 
-if (prevBtn) {
-
-    // hide on first question
-    if (currentQuestionIndex === 0 && !reviewMode) {
-        prevBtn.style.display = "none";
-    } else {
-        prevBtn.style.display = "";
+    if (prevBtn) {
+        if (currentQuestionIndex === 0 && !reviewMode) {
+            prevBtn.style.display = "none";
+        } else {
+            prevBtn.style.display = "";
+        }
     }
 
-}
     const nextBtn = document.getElementById("next-nav-btn");
-
     if (!nextBtn) return;
 
-    const isLastQuestion =
-    currentQuestionIndex >= currentQuestions.length - 1;
+    const isLastQuestion = currentQuestionIndex >= currentQuestions.length - 1;
 
-    const isLastSection =
-        currentSectionIndex === examSections.length - 1;
+    // ── Daily batch has no sections — just submit at the end ──
+    if (quizConfig.mode === "daily_batch") {
+        if (!isLastQuestion) {
+            nextBtn.textContent = "Next";
+            nextBtn.onclick = nextQuestion;
+        } else {
+            nextBtn.textContent = "Submit Quiz";
+            nextBtn.onclick = submitQuiz;
+        }
+        return;
+    }
+
+    // ── Normal / adaptive / diagnostic ──
+    const isLastSection = currentSectionIndex === examSections.length - 1;
 
     if (!isLastQuestion) {
         nextBtn.textContent = "Next";
@@ -1205,16 +1289,12 @@ if (prevBtn) {
         return;
     }
 
-    // LAST QUESTION OF SECTION
     if (!isLastSection) {
         nextBtn.textContent = "Proceed to Next Section";
-        nextBtn.onclick = () => {
-            checkSectionCompletion();
-        };
+        nextBtn.onclick = () => checkSectionCompletion();
         return;
     }
 
-    // LAST QUESTION OF LAST SECTION
     nextBtn.textContent = "Submit Quiz";
     nextBtn.onclick = submitQuiz;
 }
@@ -1302,9 +1382,78 @@ export async function loadHistory(userId) {
 /* ============================= */
 
 async function showFinalScore() {
+await endSession(answerResults.length);
 const reportBtn = document.getElementById("report-btn");
 if (reportBtn) reportBtn.style.display = "none";
 const isDiagnosticMode = quizConfig.mode === "diagnostic";
+
+if (quizConfig.mode === "daily_batch") {
+    
+    // Fetch current streak before rendering
+    const { getBatchStreak } = await import('./dailyBatch.js');
+    const { data: { user } } = await supabase.auth.getUser();
+    const streak = user ? await getBatchStreak(user.id, quizConfig.exam) : 1;
+
+    document.getElementById("question").innerHTML = `
+        <div style="text-align:center; padding: 10px 0;">
+            <div style="font-size:22px; font-weight:700; margin-bottom:6px;">
+                Daily batch complete!
+            </div>
+            <div style="
+                display:inline-flex;
+                align-items:center;
+                gap:6px;
+                background:#FFF3E0;
+                border-radius:20px;
+                padding:6px 14px;
+                font-size:14px;
+                font-weight:600;
+                color:#FF6B00;
+                margin-bottom:16px;
+            ">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                     stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round"
+                     stroke-linejoin="round">
+                  <path d="M12 2c0 0-4 4-4 8a4 4 0 0 0 8 0c0-1.5-.5-3-1-4
+                           0 0 0 3-2 3s-2-2-2-3c0-2 1-4 1-4z"/>
+                  <path d="M12 16c-2.5 0-5-1.5-5-5 0-2 1-3.5 2-4.5
+                           .5 1.5 1.5 2.5 3 2.5s2.5-1 3-2.5c1 1 2 2.5 2 4.5
+                           0 3.5-2.5 5-5 5z"/>
+                </svg>
+                ${streak} day streak
+            </div>
+            <div style="font-size:15px; color:#555; margin-bottom:20px;">
+                ${score} / ${totalQuestions} correct —
+                your next batch drops tomorrow.
+            </div>
+            <div style="text-align:center; margin-bottom:8px; display:flex; gap:10px; justify-content:center;">
+    <button onclick="
+        document.getElementById('question-card').style.display='none';
+        document.getElementById('mode-selector-card').style.display='block';
+        document.getElementById('settings-card').style.display='block';
+    " class="btn-primary" style="padding:10px 24px; width:auto;">
+        Keep Practicing
+    </button>
+    <button onclick="window.location.href='/diagnostics.html'"
+        class="btn-secondary" style="padding:10px 24px; width:auto;">
+        View Progress
+    </button>
+</div>
+        </div>
+    `;
+
+    document.getElementById("prev-btn").style.display = "none";
+    document.getElementById("next-nav-btn").style.display = "none";
+    document.getElementById("explanation").textContent = "";
+    document.getElementById("grid-container").style.display = "none";
+    document.getElementById("question-image-container").style.display = "none";
+    ["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
+        document.getElementById(id).style.display = "none";
+    });
+    stopTimer();
+    await finalizeQuizData();
+    return;
+}
 
 if (isDiagnosticMode) {
 
@@ -1380,6 +1529,7 @@ if (prevBtn) {
     // reset index so new quiz can start clean
     currentQuestionIndex = 0;
     score = 0;
+    
 }
 
 //Load adaptive quiz!!
