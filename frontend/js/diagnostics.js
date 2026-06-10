@@ -1,6 +1,8 @@
 import { supabase } from "./supabase.js";
 import { getUserExams } from "./subscription.js";
 import { checkExamAccess } from "./subscription.js";
+import { initAuthListener } from './auth.js';
+initAuthListener();
 let readinessChart = null;
 
 let examSelect;
