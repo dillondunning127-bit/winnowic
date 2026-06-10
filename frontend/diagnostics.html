@@ -8,8 +8,73 @@
   <script src="js/chart.js"></script>
    <script defer src="/_vercel/insights/script.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
+
+<header class="site-header">
+ 
+    <!-- LEFT: gear + upgrade -->
+    <div class="header-left">
+ 
+        <div class="account-menu" style="position:relative;">
+            <button id="account-gear" class="gear-btn" style="display:none;"
+                    aria-label="Account settings">
+                <i data-lucide="settings"></i>
+            </button>
+ 
+            <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                <div id="account-email" class="dropdown-email"></div>
+ 
+                <button id="logout-btn" class="dropdown-item">
+                    <i data-lucide="log-out"></i>
+                    Log Out
+                </button>
+ 
+                <button id="cnclsub-btn" class="dropdown-item">
+                    <i data-lucide="x-circle"></i>
+                    Cancel Subscription
+                </button>
+ 
+                <button id="dltact-btn" class="dropdown-item danger">
+                    <i data-lucide="trash-2"></i>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+ 
+        <button
+            id="header-upgrade-btn"
+            class="header-upgrade-btn"
+            onclick="window.location.href='/pricing.html'"
+            style="display:none;">
+            Upgrade to Premium
+        </button>
+ 
+    </div>
+ 
+    <div class="header-center">
+        <a href="/index.html" class="logo-tm-wrap">
+            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+            <sup class="logo-tm-mark">™</sup>
+        </a>
+    </div>
+ 
+    <!-- RIGHT: nav links + auth -->
+    <div class="header-right">
+ 
+<button class="header-nav-link"
+        onclick="window.location.href='/quiz.html'">
+    Study Questions
+</button>
+ 
+        <button id="header-auth-btn" class="header-auth-link">
+            Create Account
+        </button>
+ 
+    </div>
+ 
+</header>
 
 <div class="container">
 
@@ -59,7 +124,7 @@
   <div class="hero-feature-row">
 
     <div class="hero-feature-card">
-      <div class="hero-feature-number">200+</div>
+      <div class="hero-feature-number">500+</div>
       <div class="hero-feature-label">SAT Math Questions</div>
     </div>
 
@@ -289,8 +354,29 @@
   </div>
 
 </div>
-</body>
+<footer class="site-footer">
+ 
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+    </div>
+ 
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+    </nav>
+ 
+</footer>
 <script type="module" src="js/diagnostics-mini.js"></script>
 <script type="module" src="js/diagnostics.js"></script>
-
+<script type="module" src="/js/auth.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+</script>
+</body>
 </html>
