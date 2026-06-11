@@ -1155,10 +1155,6 @@ body::after {
     order: -1;                    /* 🔥 moves it to front */
   }
 
-  .gear-btn {
-    margin-right: auto;           /* 🔥 pushes it into view */
-  }
-
   /* ===== LOGO ===== */
   .logo-img {
     max-width: 160px;
@@ -1984,15 +1980,6 @@ border-bottom-right-radius: 40px;
 /* ========================= */
 
 @media (max-width: 768px) {
-
-  .header-left,
-  .header-right {
-    width: auto;
-  }
-
-  .header-logo {
-    max-width: 140px;
-  }
 
   .hero-section {
     min-height: 420px;
@@ -4077,27 +4064,20 @@ button:active {
   gap:12px;
 }
 
-.unit-streak-pill{
-
-  background:#FFF1E8;
-  color:#FF6B00;
-
-  border-radius:999px;
-
-  font-size:13px;
-  font-weight:600;
-
-  padding:10px 16px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  white-space:nowrap;
-
-  max-width:100%;
-
-  min-width:0;
+.unit-streak-pill {
+    background: #FFF1E8;
+    color: #FF6B00;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    width: fit-content;
+    min-width: fit-content;
+    flex-shrink: 0;
 }
 .unit-card-right{
   display:flex;
@@ -5481,30 +5461,6 @@ body {
   box-sizing: border-box;
 }
 
-/* =========================
-   HEADER
-========================= */
-
-
-
-.header-left,
-.header-center,
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.header-right {
-  gap: 0.45rem;
-  flex-shrink: 1;
-}
-
-.header-logo {
-  height: 34px;
-  max-width: 120px;
-  object-fit: contain;
-}
-
 #diagnostics-btn,
 #header-auth-btn {
   font-size: 0.72rem;
@@ -5753,11 +5709,6 @@ video {
     font-size:11px;
 
     min-width:unset;
-
-    max-width:120px;
-
-    overflow:hidden;
-    text-overflow:ellipsis;
   }
 
   .unit-expand-btn{
@@ -5800,45 +5751,6 @@ video {
 
     gap:14px;
   }
-
-  /* logo row */
-  .header-center{
-
-    order:1;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    gap:12px;
-
-    width:100%;
-  }
-
-  /* gear button LEFT of logo */
-  .header-center .gear-btn{
-    order:1;
-  }
-
-  .header-center .header-logo{
-    order:2;
-  }
-
-  /* bottom buttons */
-  .header-right{
-
-    order:2;
-
-    width:100%;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-  }
 }
 
 @media (max-width: 768px){
@@ -5852,57 +5764,6 @@ video {
 
 }
 
-@media (max-width: 768px) {
-
-  
-
-  /* TOP ROW = logo + gear */
-  .header-left,
-  .header-center{
-
-    display:flex;
-    align-items:center;
-  }
-
-  .header-left{
-
-    order:1;
-
-    position:absolute;
-
-    right:20px;
-
-    top:18px;
-  }
-
-  .header-center{
-
-    order:1;
-
-    width:100%;
-
-    justify-content:center;
-  }
-
-  /* BUTTON ROW */
-  .header-right{
-
-    order:2;
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-
-    width:100%;
-  }
-
-}
-
- 
 /* ── Header ── */
 .site-header {
     width: 100%;
@@ -6100,20 +5961,6 @@ video {
 /* ── Mobile ── */
 @media (max-width: 768px) {
  
-    .header-right {
-        gap: 12px;
-    }
- 
-    /* Hide diagnostics text link on mobile to save space */
-    .header-nav-link {
-        display: none;
-    }
- 
-    .header-upgrade-btn {
-        font-size: 11px;
-        padding: 5px 10px;
-    }
- 
     .site-footer {
         flex-direction: column;
         align-items: center;
@@ -6196,4 +6043,80 @@ video {
 .site-footer {
     position: relative;
     z-index: 10;
+}
+
+@media (max-width: 768px) {
+
+    /* ── Header ── */
+    .site-header {
+        padding: 10px 14px;
+        gap: 8px;
+    }
+
+    .header-left {
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .header-center {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .header-logo {
+        height: 30px;
+        max-width: 110px;
+        object-fit: contain;
+    }
+
+    .logo-tm-mark {
+        font-size: 8px;
+        margin-top: 4px;
+    }
+
+    .header-right {
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    /* Hide text nav links — too cramped on mobile */
+    .header-nav-link {
+        display: none;
+    }
+
+    /* Compact upgrade pill */
+    .header-upgrade-btn {
+        font-size: 10px;
+        padding: 5px 9px;
+        border-radius: 14px;
+    }
+
+    /* Compact auth link */
+    .header-auth-link {
+        font-size: 12px;
+    }
+
+    /* Gear icon slightly smaller */
+    .gear-btn i,
+    .gear-btn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Dropdown anchors left on mobile */
+    .account-dropdown {
+        left: 0;
+        right: auto;
+        min-width: 180px;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+        padding: 20px 16px;
+        margin-top: 0;
+    }
 }
