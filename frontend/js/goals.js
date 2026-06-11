@@ -220,39 +220,55 @@ export async function renderGoalBanner(containerEl, exam, onSave) {
 
 function goalFormHTML(exam, existingGoal) {
   const examLabel = exam.replace(/_/g, ' ');
-
-  // Score bounds by exam type
+ 
   const scoreConfig = {
     SAT_MATH:    { min: 200, max: 800,  placeholder: 'e.g. 700', step: 10 },
     AP_PRECALC:  { min: 1,   max: 5,    placeholder: 'e.g. 4',   step: 1  },
     AP_CALC_AB:  { min: 1,   max: 5,    placeholder: 'e.g. 4',   step: 1  },
     AP_CALC_BC:  { min: 1,   max: 5,    placeholder: 'e.g. 5',   step: 1  },
   };
-
+ 
   const sc = scoreConfig[exam] || { min: 1, max: 1600, placeholder: 'Target score', step: 1 };
-
+ 
   return `
-    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
-      <div style="flex:1; min-width:160px;">
+    <div style="
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    ">
+      <div style="flex: 0 0 auto;">
         <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">
-          ${examLabel} Test Date
+          Test Date
         </label>
         <input
           type="date"
           class="goal-date-input modern-select"
-          style="padding:8px 12px; width:100%; box-sizing:border-box;"
+          style="
+            width: 155px;
+            max-width: 155px;
+            min-width: 0;
+            padding: 8px 10px;
+            box-sizing: border-box;
+          "
           value="${existingGoal?.test_date || ''}"
           min="${new Date().toISOString().split('T')[0]}"
         >
       </div>
-      <div style="flex:1; min-width:140px;">
+      <div style="flex: 0 0 auto;">
         <label style="font-size:12px; color:#888; display:block; margin-bottom:4px;">
           Target Score (${sc.min}–${sc.max})
         </label>
         <input
           type="number"
           class="goal-score-input modern-select"
-          style="padding:8px 12px; width:100%; box-sizing:border-box;"
+          style="
+            width: 130px;
+            max-width: 130px;
+            min-width: 0;
+            padding: 8px 10px;
+            box-sizing: border-box;
+          "
           min="${sc.min}"
           max="${sc.max}"
           step="${sc.step}"
@@ -260,7 +276,11 @@ function goalFormHTML(exam, existingGoal) {
           value="${existingGoal?.target_score || ''}"
         >
       </div>
-      <button class="btn-primary goal-save-btn" style="padding:8px 18px; white-space:nowrap;">
+      <button class="btn-primary goal-save-btn" style="
+        padding: 8px 18px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      ">
         Save
       </button>
     </div>
