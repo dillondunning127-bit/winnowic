@@ -66,23 +66,27 @@
  
     <!-- RIGHT: nav links + auth -->
     <div class="header-right">
- 
-<button class="header-nav-link"
-        onclick="window.location.href='/quiz.html'">
-    Study Questions
-</button>
-
-        <button class="header-nav-link"
-                onclick="window.location.href='diagnostics.html'">
-            Diagnostics
-        </button>
- 
         <button id="header-auth-btn" class="header-auth-link">
             Create Account
         </button>
  
     </div>
- 
+ <!-- Mobile nav row — sits below logo row on small screens -->
+<div class="header-nav-row">
+    <!-- These links are hidden/shown by JS based on current page -->
+    <button class="header-nav-link" id="nav-quiz"
+            onclick="window.location.href='/quiz.html'">
+        Study Questions
+    </button>
+    <button class="header-nav-link" id="nav-diagnostics"
+            onclick="window.location.href='/diagnostics.html'">
+        Diagnostics
+    </button>
+    <button class="header-nav-link" id="nav-pricing"
+            onclick="window.location.href='/pricing.html'">
+        Pricing
+    </button>
+</div>
 </header>
 
 <div class="container">
