@@ -6044,120 +6044,360 @@ video {
     position: relative;
     z-index: 10;
 }
-
 /* ============================================================
-   WINNOWIC MOBILE FIXES
+   WINNOWIC HEADER V2 — TWO ROW LAYOUT (DESKTOP + MOBILE)
    
    INSTRUCTIONS:
-   1. DELETE your entire existing @media (max-width: 768px) block
-      that handles the header (the one we made last time)
-   2. REPLACE with this entire file's contents added to style.css
-   3. Keep all other existing media queries (pricing, feedback, etc.)
+   DELETE all existing CSS rules touching:
+   - .site-header
+   - .header-left
+   - .header-center  
+   - .header-right
+   - .header-nav-row
+   - .header-nav-link
+   - .header-auth-link
+   - .header-upgrade-btn
+   - .gear-btn (keep the non-header rules)
+   - .logo-tm-wrap / .logo-tm-mark
+   - Any media queries that touch the above
+   
+   REPLACE with everything below.
    ============================================================ */
 
 
+/* ── Base header shell ── */
+.site-header {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(11, 31, 59, 0.96);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+/* ── Row 1: logo row ── */
+.header-row-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── Row 2: nav row ── */
+.header-row-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 6px 28px 8px;
+    border-top: 1px solid rgba(255, 216, 77, 0.08);
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+/* ── Logo ── */
+.logo-tm-wrap {
+    display: inline-flex;
+    align-items: flex-start;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.header-logo {
+    height: 32px;
+    object-fit: contain;
+}
+
+.logo-tm-mark {
+    font-size: 9px;
+    font-weight: 700;
+    color: #FFD84D;
+    opacity: 0.7;
+    margin-left: 3px;
+    margin-top: 4px;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Left side of row 1: gear ── */
+.header-row-1-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+/* ── Right side of row 1: auth CTA ── */
+.header-row-1-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* ── Nav links (row 2) ── */
+.header-nav-link {
+    background: none;
+    border: none;
+    color: rgba(255, 216, 77, 0.65);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    padding: 2px 0;
+    transition: color 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.header-nav-link:hover {
+    color: #FFD84D;
+}
+
+/* ── Auth text button ── */
+.header-auth-link {
+    background: none;
+    border: none;
+    color: rgba(255, 216, 77, 0.75);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+
+.header-auth-link:hover {
+    color: #FFD84D;
+}
+
+/* ── Upgrade pill ── */
+.header-upgrade-btn {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    min-width: unset;
+    background: linear-gradient(135deg, #FFD84D 0%, #ffbf1f 100%);
+    color: #0B1F3B;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    box-sizing: content-box;
+    transition: transform 0.15s, opacity 0.15s;
+    letter-spacing: 0.01em;
+}
+
+.header-upgrade-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+}
+
+/* ── Gear button ── */
+.gear-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: rgba(255, 216, 77, 0.7);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: unset;
+    width: auto;
+    height: auto;
+    transition: color 0.15s;
+    border-radius: 50%;
+    box-sizing: content-box;
+}
+
+.gear-btn:hover {
+    color: #FFD84D;
+}
+
+.gear-btn i,
+.gear-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* ── Account dropdown ── */
+.account-menu {
+    position: relative;
+}
+
+.account-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #0B1F3B;
+    border: 1px solid rgba(255, 216, 77, 0.15);
+    border-radius: 14px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    z-index: 2000;
+}
+
+.dropdown-email {
+    font-size: 11px;
+    color: rgba(255, 216, 77, 0.5);
+    padding: 6px 10px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 6px;
+    word-break: break-all;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.dropdown-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+.dropdown-item.danger {
+    color: #ff6b6b;
+}
+
+.dropdown-item.danger:hover {
+    background: rgba(255,107,107,0.12);
+}
+
+.dropdown-item i,
+.dropdown-item svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* ── Footer ── */
+.site-footer {
+    background: rgba(11, 31, 59, 0.96);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    z-index: 10;
+    margin-top: 0;
+}
+
+.footer-left {
+    font-size: 12px;
+    color: rgba(255, 216, 77, 0.5);
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-left span {
+    color: rgba(255, 216, 77, 0.7);
+    font-weight: 600;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-link {
+    font-size: 12px;
+    color: rgba(255, 216, 77, 0.5);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.15s;
+}
+
+.footer-link:hover {
+    color: #FFD84D;
+}
+
+
 /* ============================================================
-   MOBILE HEADER — TWO ROW LAYOUT
+   MOBILE OVERRIDES (≤768px)
    ============================================================ */
 
 @media (max-width: 768px) {
 
-    .site-header {
-        flex-wrap: wrap;
+    /* Row 1 padding tighter */
+    .header-row-1 {
         padding: 10px 14px;
-        gap: 0;
-        row-gap: 0;
     }
 
-    /* ── ROW 1: gear | logo | auth CTA ── */
-
-    .header-left {
-        order: 1;
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+    /* Row 2 smaller text, tighter gap */
+    .header-row-2 {
+        padding: 5px 14px 7px;
+        gap: 14px;
     }
 
-    .header-center {
-        order: 2;
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* Auth button stays in header-right but floats to row 1 */
-    .header-right {
-        order: 3;
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    /* ── ROW 2: nav links ── */
-    .header-nav-row {
-        order: 4;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        padding: 6px 0 4px;
-        border-top: 1px solid rgba(255, 216, 77, 0.1);
-        margin-top: 6px;
-    }
-
-    /* Nav links SHOW on mobile (in row 2) */
     .header-nav-link {
-        display: block;
-        font-size: 12px;
-        color: rgba(255, 216, 77, 0.7);
+        font-size: 11px;
     }
 
-    .header-nav-link:hover {
-        color: #FFD84D;
-    }
-
-    /* Logo sizing */
+    /* Logo smaller */
     .header-logo {
-        height: 28px;
-        max-width: 100px;
-        object-fit: contain;
+        height: 26px;
+        max-width: 90px;
     }
 
     .logo-tm-mark {
-        font-size: 8px;
+        font-size: 7px;
         margin-top: 3px;
     }
 
-    /* Upgrade pill — compact */
+    /* Upgrade pill compact */
     .header-upgrade-btn {
         font-size: 10px;
         padding: 5px 10px;
-        border-radius: 14px;
     }
 
-    /* Auth link — compact */
+    /* Auth link compact */
     .header-auth-link {
-        font-size: 12px;
-        padding: 4px 0;
+        font-size: 11px;
     }
 
-    /* Gear icon */
+    /* Gear icon smaller */
     .gear-btn i,
     .gear-btn svg {
         width: 15px;
         height: 15px;
     }
 
-    /* Dropdown anchors left */
+    /* Dropdown anchors correctly */
     .account-dropdown {
         left: 0;
         right: auto;
         min-width: 180px;
-        top: calc(100% + 4px);
     }
 
     /* Footer stacks */
@@ -6167,78 +6407,49 @@ video {
         text-align: center;
         gap: 10px;
         padding: 20px 16px;
-        margin-top: 0;
     }
 }
 
 
 /* ============================================================
-   MODE TAB BAR — 2x2 GRID ON MOBILE
+   MODE TAB BAR — SMALLER ON MOBILE
    ============================================================ */
 
 @media (max-width: 600px) {
-
-    .mode-tab-bar {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4px;
-        border-radius: 12px;
-        padding: 4px;
-    }
 
     .mode-tab-btn {
-        font-size: 12px;
-        padding: 9px 6px;
-        border-radius: 8px;
-        white-space: normal;
-        text-align: center;
-        line-height: 1.2;
+        font-size: 11px;
+        padding: 7px 4px;
+        white-space: nowrap;
+    }
+
+    .mode-tab-bar {
+        gap: 3px;
+        padding: 3px;
     }
 }
 
 
 /* ============================================================
-   GOAL FORM — STACK ON MOBILE
+   GOAL FORM — FIX DATE INPUT WIDTH ON MOBILE
    ============================================================ */
 
 @media (max-width: 600px) {
 
-    /* The goal form flex row becomes a column */
     .goal-form-wrapper > div {
         flex-direction: column !important;
         align-items: stretch !important;
+        gap: 10px !important;
     }
 
-    .goal-form-wrapper .goal-date-input,
-    .goal-form-wrapper .goal-score-input {
+    .goal-date-input,
+    .goal-score-input {
         width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
     }
 
-    .goal-form-wrapper .goal-save-btn {
+    .goal-save-btn {
         width: 100%;
-    }
-}
-
-
-/* ============================================================
-   UNIT STREAK PILL — FIT CONTENT
-   ============================================================ */
-
-/* Remove the clipping from the 700px breakpoint */
-@media (max-width: 700px) {
-
-    .unit-streak-pill {
-        max-width: unset !important;
-        overflow: visible !important;
-        text-overflow: unset !important;
-        font-size: 11px;
-        padding: 6px 10px;
-    }
-
-    .unit-expand-btn {
-        width: 36px;
-        height: 36px;
-        flex-shrink: 0;
     }
 }
