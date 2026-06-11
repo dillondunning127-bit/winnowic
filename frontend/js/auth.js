@@ -104,7 +104,10 @@ submitBtn.innerHTML = "✓ Account Created!";
 
 setTimeout(() => {
     setAuthLoading(false);
-    window.location.href = "index.html#quiz-section";
+    const returnTo = document.referrer && !document.referrer.includes('auth.html')
+    ? document.referrer
+    : '/quiz.html';
+window.location.href = returnTo;
 }, 700);
 document.getElementById("auth-message").textContent = "";
     }
@@ -144,7 +147,10 @@ submitBtn.textContent = "✓ Logged In!";
     loadHistory(data.user.id);
     setTimeout(() => {
          setAuthLoading(false);
-    window.location.href = "index.html#quiz-section";
+    const returnTo = document.referrer && !document.referrer.includes('auth.html')
+    ? document.referrer
+    : '/quiz.html';
+window.location.href = returnTo;
 }, 700);
     document.getElementById("auth-message").textContent = "";
 }
@@ -177,10 +183,6 @@ export async function resetPassword() {
 
 export async function logout() {
     await supabase.auth.signOut();
-
-    document.getElementById("login-tab").style.display = "inline-block";
-    document.getElementById("signup-tab").style.display = "inline-block";
-    document.getElementById("account-email").textContent = "";
 
     ["choice-a", "choice-b", "choice-c", "choice-d"].forEach(id => {
         const el = document.getElementById(id);
@@ -236,23 +238,6 @@ if (headerUpgradeBtn) headerUpgradeBtn.style.display = 'block';
     });
 }
 
-// ACCOUNT MENU (SAFE INIT)
-const gearBtn = document.getElementById("account-gear");
-const dropdown = document.getElementById("account-dropdown");
-
-if (gearBtn && dropdown) {
-    gearBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!e.target.closest(".account-menu")) {
-            dropdown.style.display = "none";
-        }
-    });
-}
 
 // AUTH PAGE LOGIC
 const loginTab = document.getElementById("login-tab");
@@ -338,3 +323,37 @@ if (forgotPasswordLink) {
     });
 
 }
+
+export function initHeaderButtons() {
+    // Logout
+    document.getElementById("logout-btn")
+        ?.addEventListener("click", logout);
+
+    // Header auth button
+    document.getElementById("header-auth-btn")
+        ?.addEventListener("click", () => {
+            window.location.href = "/auth.html?mode=signup";
+        });
+
+    // Gear dropdown toggle
+    const gearBtn  = document.getElementById("account-gear");
+    const dropdown = document.getElementById("account-dropdown");
+
+    if (gearBtn && dropdown) {
+        gearBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".account-menu")) {
+                dropdown.style.display = "none";
+            }
+        });
+    }
+}
+
+// Bottom of auth.js — runs on every page
+initAuthListener();
+initHeaderButtons();
