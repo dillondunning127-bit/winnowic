@@ -45,7 +45,9 @@ export async function handleLoggedInUser(user) {
     if (gearBtn) {
         gearBtn.style.display = "block";
     }
-
+// Hide "Create Account" when logged in — upgrade btn takes its place
+const authBtn = document.getElementById('header-auth-btn');
+if (authBtn) authBtn.style.display = 'none';
     const loginBtn = document.getElementById("login-tab");
     const signupBtn = document.getElementById("signup-tab");
 
@@ -195,6 +197,19 @@ updateUpgradeButton(null);
 }
 
 export function initAuthListener() {
+    // Hide nav link for current page
+const path = window.location.pathname;
+if (path.includes('quiz'))        document.getElementById('nav-quiz')?.style.setProperty('display','none');
+if (path.includes('diagnostics')) document.getElementById('nav-diagnostics')?.style.setProperty('display','none');
+if (path.includes('pricing'))     document.getElementById('nav-pricing')?.style.setProperty('display','none');
+
+// On mobile: swap upgrade/create account based on auth state
+// (already handled by handleLoggedInUser and initAuthListener)
+// header-auth-btn hides when logged in via handleLoggedInUser — 
+// add this to handleLoggedInUser():
+//   document.getElementById('header-auth-btn')?.style.setProperty('display','none');
+// and to the logged-out branch of initAuthListener():
+//   document.getElementById('header-auth-btn')?.style.setProperty('display','block');
     supabase.auth.onAuthStateChange((event, session) => {
 
         const user = session?.user;
@@ -217,6 +232,9 @@ if (pwEl) pwEl.style.display = "none";
 
         } else {
 updateExamLocks();
+// Show "Create Account" when logged out
+const authBtn = document.getElementById('header-auth-btn');
+if (authBtn) authBtn.style.display = 'block';
             const loginBtn = document.getElementById("login-tab");
             const signupBtn = document.getElementById("signup-tab");
 updateUpgradeButton(null);
