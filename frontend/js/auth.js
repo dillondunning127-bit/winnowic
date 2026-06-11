@@ -195,7 +195,8 @@ export async function logout() {
 if (dropdown) dropdown.style.display = "none"; 
 updateUpgradeButton(null);
 }
-
+const authBtn = document.getElementById('header-auth-btn');
+if (authBtn) authBtn.style.display = 'none';
 export function initAuthListener() {
     // Hide nav link for current page
 const path = window.location.pathname;
@@ -246,6 +247,11 @@ updateUpgradeButton(null);
 
             const gear = document.getElementById("account-gear");
             if (gear) gear.style.display = "none";
+            const authBtnOut = document.getElementById('header-auth-btn');
+if (authBtnOut) authBtnOut.style.display = 'block';
+ 
+const upgradeOut = document.getElementById('header-upgrade-btn');
+if (upgradeOut) upgradeOut.style.display = 'none';
             // Show upgrade button to logged-out users too
 const headerUpgradeBtn = document.getElementById('header-upgrade-btn');
 if (headerUpgradeBtn) headerUpgradeBtn.style.display = 'block';
@@ -343,6 +349,19 @@ if (forgotPasswordLink) {
 }
 
 export function initHeaderButtons() {
+    const path = window.location.pathname;
+document.querySelectorAll('.header-nav-link').forEach(btn => {
+    const href = btn.getAttribute('onclick') || '';
+    if (
+        (path.includes('quiz')        && href.includes('quiz')) ||
+        (path.includes('diagnostics') && href.includes('diagnostics')) ||
+        (path.includes('pricing')     && href.includes('pricing')) ||
+        (path.includes('feedback')    && href.includes('feedback')) ||
+        (path === '/' || path.includes('index')) && href.includes('index')
+    ) {
+        btn.style.display = 'none';
+    }
+});
     // Logout
     document.getElementById("logout-btn")
         ?.addEventListener("click", logout);
