@@ -71,13 +71,7 @@
             border-top: 1.5px solid #e8e3d5;
             margin: 18px 0;
         }
-        .mode-tab-bar {
-            display: flex;
-            gap: 4px;
-            background: #f0ede3;
-            border-radius: 10px;
-            padding: 4px;
-        }
+       
         .mode-tab-btn {
             flex: 1;
             padding: 8px 6px;
@@ -90,7 +84,8 @@
             cursor: pointer;
             transition: background 0.15s, color 0.15s;
             font-family: 'Inter', sans-serif;
-            white-space: nowrap;
+            white-space: normal;
+            text-align: center; line-height: 1.2
         }
         .mode-tab-btn:hover { background: rgba(255,255,255,0.6); color: #0B1F3B; }
         .mode-tab-btn.active-mode {
@@ -106,15 +101,13 @@
             min-height: 16px;
         }
         #exam-select { display: none !important; }
-        #quiz-container.quiz-shell,
-#quiz-container.quiz-shell .card {
-    transform: none !important;
-    transition: box-shadow 0.25s ease, border 0.25s ease;
-}
-
-#quiz-container.quiz-shell:hover,
-#quiz-container.quiz-shell .card:hover {
-    transform: none !important;
+       #quiz-container.quiz-shell {
+    max-width: 920px;
+    width: calc(100% - 32px);
+    margin: 16px auto;
+    display: block;
+    padding: 20px;
+    box-sizing: border-box;
 }
     </style>
 </head>
