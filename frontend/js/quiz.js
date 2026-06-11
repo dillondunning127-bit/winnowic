@@ -1363,7 +1363,9 @@ export async function loadHistory(userId) {
     }
 
     // 🧹 clear container before rendering
+    if(container){
     container.innerHTML = "<h3>Past Attempts</h3>";
+    
 
     if (!data || data.length === 0) {
         container.innerHTML += "<p>No attempts yet.</p>";
@@ -1375,6 +1377,7 @@ export async function loadHistory(userId) {
         div.textContent = `${attempt.score} / ${attempt.total}`;
         container.appendChild(div);
     });
+}
 }
 
 /* ============================= */
