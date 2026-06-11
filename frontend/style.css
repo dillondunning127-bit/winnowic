@@ -6045,72 +6045,122 @@ video {
     z-index: 10;
 }
 
+/* ============================================================
+   WINNOWIC MOBILE FIXES
+   
+   INSTRUCTIONS:
+   1. DELETE your entire existing @media (max-width: 768px) block
+      that handles the header (the one we made last time)
+   2. REPLACE with this entire file's contents added to style.css
+   3. Keep all other existing media queries (pricing, feedback, etc.)
+   ============================================================ */
+
+
+/* ============================================================
+   MOBILE HEADER — TWO ROW LAYOUT
+   ============================================================ */
+
 @media (max-width: 768px) {
 
-    /* ── Header ── */
     .site-header {
+        flex-wrap: wrap;
         padding: 10px 14px;
-        gap: 8px;
+        gap: 0;
+        row-gap: 0;
     }
 
+    /* ── ROW 1: gear | logo | auth CTA ── */
+
     .header-left {
+        order: 1;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
         gap: 6px;
-        flex-shrink: 0;
     }
 
     .header-center {
+        order: 2;
         flex: 1;
+        display: flex;
         justify-content: center;
+        align-items: center;
     }
 
+    /* Auth button stays in header-right but floats to row 1 */
+    .header-right {
+        order: 3;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* ── ROW 2: nav links ── */
+    .header-nav-row {
+        order: 4;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 6px 0 4px;
+        border-top: 1px solid rgba(255, 216, 77, 0.1);
+        margin-top: 6px;
+    }
+
+    /* Nav links SHOW on mobile (in row 2) */
+    .header-nav-link {
+        display: block;
+        font-size: 12px;
+        color: rgba(255, 216, 77, 0.7);
+    }
+
+    .header-nav-link:hover {
+        color: #FFD84D;
+    }
+
+    /* Logo sizing */
     .header-logo {
-        height: 30px;
-        max-width: 110px;
+        height: 28px;
+        max-width: 100px;
         object-fit: contain;
     }
 
     .logo-tm-mark {
         font-size: 8px;
-        margin-top: 4px;
+        margin-top: 3px;
     }
 
-    .header-right {
-        gap: 8px;
-        flex-shrink: 0;
-    }
-
-    /* Hide text nav links — too cramped on mobile */
-    .header-nav-link {
-        display: none;
-    }
-
-    /* Compact upgrade pill */
+    /* Upgrade pill — compact */
     .header-upgrade-btn {
         font-size: 10px;
-        padding: 5px 9px;
+        padding: 5px 10px;
         border-radius: 14px;
     }
 
-    /* Compact auth link */
+    /* Auth link — compact */
     .header-auth-link {
         font-size: 12px;
+        padding: 4px 0;
     }
 
-    /* Gear icon slightly smaller */
+    /* Gear icon */
     .gear-btn i,
     .gear-btn svg {
         width: 15px;
         height: 15px;
     }
 
-    /* Dropdown anchors left on mobile */
+    /* Dropdown anchors left */
     .account-dropdown {
         left: 0;
         right: auto;
         min-width: 180px;
+        top: calc(100% + 4px);
     }
 
-    /* ── Footer ── */
+    /* Footer stacks */
     .site-footer {
         flex-direction: column;
         align-items: center;
@@ -6118,5 +6168,77 @@ video {
         gap: 10px;
         padding: 20px 16px;
         margin-top: 0;
+    }
+}
+
+
+/* ============================================================
+   MODE TAB BAR — 2x2 GRID ON MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .mode-tab-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        border-radius: 12px;
+        padding: 4px;
+    }
+
+    .mode-tab-btn {
+        font-size: 12px;
+        padding: 9px 6px;
+        border-radius: 8px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+    }
+}
+
+
+/* ============================================================
+   GOAL FORM — STACK ON MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    /* The goal form flex row becomes a column */
+    .goal-form-wrapper > div {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .goal-form-wrapper .goal-date-input,
+    .goal-form-wrapper .goal-score-input {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .goal-form-wrapper .goal-save-btn {
+        width: 100%;
+    }
+}
+
+
+/* ============================================================
+   UNIT STREAK PILL — FIT CONTENT
+   ============================================================ */
+
+/* Remove the clipping from the 700px breakpoint */
+@media (max-width: 700px) {
+
+    .unit-streak-pill {
+        max-width: unset !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    .unit-expand-btn {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
     }
 }
