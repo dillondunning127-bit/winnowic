@@ -6410,26 +6410,6 @@ video {
     }
 }
 
-
-/* ============================================================
-   MODE TAB BAR — SMALLER ON MOBILE
-   ============================================================ */
-
-@media (max-width: 600px) {
-
-    .mode-tab-btn {
-        font-size: 11px;
-        padding: 7px 4px;
-        white-space: nowrap;
-    }
-
-    .mode-tab-bar {
-        gap: 3px;
-        padding: 3px;
-    }
-}
-
-
 /* ============================================================
    GOAL FORM — FIX DATE INPUT WIDTH ON MOBILE
    ============================================================ */
@@ -6452,4 +6432,156 @@ video {
     .goal-save-btn {
         width: 100%;
     }
+}
+ .mode-tab-bar {
+            display: flex;
+            gap: 4px;
+            background: #f0ede3;
+            border-radius: 10px;
+            padding: 4px;
+        }
+@media (max-width: 600px) {
+ 
+    .mode-tab-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        padding: 4px;
+        border-radius: 12px;
+    }
+ 
+    .mode-tab-btn {
+        font-size: 11px;
+        padding: 8px 4px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+ 
+    .quiz-shell {
+        padding: 16px !important;
+        margin: 10px auto !important;
+        width: calc(100% - 20px) !important;
+        border-radius: 16px !important;
+    }
+ 
+    /* Inner cards also tighter */
+    .quiz-shell .card {
+        padding: 14px !important;
+        border-radius: 12px !important;
+    }
+ 
+    /* Exam cards smaller on mobile */
+    .exam-cards-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+ 
+    .exam-card-btn {
+        padding: 10px 10px 8px;
+    }
+ 
+    .exam-card-name {
+        font-size: 12px;
+    }
+ 
+    .exam-card-sub {
+        font-size: 10px;
+    }
+ 
+    .exam-card-icon {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+ 
+    .hero-section {
+        min-height: 380px;
+        padding: 60px 18px 50px;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+ 
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+ 
+    .hero-title {
+        font-size: 28px;
+        line-height: 1.15;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+ 
+    .hero-section .hero-subtext {
+        font-size: 15px;
+        max-width: 100%;
+    }
+ 
+    .hero-buttons {
+        width: 100%;
+    }
+ 
+    #hero-start-btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: 15px;
+    }
+}
+ 
+@media (max-width: 480px) {
+ 
+    .hero-section {
+        padding: 50px 14px 40px;
+    }
+ 
+    .hero-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+ 
+    .goal-form-wrapper > div {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+ 
+    .goal-date-input,
+    .goal-score-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        min-width: 0 !important;
+    }
+ 
+    .goal-save-btn {
+        width: 100% !important;
+    }
+}
+ 
+/* Desktop fix — make date input same width as score input */
+.goal-date-input {
+    width: 160px;
+    max-width: 160px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+ 
+.goal-score-input {
+    width: 130px;
+    max-width: 130px;
+    min-width: 0;
+    box-sizing: border-box;
 }
