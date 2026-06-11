@@ -21,77 +21,78 @@
 
 <header class="site-header">
  
-    <!-- LEFT: gear + upgrade -->
-    <div class="header-left">
+    <!-- ROW 1: gear | logo | auth -->
+    <div class="header-row-1">
  
-        <div class="account-menu" style="position:relative;">
-            <button id="account-gear" class="gear-btn" style="display:none;"
-                    aria-label="Account settings">
-                <i data-lucide="settings"></i>
-            </button>
- 
-            <div id="account-dropdown" class="account-dropdown" style="display:none;">
-                <div id="account-email" class="dropdown-email"></div>
- 
-                <button id="logout-btn" class="dropdown-item">
-                    <i data-lucide="log-out"></i>
-                    Log Out
+        <!-- Left: gear + upgrade -->
+        <div class="header-row-1-left">
+            <div class="account-menu">
+                <button id="account-gear" class="gear-btn"
+                        style="display:none;" aria-label="Account settings">
+                    <i data-lucide="settings"></i>
                 </button>
- 
-                <button id="cnclsub-btn" class="dropdown-item">
-                    <i data-lucide="x-circle"></i>
-                    Cancel Subscription
-                </button>
- 
-                <button id="dltact-btn" class="dropdown-item danger">
-                    <i data-lucide="trash-2"></i>
-                    Delete Account
-                </button>
+                <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                    <div id="account-email" class="dropdown-email"></div>
+                    <button id="logout-btn" class="dropdown-item">
+                        <i data-lucide="log-out"></i> Log Out
+                    </button>
+                    <button id="cnclsub-btn" class="dropdown-item">
+                        <i data-lucide="x-circle"></i> Cancel Subscription
+                    </button>
+                    <button id="dltact-btn" class="dropdown-item danger">
+                        <i data-lucide="trash-2"></i> Delete Account
+                    </button>
+                </div>
             </div>
+ 
+            <button id="header-upgrade-btn"
+                    class="header-upgrade-btn"
+                    onclick="window.location.href='/pricing.html'"
+                    style="display:none;">
+                Upgrade to Premium
+            </button>
         </div>
  
-        <button
-            id="header-upgrade-btn"
-            class="header-upgrade-btn"
-            onclick="window.location.href='/pricing.html'"
-            style="display:none;">
-            Upgrade to Premium
-        </button>
- 
-    </div>
- 
-    <!-- CENTER: logo + TM -->
-    <!-- index.html: no link wrapper -->
-    <div class="header-center">
-        <div class="logo-tm-wrap">
-            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-            <sup class="logo-tm-mark">™</sup>
+        <!-- Center: logo -->
+        <div class="header-center">
+        
+            <a href="/index.html" class="logo-tm-wrap">
+                <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+                <sup class="logo-tm-mark">™</sup>
+            </a>
+
         </div>
-    </div>
-   
-    <div class="header-right">
  
-        <button id="header-auth-btn" class="header-auth-link">
-            Create Account
+        <!-- Right: create account -->
+        <div class="header-row-1-right">
+            <button id="header-auth-btn" class="header-auth-link">
+                Create Account
+            </button>
+        </div>
+ 
+    </div>
+ 
+    <!-- ROW 2: nav links -->
+    <div class="header-row-2">
+        <!-- REMOVE the link for whichever page you're on -->
+        <button class="header-nav-link"
+                onclick="window.location.href='/quiz.html'">
+            Study Questions
         </button>
- 
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
+            Diagnostics
+        </button>
+        <button class="header-nav-link"
+                onclick="window.location.href='/pricing.html'">
+            Pricing
+        </button>
+        <button class="header-nav-link"
+                onclick="window.location.href='/feedback.html'">
+            Feedback
+        </button>
     </div>
- <!-- Mobile nav row — sits below logo row on small screens -->
-<div class="header-nav-row">
-    <!-- These links are hidden/shown by JS based on current page -->
-    <button class="header-nav-link" id="nav-quiz"
-            onclick="window.location.href='/quiz.html'">
-        Study Questions
-    </button>
-    <button class="header-nav-link" id="nav-diagnostics"
-            onclick="window.location.href='/diagnostics.html'">
-        Diagnostics
-    </button>
-    <button class="header-nav-link" id="nav-pricing"
-            onclick="window.location.href='/pricing.html'">
-        Pricing
-    </button>
-</div>
+ 
 </header>
 
 <!-- ========================= -->
