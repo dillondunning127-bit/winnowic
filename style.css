@@ -1155,10 +1155,6 @@ body::after {
     order: -1;                    /* 🔥 moves it to front */
   }
 
-  .gear-btn {
-    margin-right: auto;           /* 🔥 pushes it into view */
-  }
-
   /* ===== LOGO ===== */
   .logo-img {
     max-width: 160px;
@@ -1984,15 +1980,6 @@ border-bottom-right-radius: 40px;
 /* ========================= */
 
 @media (max-width: 768px) {
-
-  .header-left,
-  .header-right {
-    width: auto;
-  }
-
-  .header-logo {
-    max-width: 140px;
-  }
 
   .hero-section {
     min-height: 420px;
@@ -4077,27 +4064,20 @@ button:active {
   gap:12px;
 }
 
-.unit-streak-pill{
-
-  background:#FFF1E8;
-  color:#FF6B00;
-
-  border-radius:999px;
-
-  font-size:13px;
-  font-weight:600;
-
-  padding:10px 16px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  white-space:nowrap;
-
-  max-width:100%;
-
-  min-width:0;
+.unit-streak-pill {
+    background: #FFF1E8;
+    color: #FF6B00;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    width: fit-content;
+    min-width: fit-content;
+    flex-shrink: 0;
 }
 .unit-card-right{
   display:flex;
@@ -5481,30 +5461,6 @@ body {
   box-sizing: border-box;
 }
 
-/* =========================
-   HEADER
-========================= */
-
-
-
-.header-left,
-.header-center,
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.header-right {
-  gap: 0.45rem;
-  flex-shrink: 1;
-}
-
-.header-logo {
-  height: 34px;
-  max-width: 120px;
-  object-fit: contain;
-}
-
 #diagnostics-btn,
 #header-auth-btn {
   font-size: 0.72rem;
@@ -5753,11 +5709,6 @@ video {
     font-size:11px;
 
     min-width:unset;
-
-    max-width:120px;
-
-    overflow:hidden;
-    text-overflow:ellipsis;
   }
 
   .unit-expand-btn{
@@ -5800,45 +5751,6 @@ video {
 
     gap:14px;
   }
-
-  /* logo row */
-  .header-center{
-
-    order:1;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    gap:12px;
-
-    width:100%;
-  }
-
-  /* gear button LEFT of logo */
-  .header-center .gear-btn{
-    order:1;
-  }
-
-  .header-center .header-logo{
-    order:2;
-  }
-
-  /* bottom buttons */
-  .header-right{
-
-    order:2;
-
-    width:100%;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-  }
 }
 
 @media (max-width: 768px){
@@ -5852,57 +5764,6 @@ video {
 
 }
 
-@media (max-width: 768px) {
-
-  
-
-  /* TOP ROW = logo + gear */
-  .header-left,
-  .header-center{
-
-    display:flex;
-    align-items:center;
-  }
-
-  .header-left{
-
-    order:1;
-
-    position:absolute;
-
-    right:20px;
-
-    top:18px;
-  }
-
-  .header-center{
-
-    order:1;
-
-    width:100%;
-
-    justify-content:center;
-  }
-
-  /* BUTTON ROW */
-  .header-right{
-
-    order:2;
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-
-    width:100%;
-  }
-
-}
-
- 
 /* ── Header ── */
 .site-header {
     width: 100%;
@@ -6100,20 +5961,6 @@ video {
 /* ── Mobile ── */
 @media (max-width: 768px) {
  
-    .header-right {
-        gap: 12px;
-    }
- 
-    /* Hide diagnostics text link on mobile to save space */
-    .header-nav-link {
-        display: none;
-    }
- 
-    .header-upgrade-btn {
-        font-size: 11px;
-        padding: 5px 10px;
-    }
- 
     .site-footer {
         flex-direction: column;
         align-items: center;
@@ -6196,4 +6043,742 @@ video {
 .site-footer {
     position: relative;
     z-index: 10;
+}
+/* ============================================================
+   WINNOWIC HEADER V2 — TWO ROW LAYOUT (DESKTOP + MOBILE)
+   
+   INSTRUCTIONS:
+   DELETE all existing CSS rules touching:
+   - .site-header
+   - .header-left
+   - .header-center  
+   - .header-right
+   - .header-nav-row
+   - .header-nav-link
+   - .header-auth-link
+   - .header-upgrade-btn
+   - .gear-btn (keep the non-header rules)
+   - .logo-tm-wrap / .logo-tm-mark
+   - Any media queries that touch the above
+   
+   REPLACE with everything below.
+   ============================================================ */
+
+
+/* ── Base header shell ── */
+.site-header {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(11, 31, 59, 0.96);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+/* ── Row 1: logo row ── */
+.header-row-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── Row 2: nav row ── */
+.header-row-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 6px 28px 8px;
+    border-top: 1px solid rgba(255, 216, 77, 0.08);
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+/* ── Logo ── */
+.logo-tm-wrap {
+    display: inline-flex;
+    align-items: flex-start;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.header-logo {
+    height: 32px;
+    object-fit: contain;
+}
+
+.logo-tm-mark {
+    font-size: 9px;
+    font-weight: 700;
+    color: #FFD84D;
+    opacity: 0.7;
+    margin-left: 3px;
+    margin-top: 4px;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Left side of row 1: gear ── */
+.header-row-1-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+/* ── Right side of row 1: auth CTA ── */
+.header-row-1-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* ── Nav links (row 2) ── */
+.header-nav-link {
+    background: none;
+    border: none;
+    color: rgba(255, 216, 77, 0.65);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    padding: 2px 0;
+    transition: color 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.header-nav-link:hover {
+    color: #FFD84D;
+}
+
+/* ── Auth text button ── */
+.header-auth-link {
+    background: none;
+    border: none;
+    color: rgba(255, 216, 77, 0.75);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+
+.header-auth-link:hover {
+    color: #FFD84D;
+}
+
+/* ── Upgrade pill ── */
+.header-upgrade-btn {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    min-width: unset;
+    background: linear-gradient(135deg, #FFD84D 0%, #ffbf1f 100%);
+    color: #0B1F3B;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    box-sizing: content-box;
+    transition: transform 0.15s, opacity 0.15s;
+    letter-spacing: 0.01em;
+}
+
+.header-upgrade-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+}
+
+/* ── Gear button ── */
+.gear-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: rgba(255, 216, 77, 0.7);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: unset;
+    width: auto;
+    height: auto;
+    transition: color 0.15s;
+    border-radius: 50%;
+    box-sizing: content-box;
+}
+
+.gear-btn:hover {
+    color: #FFD84D;
+}
+
+.gear-btn i,
+.gear-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* ── Account dropdown ── */
+.account-menu {
+    position: relative;
+}
+
+.account-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #0B1F3B;
+    border: 1px solid rgba(255, 216, 77, 0.15);
+    border-radius: 14px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    z-index: 2000;
+}
+
+.dropdown-email {
+    font-size: 11px;
+    color: rgba(255, 216, 77, 0.5);
+    padding: 6px 10px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 6px;
+    word-break: break-all;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.dropdown-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+.dropdown-item.danger {
+    color: #ff6b6b;
+}
+
+.dropdown-item.danger:hover {
+    background: rgba(255,107,107,0.12);
+}
+
+.dropdown-item i,
+.dropdown-item svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* ── Footer ── */
+.site-footer {
+    background: rgba(11, 31, 59, 0.96);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    z-index: 10;
+    margin-top: 0;
+}
+
+.footer-left {
+    font-size: 12px;
+    color: rgba(255, 216, 77, 0.5);
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-left span {
+    color: rgba(255, 216, 77, 0.7);
+    font-weight: 600;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-link {
+    font-size: 12px;
+    color: rgba(255, 216, 77, 0.5);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.15s;
+}
+
+.footer-link:hover {
+    color: #FFD84D;
+}
+
+
+/* ============================================================
+   MOBILE OVERRIDES (≤768px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* Row 1 padding tighter */
+    .header-row-1 {
+        padding: 10px 14px;
+    }
+
+    /* Row 2 smaller text, tighter gap */
+    .header-row-2 {
+        padding: 5px 14px 7px;
+        gap: 14px;
+    }
+
+    .header-nav-link {
+        font-size: 11px;
+    }
+
+    /* Logo smaller */
+    .header-logo {
+        height: 26px;
+        max-width: 90px;
+    }
+
+    .logo-tm-mark {
+        font-size: 7px;
+        margin-top: 3px;
+    }
+
+    /* Upgrade pill compact */
+    .header-upgrade-btn {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    /* Auth link compact */
+    .header-auth-link {
+        font-size: 11px;
+    }
+
+    /* Gear icon smaller */
+    .gear-btn i,
+    .gear-btn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Dropdown anchors correctly */
+    .account-dropdown {
+        left: 0;
+        right: auto;
+        min-width: 180px;
+    }
+
+    /* Footer stacks */
+    .site-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+        padding: 20px 16px;
+    }
+}
+
+/* ============================================================
+   GOAL FORM — FIX DATE INPUT WIDTH ON MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .goal-form-wrapper > div {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    .goal-date-input,
+    .goal-score-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .goal-save-btn {
+        width: 100%;
+    }
+}
+ .mode-tab-bar {
+            display: flex;
+            gap: 4px;
+            background: #f0ede3;
+            border-radius: 10px;
+            padding: 4px;
+        }
+@media (max-width: 600px) {
+ 
+    .mode-tab-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        padding: 4px;
+        border-radius: 12px;
+    }
+ 
+    .mode-tab-btn {
+        font-size: 11px;
+        padding: 8px 4px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+ 
+    .quiz-shell {
+        padding: 16px !important;
+        margin: 10px auto !important;
+        width: calc(100% - 20px) !important;
+        border-radius: 16px !important;
+    }
+ 
+    /* Inner cards also tighter */
+    .quiz-shell .card {
+        padding: 14px !important;
+        border-radius: 12px !important;
+    }
+ 
+    /* Exam cards smaller on mobile */
+    .exam-cards-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+ 
+    .exam-card-btn {
+        padding: 10px 10px 8px;
+    }
+ 
+    .exam-card-name {
+        font-size: 12px;
+    }
+ 
+    .exam-card-sub {
+        font-size: 10px;
+    }
+ 
+    .exam-card-icon {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+ 
+    .hero-section {
+        min-height: 380px;
+        padding: 60px 18px 50px;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+ 
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+ 
+    .hero-title {
+        font-size: 28px;
+        line-height: 1.15;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+ 
+    .hero-section .hero-subtext {
+        font-size: 15px;
+        max-width: 100%;
+    }
+ 
+    .hero-buttons {
+        width: 100%;
+    }
+ 
+    #hero-start-btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: 15px;
+    }
+}
+ 
+@media (max-width: 480px) {
+ 
+    .hero-section {
+        padding: 50px 14px 40px;
+    }
+ 
+    .hero-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+ 
+    .goal-form-wrapper > div {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+ 
+    .goal-date-input,
+    .goal-score-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        min-width: 0 !important;
+    }
+ 
+    .goal-save-btn {
+        width: 100% !important;
+    }
+}
+ 
+/* Desktop fix — make date input same width as score input */
+.goal-date-input {
+    width: 160px;
+    max-width: 160px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+ 
+.goal-score-input {
+    width: 130px;
+    max-width: 130px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .hero-buttons .primary-btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: 15px !important;
+        padding: 14px 20px !important;
+    }
+
+    .hero-buttons #hero-practice-btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: 14px !important;
+        padding: 12px 20px !important;
+        text-align: center;
+    }
+}
+
+/* ── How It Works — step grid ── */
+.how-steps-grid {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.how-step-card {
+    flex: 1;
+    background: rgba(255,255,255,0.82);
+    border-radius: 18px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    border: 1px solid rgba(255,255,255,0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.how-step-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.how-step-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: #0B1F3B;
+    color: #FFD84D;
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}
+
+.how-step-tag--then {
+    background: rgba(11,31,59,0.1);
+    color: #0B1F3B;
+}
+
+.how-step-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0B1F3B;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.how-step-card p {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+}
+
+.how-step-cta {
+    background: #0B1F3B;
+    color: #FFD84D;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity 0.15s;
+    margin-top: 4px;
+    align-self: flex-start;
+}
+
+.how-step-cta:hover {
+    opacity: 0.85;
+}
+
+/* Arrow between steps */
+.how-step-arrow {
+    font-size: 22px;
+    color: rgba(11,31,59,0.2);
+    padding: 0 6px;
+    margin-top: 40px;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+/* Video below steps */
+.how-video-wrap {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.how-video-wrap iframe {
+    width: 100%;
+    height: 360px;
+    display: block;
+    border: none;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+
+  .how-section {
+    box-sizing: border-box;
+  }
+
+
+    .how-steps-grid {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .how-step-arrow {
+        transform: rotate(90deg);
+        margin: 0 auto;
+        padding: 0;
+        font-size: 18px;
+    }
+
+    .how-step-card {
+        width: 60%;
+          box-sizing: border-box;
+    }
+
+    .how-video-wrap iframe {
+        height: 220px;
+    }
+}
+
+.footer-social {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.footer-social-link {
+    color: rgba(255, 216, 77, 0.55);
+    transition: color 0.15s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.footer-social-link:hover {
+    color: #FFD84D;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+
+    .site-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        padding: 20px 16px;
+    }
+
+    .footer-social {
+        gap: 20px;
+    }
 }

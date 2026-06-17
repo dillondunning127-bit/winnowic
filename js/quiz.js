@@ -4,6 +4,7 @@ import { checkExamAccess } from "./subscription.js";
 import { getExamArrayValue } from "./diagnostics.js";
 import { maybeCreateSnapshot } from "./diagnostics.js";
 import { updateUserStats } from "./diagnostics.js";
+import { renderDiagnosticResults } from './diagnostics-mini.js';
 // In quiz.js — add at top
 import { startSession, endSession } from './sessions.js';
 import { getDailyBatch, markBatchComplete } from './dailyBatch.js';
@@ -1363,7 +1364,9 @@ export async function loadHistory(userId) {
     }
 
     // 🧹 clear container before rendering
+    if(container){
     container.innerHTML = "<h3>Past Attempts</h3>";
+    
 
     if (!data || data.length === 0) {
         container.innerHTML += "<p>No attempts yet.</p>";
@@ -1375,6 +1378,7 @@ export async function loadHistory(userId) {
         div.textContent = `${attempt.score} / ${attempt.total}`;
         container.appendChild(div);
     });
+}
 }
 
 /* ============================= */
@@ -1456,17 +1460,69 @@ if (quizConfig.mode === "daily_batch") {
 }
 
 if (isDiagnosticMode) {
+    await endSession(answerResults.length);
+    await finalizeQuizData();
 
-    const diagnosticData = answerResults;
+    // Hide all quiz UI
+    document.getElementById("prev-btn").style.display = "none";
+    document.getElementById("next-nav-btn").style.display = "none";
+    document.getElementById("explanation").textContent = "";
+    document.getElementById("grid-container").style.display = "none";
+    document.getElementById("question-image-container").style.display = "none";
+    document.getElementById("progress-container").textContent = "";
+    document.getElementById("progress-bar").style.width = "0%";
+    ["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
+    });
+    stopTimer();
 
-    sessionStorage.setItem(
-        "diagnosticResults",
-        JSON.stringify(diagnosticData)
-    );
+    // Build results container inside question element
+    const questionEl = document.getElementById("question");
+    questionEl.innerHTML = `
+        <div style="
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(11,31,59,0.45);
+            margin-bottom: 12px;
+        ">
+            Diagnostic Complete
+        </div>
+    `;
 
-    sessionStorage.setItem("diagnosticExam", quizConfig.exam);
+    // Results render here
+    const resultsContainer = document.createElement("div");
+    resultsContainer.id = "inline-diagnostic-results";
+    questionEl.appendChild(resultsContainer);
 
-    window.location.href = "/diagnostics.html?mode=mini";
+    await renderDiagnosticResults(answerResults, quizConfig.exam, resultsContainer);
+
+    // Action buttons
+    const btnWrap = document.createElement("div");
+    btnWrap.style.cssText = `
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    `;
+    btnWrap.innerHTML = `
+        <button onclick="
+            document.getElementById('question-card').style.display='none';
+            document.getElementById('mode-selector-card').style.display='block';
+            document.getElementById('settings-card').style.display='block';
+        " class="btn-primary" style="padding:10px 24px; width:auto;">
+            Keep Practicing
+        </button>
+        <button onclick="window.location.href='/diagnostics.html'"
+            class="btn-secondary" style="padding:10px 24px; width:auto;">
+            Full Diagnostics
+        </button>
+    `;
+    questionEl.appendChild(btnWrap);
+
     return;
 }
 

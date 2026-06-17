@@ -373,13 +373,7 @@ document.getElementById("start-quiz-btn").addEventListener("click", async () => 
 
 
     
-const gearMenu = document.getElementById("account-gear");
 
-if (user) {
-    gearMenu.style.display = "block";
-} else {
-    gearMenu.style.display = "none";
-}
     /* ============================= */
     /* REPORT SYSTEM (SAFE INIT) */
     /* ============================= */

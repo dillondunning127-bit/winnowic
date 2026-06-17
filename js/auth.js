@@ -45,7 +45,9 @@ export async function handleLoggedInUser(user) {
     if (gearBtn) {
         gearBtn.style.display = "block";
     }
-
+// Hide "Create Account" when logged in — upgrade btn takes its place
+const authBtn = document.getElementById('header-auth-btn');
+if (authBtn) authBtn.style.display = 'none';
     const loginBtn = document.getElementById("login-tab");
     const signupBtn = document.getElementById("signup-tab");
 
@@ -104,7 +106,10 @@ submitBtn.innerHTML = "✓ Account Created!";
 
 setTimeout(() => {
     setAuthLoading(false);
-    window.location.href = "index.html#quiz-section";
+    const returnTo = document.referrer && !document.referrer.includes('auth.html')
+    ? document.referrer
+    : '/quiz.html';
+window.location.href = returnTo;
 }, 700);
 document.getElementById("auth-message").textContent = "";
     }
@@ -144,7 +149,10 @@ submitBtn.textContent = "✓ Logged In!";
     loadHistory(data.user.id);
     setTimeout(() => {
          setAuthLoading(false);
-    window.location.href = "index.html#quiz-section";
+    const returnTo = document.referrer && !document.referrer.includes('auth.html')
+    ? document.referrer
+    : '/quiz.html';
+window.location.href = returnTo;
 }, 700);
     document.getElementById("auth-message").textContent = "";
 }
@@ -178,10 +186,6 @@ export async function resetPassword() {
 export async function logout() {
     await supabase.auth.signOut();
 
-    document.getElementById("login-tab").style.display = "inline-block";
-    document.getElementById("signup-tab").style.display = "inline-block";
-    document.getElementById("account-email").textContent = "";
-
     ["choice-a", "choice-b", "choice-c", "choice-d"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = "none";
@@ -191,8 +195,22 @@ export async function logout() {
 if (dropdown) dropdown.style.display = "none"; 
 updateUpgradeButton(null);
 }
-
+const authBtn = document.getElementById('header-auth-btn');
+if (authBtn) authBtn.style.display = 'none';
 export function initAuthListener() {
+    // Hide nav link for current page
+const path = window.location.pathname;
+if (path.includes('quiz'))        document.getElementById('nav-quiz')?.style.setProperty('display','none');
+if (path.includes('diagnostics')) document.getElementById('nav-diagnostics')?.style.setProperty('display','none');
+if (path.includes('pricing'))     document.getElementById('nav-pricing')?.style.setProperty('display','none');
+
+// On mobile: swap upgrade/create account based on auth state
+// (already handled by handleLoggedInUser and initAuthListener)
+// header-auth-btn hides when logged in via handleLoggedInUser — 
+// add this to handleLoggedInUser():
+//   document.getElementById('header-auth-btn')?.style.setProperty('display','none');
+// and to the logged-out branch of initAuthListener():
+//   document.getElementById('header-auth-btn')?.style.setProperty('display','block');
     supabase.auth.onAuthStateChange((event, session) => {
 
         const user = session?.user;
@@ -215,6 +233,9 @@ if (pwEl) pwEl.style.display = "none";
 
         } else {
 updateExamLocks();
+// Show "Create Account" when logged out
+const authBtn = document.getElementById('header-auth-btn');
+if (authBtn) authBtn.style.display = 'block';
             const loginBtn = document.getElementById("login-tab");
             const signupBtn = document.getElementById("signup-tab");
 updateUpgradeButton(null);
@@ -226,6 +247,11 @@ updateUpgradeButton(null);
 
             const gear = document.getElementById("account-gear");
             if (gear) gear.style.display = "none";
+            const authBtnOut = document.getElementById('header-auth-btn');
+if (authBtnOut) authBtnOut.style.display = 'block';
+ 
+const upgradeOut = document.getElementById('header-upgrade-btn');
+if (upgradeOut) upgradeOut.style.display = 'none';
             // Show upgrade button to logged-out users too
 const headerUpgradeBtn = document.getElementById('header-upgrade-btn');
 if (headerUpgradeBtn) headerUpgradeBtn.style.display = 'block';
@@ -236,23 +262,6 @@ if (headerUpgradeBtn) headerUpgradeBtn.style.display = 'block';
     });
 }
 
-// ACCOUNT MENU (SAFE INIT)
-const gearBtn = document.getElementById("account-gear");
-const dropdown = document.getElementById("account-dropdown");
-
-if (gearBtn && dropdown) {
-    gearBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!e.target.closest(".account-menu")) {
-            dropdown.style.display = "none";
-        }
-    });
-}
 
 // AUTH PAGE LOGIC
 const loginTab = document.getElementById("login-tab");
@@ -338,3 +347,50 @@ if (forgotPasswordLink) {
     });
 
 }
+
+export function initHeaderButtons() {
+    const path = window.location.pathname;
+document.querySelectorAll('.header-nav-link').forEach(btn => {
+    const href = btn.getAttribute('onclick') || '';
+    if (
+        (path.includes('quiz')        && href.includes('quiz')) ||
+        (path.includes('diagnostics') && href.includes('diagnostics')) ||
+        (path.includes('pricing')     && href.includes('pricing')) ||
+        (path.includes('feedback')    && href.includes('feedback')) ||
+        (path === '/' || path.includes('index')) && href.includes('index')
+    ) {
+        btn.style.display = 'none';
+    }
+});
+    // Logout
+    document.getElementById("logout-btn")
+        ?.addEventListener("click", logout);
+
+    // Header auth button
+    document.getElementById("header-auth-btn")
+        ?.addEventListener("click", () => {
+            window.location.href = "/auth.html?mode=signup";
+        });
+
+    // Gear dropdown toggle
+    const gearBtn  = document.getElementById("account-gear");
+    const dropdown = document.getElementById("account-dropdown");
+
+    if (gearBtn && dropdown) {
+        gearBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".account-menu")) {
+                dropdown.style.display = "none";
+            }
+        });
+    }
+}
+
+// Bottom of auth.js — runs on every page
+initAuthListener();
+initHeaderButtons();

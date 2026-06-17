@@ -23,10 +23,18 @@ async function startCheckout(priceId, exam, productType) {
   const { data: { user } } = await supabase.auth.getUser();
 
   // 🔒 Check user FIRST
-  if (!user) {
+ if (!user) {
     showPricingMessage("Create a free account to unlock this plan 🚀");
+    // Also show message near the specific button that was clicked
+    const satMsg = document.getElementById('sat-auth-message');
+    if (satMsg) {
+        satMsg.textContent = 'Please sign in or create an account before upgrading.';
+        satMsg.style.display = 'block';
+        // Auto-hide after 4 seconds
+        setTimeout(() => { satMsg.style.display = 'none'; }, 4000);
+    }
     return;
-  }
+}
 
   // ✅ THEN get session
   const { data: { session } } = await supabase.auth.getSession();

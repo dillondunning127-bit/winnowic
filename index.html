@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="./style.css">
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-icons@v11/index.min.js"></script>
 </head>
 <button class="floating-cta" id="floating-cta">
-  Take SAT Questions Now
+  Take Free Diagnostic
 </button>
 <body>
 
@@ -21,70 +22,73 @@
 
 <header class="site-header">
  
-    <!-- LEFT: gear + upgrade -->
-    <div class="header-left">
+    <!-- ROW 1: gear | logo | auth -->
+    <div class="header-row-1">
  
-        <div class="account-menu" style="position:relative;">
-            <button id="account-gear" class="gear-btn" style="display:none;"
-                    aria-label="Account settings">
-                <i data-lucide="settings"></i>
-            </button>
- 
-            <div id="account-dropdown" class="account-dropdown" style="display:none;">
-                <div id="account-email" class="dropdown-email"></div>
- 
-                <button id="logout-btn" class="dropdown-item">
-                    <i data-lucide="log-out"></i>
-                    Log Out
+        <!-- Left: gear + upgrade -->
+        <div class="header-row-1-left">
+            <div class="account-menu">
+                <button id="account-gear" class="gear-btn"
+                        style="display:none;" aria-label="Account settings">
+                    <i data-lucide="settings"></i>
                 </button>
- 
-                <button id="cnclsub-btn" class="dropdown-item">
-                    <i data-lucide="x-circle"></i>
-                    Cancel Subscription
-                </button>
- 
-                <button id="dltact-btn" class="dropdown-item danger">
-                    <i data-lucide="trash-2"></i>
-                    Delete Account
-                </button>
+                <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                    <div id="account-email" class="dropdown-email"></div>
+                    <button id="logout-btn" class="dropdown-item">
+                        <i data-lucide="log-out"></i> Log Out
+                    </button>
+                    <button id="cnclsub-btn" class="dropdown-item">
+                        <i data-lucide="x-circle"></i> Cancel Subscription
+                    </button>
+                    <button id="dltact-btn" class="dropdown-item danger">
+                        <i data-lucide="trash-2"></i> Delete Account
+                    </button>
+                </div>
             </div>
+ 
+            <button id="header-upgrade-btn"
+                    class="header-upgrade-btn"
+                    onclick="window.location.href='/pricing.html'"
+                    style="display:none;">
+                Upgrade to Premium
+            </button>
         </div>
  
-        <button
-            id="header-upgrade-btn"
-            class="header-upgrade-btn"
-            onclick="window.location.href='/pricing.html'"
-            style="display:none;">
-            Upgrade to Premium
-        </button>
- 
-    </div>
- 
-    <!-- CENTER: logo + TM -->
-    <!-- index.html: no link wrapper -->
-    <div class="header-center">
-        <div class="logo-tm-wrap">
-            <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-            <sup class="logo-tm-mark">™</sup>
-        </div>
-    </div>
-   
-    <div class="header-right">
- 
-<button class="header-nav-link"
-        onclick="window.location.href='/quiz.html'">
-    Study Questions
-</button>
+        <!-- Center: logo -->
+        <div class="header-center">
+        
+            <a href="/index.html" class="logo-tm-wrap">
+                <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
+                <sup class="logo-tm-mark">™</sup>
+            </a>
 
+        </div>
+ 
+        <!-- Right: create account -->
+        <div class="header-row-1-right">
+            <button id="header-auth-btn" class="header-auth-link">
+                Create Account
+            </button>
+        </div>
+ 
+    </div>
+ 
+    <!-- ROW 2: nav links -->
+    <div class="header-row-2">
+        <!-- REMOVE the link for whichever page you're on -->
         <button class="header-nav-link"
-                onclick="window.location.href='diagnostics.html'">
+                onclick="window.location.href='/quiz.html'">
+            Study Questions
+        </button>
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
             Diagnostics
         </button>
- 
-        <button id="header-auth-btn" class="header-auth-link">
-            Create Account
+      
+        <button class="header-nav-link"
+                onclick="window.location.href='/feedback.html'">
+            Feedback
         </button>
- 
     </div>
  
 </header>
@@ -94,27 +98,82 @@
 <!-- ========================= -->
 
 <section class="hero-section">
-
   <div class="hero-content">
 
+    <!-- Badge -->
+    <div style="
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,216,77,0.15);
+        border: 1px solid rgba(255,216,77,0.3);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #FFD84D;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    ">
+        Free — No Account Required
+    </div>
+
     <h1 class="hero-title">
-      Tailored SAT + AP Practice That Adapts To You
+      Know Exactly What To Study For Your SAT
     </h1>
 
     <p class="hero-subtext">
-      Practice smarter, focus on weak areas, and track your improvement with adaptive quizzes and diagnostics.
+      Take a free 20-question diagnostic. Get your predicted score range,
+      see which units are holding you back, and start practicing smarter —
+      in under 15 minutes.
     </p>
 
-    <div class="hero-buttons">
+    <div class="hero-buttons" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center;">
 
-      <button id="hero-start-btn" class="primary-btn">
-        Take SAT Questions NOW!
+      <button id="hero-diagnostic-btn" class="primary-btn"
+              style="font-size:17px; padding:16px 32px;">
+        Take Free SAT Diagnostic
+      </button>
+
+      <button id="hero-practice-btn" style="
+          background: none;
+          border: 2px solid rgba(255,255,255,0.35);
+          color: rgba(255,255,255,0.85);
+          border-radius: 12px;
+          padding: 14px 24px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: 'Inter', sans-serif;
+          transition: border-color 0.15s, color 0.15s;
+      "
+      onmouseover="this.style.borderColor='rgba(255,255,255,0.7)'; this.style.color='#fff';"
+      onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'; this.style.color='rgba(255,255,255,0.85)';"
+      >
+        Browse Practice Questions
       </button>
 
     </div>
 
-  </div>
+    <!-- Social proof strip -->
+    <div style="
+        margin-top: 28px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    ">
+        <span>✓ 20 questions</span>
+        <span>✓ Predicted score range</span>
+        <span>✓ Unit breakdown</span>
+        <span>✓ Free forever</span>
+    </div>
 
+  </div>
 </section>
 
 <!-- ========================= -->
@@ -125,71 +184,93 @@
 
   <div class="how-header">
     <h2>How Winnowic Works</h2>
-    <p>
-      Personalized SAT + AP prep designed to improve weak areas faster.
-    </p>
+    <p>From zero to a personalized study plan — in four steps.</p>
   </div>
 
-  <div class="how-layout">
+  <div class="how-steps-grid">
 
-    <!-- LEFT SIDE -->
-    <div class="how-grid">
-
-      <div class="how-card reveal-on-scroll">
-        <div class="how-card-header">
+    <!-- STEP 1 -->
+    <div class="how-step-card reveal-on-scroll">
+      <div class="how-step-top">
         <div class="how-number">1</div>
-
-        <h3>Take Practice Quizzes</h3>
-</div>
-        <p>
-          Choose SAT or AP exams and practice with targeted questions.
-        </p>
+        <div class="how-step-tag">Start Here</div>
       </div>
+      <h3>Take a Free Diagnostic</h3>
+      <p>
+        Answer 20 SAT Math questions covering all major units.
+        No account needed. Takes about 12 minutes.
+      </p>
+      <button class="how-step-cta" id="step1-diagnostic-btn">
+        Start Diagnostic →
+      </button>
+    </div>
 
-      <div class="how-card reveal-on-scroll">
-        <div class="how-card-header">
+    <!-- ARROW -->
+    <div class="how-step-arrow">→</div>
+
+    <!-- STEP 2 -->
+    <div class="how-step-card reveal-on-scroll">
+      <div class="how-step-top">
         <div class="how-number">2</div>
-
-        <h3>Identify Weak Areas</h3>
-</div>
-        <p>
-          Diagnostics and analytics show exactly what needs improvement.
-        </p>
+        <div class="how-step-tag how-step-tag--then">Then</div>
       </div>
+      <h3>See Your Weak Areas</h3>
+      <p>
+        Get a predicted score range and a unit-by-unit breakdown.
+        Know exactly where points are being lost.
+      </p>
+    </div>
 
-      <div class="how-card reveal-on-scroll">
-        <div class="how-card-header">
+    <!-- ARROW -->
+    <div class="how-step-arrow">→</div>
+
+    <!-- STEP 3 -->
+    <div class="how-step-card reveal-on-scroll">
+      <div class="how-step-top">
         <div class="how-number">3</div>
-
-        <h3>Improve Faster</h3>
-</div>
-        <p>
-          Adaptive practice focuses on concepts you struggle with most.
-        </p>
+        <div class="how-step-tag how-step-tag--then">Then</div>
       </div>
-
+      <h3>Get a Daily Practice Batch</h3>
+      <p>
+        10 personalized questions every day targeting your weakest units.
+        Builds a streak and adapts as you improve.
+      </p>
     </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="how-video">
+    <!-- ARROW -->
+    <div class="how-step-arrow">→</div>
 
-      <!-- YOUTUBE EMBED -->
-      <iframe
-        src="https://www.youtube.com/embed/L9Lq_mPNJYo"
-        title="Winnowic Demo"
-        frameborder="0"
-        allowfullscreen>
-      </iframe>
-
-      <!-- OR LOCAL VIDEO -->
-      <!--
-      <video controls>
-        <source src="videos/winnowic-demo.mp4" type="video/mp4">
-      </video>
-      -->
-
+    <!-- STEP 4 -->
+    <div class="how-step-card reveal-on-scroll">
+      <div class="how-step-top">
+        <div class="how-number">4</div>
+        <div class="how-step-tag how-step-tag--then">Then</div>
+      </div>
+      <h3>Track Score Improvement</h3>
+      <p>
+        Diagnostics update your predicted score every 20 questions.
+        Watch your range climb week over week.
+      </p>
     </div>
 
+  </div>
+
+  <!-- Video below steps -->
+  <div class="how-video-wrap reveal-on-scroll">
+    <iframe
+      src="https://www.youtube.com/embed/L9Lq_mPNJYo"
+      title="Winnowic Demo"
+      frameborder="0"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div style="text-align:center; margin-top:36px;">
+    <button id="how-diagnostic-btn" class="primary-btn"
+            style="font-size:16px; padding:14px 32px;">
+      Start Free Diagnostic Now
+    </button>
   </div>
 
 </section>
@@ -325,44 +406,59 @@
 
 </div>
  
-<div class="social-section">
-  <div class="social-card">
-    <h3>See Winnowic in action</h3>
-
-    <p class="social-subtext">
-      Watch how students use diagnostics to improve their scores
-    </p>
-
-    <div class="social-buttons">
-      <a href="https://www.instagram.com/trywinnowic/" target="_blank">
-        <button class="btn-secondary">Instagram</button>
-      </a>
-
-      <a href="https://www.tiktok.com/@trywinnowic?_r=1&_t=ZP-95qsSDf6A51" target="_blank">
-        <button class="btn-secondary">TikTok</button>
-      </a>
-
-      <a href="https://www.youtube.com/@Winnowic" target="_blank">
-        <button class="btn-secondary">YouTube</button>
-      </a>
-    </div>
-  </div>
-</div>
 <footer class="site-footer">
- 
+
     <div class="footer-left">
         © 2026 <span>Winnowic™</span> · All rights reserved
     </div>
- 
+
     <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
         <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+        <a href="/privacy.html" class="footer-link">Privacy Policy</a>
     </nav>
- 
+
+    <div class="footer-social">
+
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@trywinnowic" target="_blank"
+           class="footer-social-link" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+            </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/trywinnowic/" target="_blank"
+           class="footer-social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@Winnowic" target="_blank"
+           class="footer-social-link" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank"
+           class="footer-social-link" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+        </a>
+
+    </div>
+
 </footer>
 <script type="module" src="/js/auth.js"></script>
 <script type="module" src="/js/index.js"></script>
+<script type="module" src="/js/customer_manage.js"></script>
 <script>
     // Initialize Lucide icons after DOM is ready
     document.addEventListener('DOMContentLoaded', function() {

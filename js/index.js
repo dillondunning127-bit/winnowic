@@ -58,3 +58,31 @@ document.querySelectorAll("#upgrade-btn-global")
   .forEach(btn => btn.addEventListener("click", () => {
     window.location.href = "/pricing.html";
   }));
+
+  // Primary CTA — diagnostic
+document.getElementById("hero-diagnostic-btn")
+    ?.addEventListener("click", () => {
+        window.location.href = "/quiz.html?mode=diagnostic&exam=SAT_MATH";
+    });
+
+// Secondary CTA — browse practice
+document.getElementById("hero-practice-btn")
+    ?.addEventListener("click", () => {
+        window.location.href = "/quiz.html";
+    });
+
+// Floating CTA — also goes to diagnostic
+document.getElementById("floating-cta")
+    ?.addEventListener("click", () => {
+        window.location.href = "/quiz.html?mode=diagnostic&exam=SAT_MATH";
+    });
+
+    document.getElementById("step1-diagnostic-btn")
+    ?.addEventListener("click", () => {
+        window.location.href = "/quiz.html?mode=diagnostic&exam=SAT_MATH";
+    });
+
+document.getElementById("how-diagnostic-btn")
+    ?.addEventListener("click", () => {
+        window.location.href = "/quiz.html?mode=diagnostic&exam=SAT_MATH";
+    });
