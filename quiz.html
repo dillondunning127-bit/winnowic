@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <title>Practice — Winnowic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,120 +9,100 @@
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-icons@v11/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <meta name="description" content="Practice SAT Math questions with adaptive difficulty. Free daily practice batches, unit filters, and timed quiz modes. Track your progress and improve your SAT Math score.">
+<meta property="og:title" content="SAT Math Practice Questions — Winnowic">
+<meta property="og:description" content="500+ SAT Math practice questions with adaptive difficulty targeting. Free daily batches, timed modes, and unit-by-unit practice.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.winnowic.com/quiz.html">
+<link rel="canonical" href="https://www.winnowic.com/quiz.html">
     <style>
-        #quiz-container.quiz-shell {
-    max-width: 920px;
-    width: calc(100% - 40px);
-    margin: 30px auto;
-    display: block;
-}
-        .exam-selector-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            color: #0B1F3B;
-            opacity: 0.5;
-            margin: 0 0 10px;
-        }
-        .exam-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
-        }
-        .exam-card-btn {
-            background: #fff;
-            border: 1.5px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 14px 14px 12px;
-            cursor: pointer;
-            text-align: left;
-            transition: border-color 0.15s, background 0.15s, transform 0.1s;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .exam-card-btn:hover {
-            border-color: #0B1F3B;
-            transform: translateY(-1px);
-        }
-        .exam-card-btn.selected {
-            border: 2px solid #0B1F3B;
-            background: #0B1F3B;
-        }
-        .exam-card-icon {
-            font-size: 18px;
-            line-height: 1;
-            color: #0B1F3B;
-            opacity: 0.35;
-            font-style: normal;
-        }
-        .exam-card-btn.selected .exam-card-icon { color: #FFD84D; opacity: 1; }
-        .exam-card-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0B1F3B;
-            line-height: 1.2;
-        }
-        .exam-card-btn.selected .exam-card-name { color: #FFD84D; }
-        .exam-card-sub { font-size: 11px; color: #999; }
-        .exam-card-btn.selected .exam-card-sub { color: rgba(255,216,77,0.6); }
-        .selector-divider {
-            border: none;
-            border-top: 1.5px solid #e8e3d5;
-            margin: 18px 0;
-        }
-       
-        .mode-tab-btn {
-            flex: 1;
-            padding: 8px 6px;
-            border: none;
-            background: transparent;
-            border-radius: 7px;
-            font-size: 13px;
-            font-weight: 400;
-            color: #666;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-            font-family: 'Inter', sans-serif;
-            white-space: normal;
-            text-align: center; line-height: 1.2
-        }
-        .mode-tab-btn:hover { background: rgba(255,255,255,0.6); color: #0B1F3B; }
-        .mode-tab-btn.active-mode {
-            background: #fff;
-            color: #0B1F3B;
-            font-weight: 600;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        .mode-tab-desc {
-            font-size: 12px;
-            color: #888;
-            margin: 8px 2px 0;
-            min-height: 16px;
-        }
-        #exam-select { display: none !important; }
-       #quiz-container.quiz-shell {
-    max-width: 920px;
-    width: calc(100% - 32px);
-    margin: 16px auto;
-    display: block;
-    padding: 20px;
-    box-sizing: border-box;
-}
-    </style>
+    /* SAT-only: hide AP cards */
+    .exam-card-btn[data-exam="AP_PRECALC"],
+    .exam-card-btn[data-exam="AP_CALC_AB"],
+    .exam-card-btn[data-exam="AP_CALC_BC"] {
+        display: none !important;
+    }
+    .exam-cards-grid {
+        grid-template-columns: 1fr !important;
+        max-width: 200px;
+    }
+ 
+    /* Hide exam selector label + cards entirely since only SAT exists */
+    .exam-selector-label:first-of-type,
+    .exam-cards-grid {
+        display: none !important;
+    }
+ 
+    /* Hide the hidden select */
+    #exam-select { display: none !important; }
+ 
+    /* Mode tabs */
+    .mode-tab-btn {
+        flex: 1;
+        padding: 8px 6px;
+        border: none;
+        background: transparent;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+        font-family: 'Inter', sans-serif;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+    }
+    .mode-tab-btn:hover {
+        background: rgba(255,255,255,0.6);
+        color: #0B1F3B;
+    }
+    .mode-tab-btn.active-mode {
+        background: #fff;
+        color: #0B1F3B;
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .mode-tab-desc {
+        font-size: 12px;
+        color: #888;
+        margin: 8px 2px 0;
+        min-height: 16px;
+    }
+    #quiz-container.quiz-shell {
+        max-width: 920px;
+        width: calc(100% - 32px);
+        margin: 16px auto;
+        display: block;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+</style>
 </head>
 
 <body>
 
 <header class="site-header">
- 
-    <!-- ROW 1: gear | logo | auth -->
     <div class="header-row-1">
- 
-        <!-- Left: gear + upgrade -->
         <div class="header-row-1-left">
-            <div class="account-menu">
+            <a href="/index.html" style="display:inline-flex; text-decoration:none;">
+                <img src="/assets/Logo-Large.png"
+                     class="header-logo-img header-logo-large"
+                     alt="Winnowic">
+                <img src="/assets/Logo-Small.png"
+                     class="header-logo-img header-logo-small"
+                     alt="Winnowic">
+            </a>
+        </div>
+        <div class="header-row-1-right">
+            <button id="header-upgrade-btn"
+                    onclick="window.location.href='/pricing.html'"
+                    style="display:none;">
+                Upgrade to Premium
+            </button>
+            <div class="account-menu" style="position:relative;">
                 <button id="account-gear" class="gear-btn"
                         style="display:none;" aria-label="Account settings">
                     <i data-lucide="settings"></i>
@@ -140,44 +120,23 @@
                     </button>
                 </div>
             </div>
- 
-            <button id="header-upgrade-btn"
-                    class="header-upgrade-btn"
-                    onclick="window.location.href='/pricing.html'"
-                    style="display:none;">
-                Upgrade to Premium
-            </button>
-        </div>
- 
-        <!-- Center: logo -->
-        <div class="header-center">
-        
-            <a href="/index.html" class="logo-tm-wrap">
-                <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-                <sup class="logo-tm-mark">™</sup>
-            </a>
-
-        </div>
- 
-        <!-- Right: create account -->
-        <div class="header-row-1-right">
             <button id="header-auth-btn" class="header-auth-link">
                 Create Account
             </button>
         </div>
- 
     </div>
- 
-    <!-- ROW 2: nav links -->
-    <div class="header-row-2">
-        <!-- REMOVE the link for whichever page you're on -->
+     <div class="header-row-2">
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
+            Premium Diagnostics
+        </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/quiz.html'">
             Study Questions
         </button>
-        <button class="header-nav-link"
-                onclick="window.location.href='/diagnostics.html'">
-            Diagnostics
+         <button class="header-nav-link"
+                onclick="window.location.href='/studyplan.html'">
+            Study Plan
         </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/pricing.html'">
@@ -188,7 +147,6 @@
             Feedback
         </button>
     </div>
- 
 </header>
 
 <div id="quiz-container" class="card quiz-shell">
@@ -307,9 +265,6 @@
 
         </div>
 
-        <!-- GOAL BANNER -->
-        <div class="card" id="goal-banner-card" style="display:none;"></div>
-
         <!-- Hidden select — keeps quizSettings.js working with zero changes -->
         <select id="exam-select">
             <option value="">-- Select Exam --</option>
@@ -370,6 +325,7 @@
 
             <div id="progress-container"></div>
             <div id="question-image-container"><img id="question-image"></div>
+<canvas id="question-chart" style="display:none; max-width:600px; margin:0 auto;"></canvas>
             <h2 id="question"></h2>
 
             <div class="answers-grid">
@@ -380,10 +336,32 @@
             </div>
 
             <div id="grid-container" style="display:none">
-                <input id="grid-input">
-                <span id="grid-result"></span>
-                <button id="grid-submit">Submit</button>
-            </div>
+        <!-- Hidden inputs kept for quiz.js compatibility -->
+        <input id="grid-input" style="display:none">
+        <button id="grid-submit" style="display:none">Submit</button>
+        <span id="grid-result"></span>
+ 
+        <!-- Number pad UI -->
+        <div class="numpad-display">
+            <span class="numpad-display-value" id="numpad-display-value">—</span>
+            <button class="numpad-display-clear" id="numpad-clear" type="button">⌫</button>
+        </div>
+        <div class="numpad-grid">
+            <button class="numpad-key" data-key="7" type="button">7</button>
+            <button class="numpad-key" data-key="8" type="button">8</button>
+            <button class="numpad-key" data-key="9" type="button">9</button>
+            <button class="numpad-key" data-key="4" type="button">4</button>
+            <button class="numpad-key" data-key="5" type="button">5</button>
+            <button class="numpad-key" data-key="6" type="button">6</button>
+            <button class="numpad-key" data-key="1" type="button">1</button>
+            <button class="numpad-key" data-key="2" type="button">2</button>
+            <button class="numpad-key" data-key="3" type="button">3</button>
+            <button class="numpad-key numpad-negative" data-key="-" type="button">±</button>
+            <button class="numpad-key" data-key="0" type="button">0</button>
+            <button class="numpad-key numpad-decimal" data-key="." type="button">.</button>
+            <button class="numpad-key numpad-submit" id="numpad-submit" type="button">Submit Answer</button>
+        </div>
+    </div>
 
             <div id="explanation"></div>
 
@@ -495,9 +473,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
-        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+          <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
     </nav>
 
     <div class="footer-social">

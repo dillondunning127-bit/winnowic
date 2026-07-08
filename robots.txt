@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+ 
+User-agent: GPTBot
+Allow: /
+ 
+User-agent: PerplexityBot
+Allow: /
+ 
+User-agent: anthropic-ai
+Allow: /
+ 
+User-agent: Claude-Web
+Allow: /
+ 
+Sitemap: https://www.winnowic.com/sitemap.xml

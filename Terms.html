@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Terms of Use — Winnowic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Terms of Use for Winnowic SAT Math prep platform.">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        .terms-container {
+            max-width: 800px;
+            margin: 40px auto 80px;
+            padding: 0 24px;
+            font-family: 'Inter', Arial, sans-serif;
+            color: #333;
+            line-height: 1.7;
+            z-index: 1;
+        }
+
+        .terms-container h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0B1F3B;
+            margin: 0 0 6px;
+        }
+
+        .terms-last-updated {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 36px;
+        }
+
+        .terms-container h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0B1F3B;
+            margin: 36px 0 10px;
+            padding-top: 8px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .terms-container h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            margin: 24px 0 8px;
+        }
+
+        .terms-container p {
+            font-size: 14px;
+            color: #555;
+            margin: 0 0 14px;
+        }
+
+        .terms-container ul {
+            margin: 0 0 14px;
+            padding-left: 24px;
+        }
+
+        .terms-container ul li {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .terms-container a {
+            color: #0B1F3B;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .terms-container a:hover {
+            color: #FF6B00;
+        }
+
+        .terms-toc {
+            background: #F8F9FB;
+            border: 1px solid #f0f0f0;
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 36px;
+        }
+
+        .terms-toc p {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0B1F3B;
+            margin: 0 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .terms-toc ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .terms-toc ol li {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .terms-toc ol li a {
+            font-weight: 400;
+            color: #0B1F3B;
+        }
+
+        .terms-uppercase {
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="header-row-1">
+        <div class="header-row-1-left">
+            <a href="/index.html" style="display:inline-flex; text-decoration:none;">
+                <img src="/assets/Logo-Large.png" class="header-logo-img header-logo-large" alt="Winnowic">
+                <img src="/assets/Logo-Small.png" class="header-logo-img header-logo-small" alt="Winnowic">
+            </a>
+        </div>
+        <div class="header-row-1-right">
+            <button id="header-upgrade-btn" onclick="window.location.href='/pricing.html'" style="display:none;">Upgrade to Premium</button>
+            <div class="account-menu" style="position:relative;">
+                <button id="account-gear" class="gear-btn" style="display:none;" aria-label="Account settings">
+                    <i data-lucide="settings"></i>
+                </button>
+                <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                    <div id="account-email" class="dropdown-email"></div>
+                    <button id="logout-btn" class="dropdown-item"><i data-lucide="log-out"></i> Log Out</button>
+                    <button id="cnclsub-btn" class="dropdown-item"><i data-lucide="x-circle"></i> Cancel Subscription</button>
+                    <button id="dltact-btn" class="dropdown-item danger"><i data-lucide="trash-2"></i> Delete Account</button>
+                </div>
+            </div>
+            <button id="header-auth-btn" class="header-auth-link">Create Account</button>
+        </div>
+    </div>
+    <div class="header-row-2">
+        <button class="header-nav-link" onclick="window.location.href='/studyplan.html'">Study Plan</button>
+        <button class="header-nav-link" onclick="window.location.href='/diagnostics.html'">Premium Diagnostics</button>
+        <button class="header-nav-link" onclick="window.location.href='/quiz.html'">Study Questions</button>
+        <button class="header-nav-link" onclick="window.location.href='/pricing.html'">Pricing</button>
+        <button class="header-nav-link" onclick="window.location.href='/feedback.html'">Feedback</button>
+    </div>
+</header>
+
+<div class="terms-container">
+
+    <h1>Terms of Use</h1>
+    <p class="terms-last-updated"><strong>Last updated:</strong> July 05, 2026</p>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="terms-toc">
+        <p>Table of Contents</p>
+        <ol>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="#ip">Intellectual Property Rights</a></li>
+            <li><a href="#userreps">User Representations</a></li>
+            <li><a href="#userreg">User Registration</a></li>
+            <li><a href="#purchases">Purchases and Payment</a></li>
+            <li><a href="#subscriptions">Subscriptions</a></li>
+            <li><a href="#prohibited">Prohibited Activities</a></li>
+            <li><a href="#ugc">User Generated Contributions</a></li>
+            <li><a href="#license">Contribution License</a></li>
+            <li><a href="#reviews">Guidelines for Reviews</a></li>
+            <li><a href="#thirdparty">Third-Party Websites and Content</a></li>
+            <li><a href="#sitemanage">Services Management</a></li>
+            <li><a href="#ppyes">Privacy Policy</a></li>
+            <li><a href="#terms">Term and Termination</a></li>
+            <li><a href="#modifications">Modifications and Interruptions</a></li>
+            <li><a href="#law">Governing Law</a></li>
+            <li><a href="#disputes">Dispute Resolution</a></li>
+            <li><a href="#corrections">Corrections</a></li>
+            <li><a href="#disclaimer">Disclaimer</a></li>
+            <li><a href="#liability">Limitations of Liability</a></li>
+            <li><a href="#indemnification">Indemnification</a></li>
+            <li><a href="#userdata">User Data</a></li>
+            <li><a href="#electronic">Electronic Communications, Transactions, and Signatures</a></li>
+            <li><a href="#california">California Users and Residents</a></li>
+            <li><a href="#misc">Miscellaneous</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ol>
+    </div>
+
+    <!-- AGREEMENT -->
+    <h2 id="agreement">Agreement to Our Legal Terms</h2>
+    <p>We are <strong>Winnowic</strong> ("Company," "we," "us," "our"), a company registered in California, United States, located in Poway, CA 92064.</p>
+    <p>We operate the website <a href="https://winnowic.com" target="_blank">https://winnowic.com</a> (the "Site"), as well as any other related products and services that refer or link to these legal terms (collectively, the "Services").</p>
+    <p>You can contact us by phone at <strong>8582614746</strong>, email at <a href="mailto:trywinnowic@gmail.com">trywinnowic@gmail.com</a>, or by mail to Poway, CA 92064, United States.</p>
+    <p>These Legal Terms constitute a legally binding agreement between you ("you") and Winnowic, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. <strong class="terms-uppercase">If you do not agree with all of these legal terms, then you are expressly prohibited from using the services and you must discontinue use immediately.</strong></p>
+    <p>We reserve the right to make changes to these Legal Terms at any time and for any reason. We will alert you about any changes by updating the "Last updated" date, and you waive any right to receive specific notice of each such change. It is your responsibility to periodically review these Legal Terms.</p>
+    <p>The Services are intended for users who are at least 13 years of age. If you are a minor in your jurisdiction (generally under 18), you must have permission from your parent or guardian to use the Services.</p>
+    <p>We recommend that you print a copy of these Legal Terms for your records.</p>
+
+    <!-- 1 -->
+    <h2 id="services">1. Our Services</h2>
+    <p>The information provided when using the Services is not intended for distribution to or use by any person or entity in any jurisdiction where such distribution or use would be contrary to law or regulation. Those who access the Services from other locations do so on their own initiative and are solely responsible for compliance with local laws.</p>
+    <p>The Services are not tailored to comply with industry-specific regulations (HIPAA, FISMA, etc.), so if your interactions would be subject to such laws, you may not use the Services. You may not use the Services in a way that would violate the Gramm-Leach-Bliley Act (GLBA).</p>
+
+    <!-- 2 -->
+    <h2 id="ip">2. Intellectual Property Rights</h2>
+    <h3>Our intellectual property</h3>
+    <p>We are the owner or the licensee of all intellectual property rights in our Services, including all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics (collectively, the "Content"), as well as the trademarks, service marks, and logos contained therein (the "Marks").</p>
+    <p>Our Content and Marks are protected by copyright and trademark laws in the United States and around the world. The Content and Marks are provided through the Services "AS IS" for your personal, non-commercial use only.</p>
+    <h3>Your use of our Services</h3>
+    <p>Subject to your compliance with these Legal Terms, we grant you a non-exclusive, non-transferable, revocable license to access the Services and download or print a copy of any portion of the Content to which you have properly gained access, solely for your personal, non-commercial use.</p>
+    <p>No part of the Services and no Content or Marks may be copied, reproduced, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted, distributed, sold, licensed, or otherwise exploited for any commercial purpose without our express prior written permission.</p>
+    <p>To request permission, please contact us at <a href="mailto:trywinnowic@gmail.com">trywinnowic@gmail.com</a>. Any breach of these Intellectual Property Rights will constitute a material breach of our Legal Terms and your right to use our Services will terminate immediately.</p>
+    <h3>Your submissions</h3>
+    <p>By directly sending us any question, comment, suggestion, idea, feedback, or other information ("Submissions"), you agree to assign to us all intellectual property rights in such Submission. We shall own this Submission and be entitled to its unrestricted use for any lawful purpose without acknowledgment or compensation to you.</p>
+
+    <!-- 3 -->
+    <h2 id="userreps">3. User Representations</h2>
+    <p>By using the Services, you represent and warrant that: (1) all registration information you submit will be true, accurate, current, and complete; (2) you will maintain the accuracy of such information; (3) you have the legal capacity and agree to comply with these Legal Terms; (4) you are not under the age of 13; (5) you are not a minor in your jurisdiction, or if a minor, you have received parental permission; (6) you will not access the Services through automated or non-human means; (7) you will not use the Services for any illegal or unauthorized purpose; and (8) your use of the Services will not violate any applicable law or regulation.</p>
+    <p>If you provide any information that is untrue, inaccurate, not current, or incomplete, we have the right to suspend or terminate your account and refuse any and all current or future use of the Services.</p>
+
+    <!-- 4 -->
+    <h2 id="userreg">4. User Registration</h2>
+    <p>You may be required to register to use the Services. You agree to keep your password confidential and will be responsible for all use of your account and password. We reserve the right to remove, reclaim, or change a username you select if we determine, in our sole discretion, that such username is inappropriate, obscene, or otherwise objectionable.</p>
+
+    <!-- 5 -->
+    <h2 id="purchases">5. Purchases and Payment</h2>
+    <p>We accept the following forms of payment: Visa, Mastercard, American Express, PayPal, and Discover.</p>
+    <p>You agree to provide current, complete, and accurate purchase and account information for all purchases. You further agree to promptly update account and payment information as needed. Sales tax will be added to the price of purchases as required. We may change prices at any time. All payments shall be in US dollars.</p>
+    <p>You authorize us to charge your chosen payment provider for any amounts upon placing your order. We reserve the right to correct any errors or mistakes in pricing. We reserve the right to refuse any order placed through the Services.</p>
+
+    <!-- 6 -->
+    <h2 id="subscriptions">6. Subscriptions</h2>
+    <h3>Billing and Renewal</h3>
+    <p>Your subscription will continue and automatically renew unless canceled. You consent to our charging your payment method on a recurring basis without requiring your prior approval for each recurring charge, until such time as you cancel. The length of your billing cycle is monthly.</p>
+    <h3>Cancellation</h3>
+    <p>All purchases are non-refundable. You can cancel your subscription at any time by logging into your account. Your cancellation will take effect at the end of the current paid term. If you have any questions or are unsatisfied with our Services, please email us at <a href="mailto:trywinnowic@gmail.com">trywinnowic@gmail.com</a>.</p>
+    <h3>Fee Changes</h3>
+    <p>We may, from time to time, make changes to the subscription fee and will communicate any price changes to you in accordance with applicable law.</p>
+
+    <!-- 7 -->
+    <h2 id="prohibited">7. Prohibited Activities</h2>
+    <p>You may not access or use the Services for any purpose other than that for which we make the Services available. The Services may not be used in connection with any commercial endeavors except those specifically endorsed or approved by us.</p>
+    <p>As a user of the Services, you agree not to:</p>
+    <ul>
+        <li>Systematically retrieve data or other content from the Services to create a collection, compilation, database, or directory without written permission from us.</li>
+        <li>Trick, defraud, or mislead us and other users, especially in any attempt to learn sensitive account information such as user passwords.</li>
+        <li>Circumvent, disable, or otherwise interfere with security-related features of the Services.</li>
+        <li>Disparage, tarnish, or otherwise harm, in our opinion, us and/or the Services.</li>
+        <li>Use any information obtained from the Services to harass, abuse, or harm another person.</li>
+        <li>Make improper use of our support services or submit false reports of abuse or misconduct.</li>
+        <li>Use the Services in a manner inconsistent with any applicable laws or regulations.</li>
+        <li>Engage in unauthorized framing of or linking to the Services.</li>
+        <li>Upload or transmit viruses, Trojan horses, or other material that interferes with any party's use and enjoyment of the Services.</li>
+        <li>Engage in any automated use of the system, such as using scripts to send comments or messages, or using data mining, robots, or similar data gathering tools.</li>
+        <li>Delete the copyright or other proprietary rights notice from any Content.</li>
+        <li>Attempt to impersonate another user or person or use the username of another user.</li>
+        <li>Interfere with, disrupt, or create an undue burden on the Services or the networks or services connected to the Services.</li>
+        <li>Harass, annoy, intimidate, or threaten any of our employees or agents.</li>
+        <li>Attempt to bypass any measures of the Services designed to prevent or restrict access.</li>
+        <li>Copy or adapt the Services' software, including but not limited to Flash, PHP, HTML, JavaScript, or other code.</li>
+        <li>Except as permitted by applicable law, decipher, decompile, disassemble, or reverse engineer any of the software comprising or making up a part of the Services.</li>
+        <li>Use, launch, develop, or distribute any automated system, including any spider, robot, cheat utility, scraper, or offline reader that accesses the Services without authorization.</li>
+        <li>Use a buying agent or purchasing agent to make purchases on the Services.</li>
+        <li>Make any unauthorized use of the Services, including collecting usernames and/or email addresses of users by electronic or other means for the purpose of sending unsolicited email.</li>
+        <li>Use the Services as part of any effort to compete with us or for any revenue-generating endeavor or commercial enterprise.</li>
+        <li>Sell or otherwise transfer your profile.</li>
+    </ul>
+
+    <!-- 8 -->
+    <h2 id="ugc">8. User Generated Contributions</h2>
+    <p>The Services does not offer users to submit or post content. We may provide you with the opportunity to create, submit, post, display, transmit, or publish content and materials, including but not limited to text, writings, video, audio, photographs, graphics, comments, suggestions, or personal information (collectively, "Contributions"). When you create or make available any Contributions, you represent and warrant that:</p>
+    <ul>
+        <li>The creation, distribution, transmission, public display, or performance, and the accessing, downloading, or copying of your Contributions do not and will not infringe the proprietary rights of any third party.</li>
+        <li>You are the creator and owner of or have the necessary licenses, rights, consents, releases, and permissions to use and to authorize us and other users to use your Contributions.</li>
+        <li>You have the written consent of each identifiable individual person in your Contributions.</li>
+        <li>Your Contributions are not false, inaccurate, or misleading.</li>
+        <li>Your Contributions are not unsolicited or unauthorized advertising, promotional materials, pyramid schemes, chain letters, spam, or mass mailings.</li>
+        <li>Your Contributions are not obscene, lewd, lascivious, filthy, violent, harassing, libelous, slanderous, or otherwise objectionable.</li>
+        <li>Your Contributions do not ridicule, mock, disparage, intimidate, or abuse anyone.</li>
+        <li>Your Contributions do not violate any applicable law, regulation, or rule.</li>
+        <li>Your Contributions do not violate the privacy or publicity rights of any third party.</li>
+        <li>Your Contributions do not violate any applicable law concerning child pornography or the health or well-being of minors.</li>
+        <li>Your Contributions do not include any offensive comments connected to race, national origin, gender, sexual preference, or physical handicap.</li>
+    </ul>
+    <p>Any use of the Services in violation of the foregoing violates these Legal Terms and may result in termination or suspension of your rights to use the Services.</p>
+
+    <!-- 9 -->
+    <h2 id="license">9. Contribution License</h2>
+    <p>You and the Services agree that we may access, store, process, and use any information and personal data that you provide following the terms of the Privacy Policy and your choices (including settings).</p>
+    <p>By submitting suggestions or other feedback regarding the Services, you agree that we can use and share such feedback for any purpose without compensation to you.</p>
+    <p>We do not assert any ownership over your Contributions. You retain full ownership of all of your Contributions and any intellectual property rights associated with your Contributions. We are not liable for any statements or representations in your Contributions provided by you in any area on the Services.</p>
+
+    <!-- 10 -->
+    <h2 id="reviews">10. Guidelines for Reviews</h2>
+    <p>We may provide you areas on the Services to leave reviews or ratings. When posting a review, you must comply with the following criteria: (1) you should have firsthand experience with the person/entity being reviewed; (2) your reviews should not contain offensive profanity, or abusive, racist, offensive, or hateful language; (3) your reviews should not contain discriminatory references based on religion, race, gender, national origin, age, marital status, sexual orientation, or disability; (4) your reviews should not contain references to illegal activity; (5) you should not be affiliated with competitors if posting negative reviews; (6) you should not make any conclusions as to the legality of conduct; (7) you may not post any false or misleading statements; and (8) you may not organize a campaign encouraging others to post reviews, whether positive or negative.</p>
+    <p>We may accept, reject, or remove reviews in our sole discretion. Reviews are not endorsed by us and do not necessarily represent our opinions or the views of any of our affiliates or partners. We do not assume liability for any review or for any claims, liabilities, or losses resulting from any review.</p>
+
+    <!-- 11 -->
+    <h2 id="thirdparty">11. Third-Party Websites and Content</h2>
+    <p>The Services may contain links to other websites ("Third-Party Websites") as well as articles, photographs, text, graphics, pictures, designs, music, sound, video, information, applications, software, and other content belonging to or originating from third parties ("Third-Party Content"). Such Third-Party Websites and Third-Party Content are not investigated, monitored, or checked for accuracy, appropriateness, or completeness by us.</p>
+    <p>Inclusion of, linking to, or permitting the use or installation of any Third-Party Websites or Content does not imply approval or endorsement by us. If you decide to leave the Services and access Third-Party Websites, you do so at your own risk and these Legal Terms no longer govern. Any purchases you make through Third-Party Websites are exclusively between you and the applicable third party.</p>
+
+    <!-- 12 -->
+    <h2 id="sitemanage">12. Services Management</h2>
+    <p>We reserve the right, but not the obligation, to: (1) monitor the Services for violations of these Legal Terms; (2) take appropriate legal action against anyone who violates the law or these Legal Terms; (3) in our sole discretion, refuse, restrict access to, limit the availability of, or disable any of your Contributions or any portion thereof; (4) remove from the Services or disable all files and content that are excessive in size or burdensome to our systems; and (5) otherwise manage the Services in a manner designed to protect our rights and property.</p>
+
+    <!-- 13 -->
+    <h2 id="ppyes">13. Privacy Policy</h2>
+    <p>We care about data privacy and security. Please review our Privacy Policy: <a href="https://winnowic.com/privacy.html" target="_blank">https://winnowic.com/privacy.html</a>. By using the Services, you agree to be bound by our Privacy Policy, which is incorporated into these Legal Terms.</p>
+    <p>The Services are hosted in the United States. If you access the Services from any other region with laws governing personal data collection, use, or disclosure that differ from United States laws, by your continued use of the Services, you are transferring your data to the United States and expressly consent to have your data transferred to and processed in the United States.</p>
+    <p>We do not knowingly accept, request, or solicit information from children. In accordance with the U.S. Children's Online Privacy Protection Act, if we receive actual knowledge that anyone under the age of 13 has provided personal information to us without the requisite and verifiable parental consent, we will delete that information from the Services as quickly as is reasonably practical.</p>
+
+    <!-- 14 -->
+    <h2 id="terms">14. Term and Termination</h2>
+    <p>These Legal Terms shall remain in full force and effect while you use the Services. <span class="terms-uppercase">We reserve the right to, in our sole discretion and without notice or liability, deny access to and use of the Services to any person for any reason. We may terminate your use or participation in the Services or delete your account and any content or information that you posted at any time, without warning, in our sole discretion.</span></p>
+    <p>If we terminate or suspend your account for any reason, you are prohibited from registering and creating a new account under your name, a fake or borrowed name, or the name of any third party. In addition to terminating or suspending your account, we reserve the right to take appropriate legal action, including pursuing civil, criminal, and injunctive redress.</p>
+
+    <!-- 15 -->
+    <h2 id="modifications">15. Modifications and Interruptions</h2>
+    <p>We reserve the right to change, modify, or remove the contents of the Services at any time or for any reason at our sole discretion without notice. We will not be liable to you or any third party for any modification, price change, suspension, or discontinuance of the Services.</p>
+    <p>We cannot guarantee the Services will be available at all times. We may experience hardware, software, or other problems or need to perform maintenance related to the Services, resulting in interruptions, delays, or errors. You agree that we have no liability whatsoever for any loss, damage, or inconvenience caused by your inability to access or use the Services during any downtime or discontinuance of the Services.</p>
+
+    <!-- 16 -->
+    <h2 id="law">16. Governing Law</h2>
+    <p>These Legal Terms and your use of the Services are governed by and construed in accordance with the laws of the State of California applicable to agreements made and to be entirely performed within the State of California, without regard to its conflict of law principles.</p>
+
+    <!-- 17 -->
+    <h2 id="disputes">17. Dispute Resolution</h2>
+    <p>Any legal action of whatever nature brought by either you or us shall be commenced or prosecuted in the state and federal courts located in California, United States, and the Parties hereby consent to, and waive all defenses of lack of personal jurisdiction and forum non conveniens with respect to venue and jurisdiction in such courts. In no event shall any claim, action, or proceeding brought by either Party related in any way to the Services be commenced more than one (1) year after the cause of action arose.</p>
+
+    <!-- 18 -->
+    <h2 id="corrections">18. Corrections</h2>
+    <p>There may be information on the Services that contains typographical errors, inaccuracies, or omissions, including descriptions, pricing, availability, and various other information. We reserve the right to correct any errors, inaccuracies, or omissions and to change or update the information on the Services at any time, without prior notice.</p>
+
+    <!-- 19 -->
+    <h2 id="disclaimer">19. Disclaimer</h2>
+    <p class="terms-uppercase">The Services are provided on an as-is and as-available basis. You agree that your use of the Services will be at your sole risk. To the fullest extent permitted by law, we disclaim all warranties, express or implied, in connection with the Services and your use thereof, including, without limitation, the implied warranties of merchantability, fitness for a particular purpose, and non-infringement. We make no warranties or representations about the accuracy or completeness of the Services' content or the content of any websites or mobile applications linked to the Services and we will assume no liability or responsibility for any errors, mistakes, or inaccuracies of content; personal injury or property damage; any unauthorized access to or use of our secure servers and/or any personal information stored therein; any interruption or cessation of transmission to or from the Services; or any bugs, viruses, trojan horses, or the like which may be transmitted to or through the Services by any third party.</p>
+
+    <!-- 20 -->
+    <h2 id="liability">20. Limitations of Liability</h2>
+    <p class="terms-uppercase">In no event will we or our directors, employees, or agents be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages, including lost profit, lost revenue, loss of data, or other damages arising from your use of the Services, even if we have been advised of the possibility of such damages. Notwithstanding anything to the contrary contained herein, our liability to you for any cause whatsoever and regardless of the form of the action, will at all times be limited to the amount paid, if any, by you to us during the six (6) month period prior to any cause of action arising. Certain US state laws and international laws do not allow limitations on implied warranties or the exclusion or limitation of certain damages. If these laws apply to you, some or all of the above disclaimers or limitations may not apply to you, and you may have additional rights.</p>
+
+    <!-- 21 -->
+    <h2 id="indemnification">21. Indemnification</h2>
+    <p>You agree to defend, indemnify, and hold us harmless, including our subsidiaries, affiliates, and all of our respective officers, agents, partners, and employees, from and against any loss, damage, liability, claim, or demand, including reasonable attorneys' fees and expenses, made by any third party due to or arising out of: (1) use of the Services; (2) breach of these Legal Terms; (3) any breach of your representations and warranties set forth in these Legal Terms; (4) your violation of the rights of a third party, including but not limited to intellectual property rights; or (5) any overt harmful act toward any other user of the Services with whom you connected via the Services.</p>
+
+    <!-- 22 -->
+    <h2 id="userdata">22. User Data</h2>
+    <p>We will maintain certain data that you transmit to the Services for the purpose of managing the performance of the Services, as well as data relating to your use of the Services. Although we perform regular routine backups of data, you are solely responsible for all data that you transmit or that relates to any activity you have undertaken using the Services. You agree that we shall have no liability to you for any loss or corruption of any such data, and you hereby waive any right of action against us arising from any such loss or corruption of such data.</p>
+
+    <!-- 23 -->
+    <h2 id="electronic">23. Electronic Communications, Transactions, and Signatures</h2>
+    <p>Visiting the Services, sending us emails, and completing online forms constitute electronic communications. You consent to receive electronic communications, and you agree that all agreements, notices, disclosures, and other communications we provide to you electronically satisfy any legal requirement that such communication be in writing. You hereby agree to the use of electronic signatures, contracts, orders, and other records, and to electronic delivery of notices, policies, and records of transactions initiated or completed by us or via the Services.</p>
+
+    <!-- 24 -->
+    <h2 id="california">24. California Users and Residents</h2>
+    <p>If any complaint with us is not satisfactorily resolved, you can contact the Complaint Assistance Unit of the Division of Consumer Services of the California Department of Consumer Affairs in writing at 1625 North Market Blvd., Suite N 112, Sacramento, California 95834 or by telephone at (800) 952-5210 or (916) 445-1254.</p>
+
+    <!-- 25 -->
+    <h2 id="misc">25. Miscellaneous</h2>
+    <p>These Legal Terms and any policies or operating rules posted by us on the Services constitute the entire agreement and understanding between you and us. Our failure to exercise or enforce any right or provision of these Legal Terms shall not operate as a waiver of such right or provision. These Legal Terms operate to the fullest extent permissible by law. We may assign any or all of our rights and obligations to others at any time. If any provision or part of a provision of these Legal Terms is determined to be unlawful, void, or unenforceable, that provision is deemed severable from these Legal Terms and does not affect the validity and enforceability of any remaining provisions. There is no joint venture, partnership, employment or agency relationship created between you and us as a result of these Legal Terms. You agree that these Legal Terms will not be construed against us by virtue of having drafted them.</p>
+
+    <!-- 26 -->
+    <h2 id="contact">26. Contact Us</h2>
+    <p>In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:</p>
+    <p>
+        <strong>Winnowic</strong><br>
+        Poway, CA 92064<br>
+        United States<br>
+        Phone: <strong>8582614746</strong><br>
+        Email: <a href="mailto:trywinnowic@gmail.com">trywinnowic@gmail.com</a>
+    </p>
+
+</div>
+
+<footer class="site-footer">
+    <div class="footer-left">© 2026 <span>Winnowic™</span> · All rights reserved</div>
+   <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+          <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
+    </nav>
+    <div class="footer-social">
+        <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/trywinnowic/" target="_blank" class="footer-social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@Winnowic" target="_blank" class="footer-social-link" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank" class="footer-social-link" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+    </div>
+</footer>
+
+<script type="module" src="/js/auth.js"></script>
+<script type="module" src="/js/customer_manage.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+</script>
+
+</body>
+</html>

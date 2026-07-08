@@ -1,8 +1,18 @@
 import { supabase } from "./supabase.js";
 
 export async function checkExamAccess(exam) {
+const { data: { user } } = await supabase.auth.getUser();
+if (user) {
+    const { data: activeReward } = await supabase
+        .from('reward_unlocks')
+        .select('expires_at')
+        .eq('user_id', user.id)
+        .eq('reward_type', 'premium_preview_48h')
+        .gt('expires_at', new Date().toISOString())
+        .maybeSingle();
 
-  const { data: { user } } = await supabase.auth.getUser();
+    if (activeReward) return true; // temporary premium access
+}
   if (!user) return false;
 
   const { data, error } = await supabase

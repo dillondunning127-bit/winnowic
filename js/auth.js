@@ -7,361 +7,218 @@ let cachedUser = null;
 
 export async function getCurrentUser() {
     if (cachedUser) return cachedUser;
-
     const { data } = await supabase.auth.getUser();
     cachedUser = data.user;
-
     return cachedUser;
 }
 
+// ─────────────────────────────────────────────
+// Upgrade button visibility
+// ─────────────────────────────────────────────
 async function updateUpgradeButton(user) {
-    const upgradeBtn = document.getElementById("upgrade-btn");
+    const upgradeBtn = document.getElementById("header-upgrade-btn");
     if (!upgradeBtn) return;
 
     if (!user) {
-        upgradeBtn.style.display = "block";
-        submitBtn.disabled = false;
-submitBtn.textContent = "Login";
+        upgradeBtn.style.display = "none";
         return;
     }
 
     const exams = await getUserExams();
-
-    if (exams.includes("ALL")) {
-        upgradeBtn.style.display = "none";
-    } else {
-        upgradeBtn.style.display = "block";
-    }
+    upgradeBtn.style.display = exams.includes("ALL") ? "none" : "block";
 }
 
+// ─────────────────────────────────────────────
+// Handle logged-in state UI
+// ─────────────────────────────────────────────
 export async function handleLoggedInUser(user) {
     const emailEl = document.getElementById("account-email");
     const gearBtn = document.getElementById("account-gear");
+    const authBtn = document.getElementById("header-auth-btn");
 
-    if (emailEl) {
-        emailEl.textContent = "Logged in as: " + user.email;
-    }
+    if (emailEl) emailEl.textContent = "Logged in as: " + user.email;
+    if (gearBtn) gearBtn.style.display = "block";
+    if (authBtn) authBtn.style.display = "none";
 
-    if (gearBtn) {
-        gearBtn.style.display = "block";
-    }
-// Hide "Create Account" when logged in — upgrade btn takes its place
-const authBtn = document.getElementById('header-auth-btn');
-if (authBtn) authBtn.style.display = 'none';
     const loginBtn = document.getElementById("login-tab");
     const signupBtn = document.getElementById("signup-tab");
-
     if (loginBtn) loginBtn.style.display = "none";
     if (signupBtn) signupBtn.style.display = "none";
 
-    // Upgrade button — after gear so gear always shows regardless
-    const headerUpgradeBtn = document.getElementById('header-upgrade-btn');
-    if (headerUpgradeBtn) {
-        const exams = await getUserExams();
-        headerUpgradeBtn.style.display = exams.includes('ALL') ? 'none' : 'block';
-    }
-
-    updateUpgradeButton(user);
+    await updateUpgradeButton(user);
 }
 
+// ─────────────────────────────────────────────
+// Sign Up
+// ─────────────────────────────────────────────
 export async function signUp() {
- 
-    const email = document.getElementById("auth-email").value;
-    const password = document.getElementById("auth-password").value;
-    setAuthLoading(true);
-       if (!email || !password) {
-    const msg = document.getElementById("auth-message");
+    const email    = document.getElementById("auth-email")?.value;
+    const password = document.getElementById("auth-password")?.value;
 
-    msg.textContent = "Please enter an email and password.";
-    msg.style.color = "#ff6b6b";
-
-    return;
-}
-submitBtn.disabled = true;
-submitBtn.textContent = "Creating Account...";
-
-
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password
-    });
-
-    if (error) {
+    if (!email || !password) {
         const msg = document.getElementById("auth-message");
-setAuthLoading(false);
-msg.textContent = error.message;
-msg.style.color = "#ff6b6b";
-msg.style.marginTop = "10px";
-        submitBtn.disabled = false;
-submitBtn.textContent = "Create Account";
+        if (msg) { msg.textContent = "Please enter an email and password."; msg.style.color = "#ff6b6b"; }
         return;
     }
 
-submitBtn.textContent = "Creating...";
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Creating Account..."; }
+
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+        const msg = document.getElementById("auth-message");
+        if (msg) { msg.textContent = error.message; msg.style.color = "#ff6b6b"; msg.style.marginTop = "10px"; }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Create Account"; }
+        return;
+    }
+
     if (data.session) {
         handleLoggedInUser(data.user);
-        loadHistory(data.user.id);
-        submitBtn.classList.add("success");
-submitBtn.innerHTML = "✓ Account Created!";
+        if (document.getElementById('history-container')) loadHistory(data.user.id);
+        if (submitBtn) { submitBtn.classList.add("success"); submitBtn.innerHTML = "✓ Account Created!"; }
 
-setTimeout(() => {
-    setAuthLoading(false);
-    const returnTo = document.referrer && !document.referrer.includes('auth.html')
-    ? document.referrer
-    : '/quiz.html';
-window.location.href = returnTo;
-}, 700);
-document.getElementById("auth-message").textContent = "";
+        setTimeout(() => {
+            const returnTo = sessionStorage.getItem('studyPlanReturn')
+                ? '/studyplan.html'
+                : document.referrer && !document.referrer.includes('auth.html')
+                    ? document.referrer
+                    : '/quiz.html';
+            sessionStorage.removeItem('studyPlanReturn');
+            window.location.href = returnTo;
+        }, 700);
+
+        const msg = document.getElementById("auth-message");
+        if (msg) msg.textContent = "";
     }
 }
 
+// ─────────────────────────────────────────────
+// Login
+// ─────────────────────────────────────────────
 export async function login() {
-    const email = document.getElementById("auth-email").value;
-    const password = document.getElementById("auth-password").value;
-     if (!email || !password) {
-    const msg = document.getElementById("auth-message");
-setAuthLoading(true);
-    msg.textContent = "Please enter an email and password.";
-    msg.style.color = "#ff6b6b";
+    const email    = document.getElementById("auth-email")?.value;
+    const password = document.getElementById("auth-password")?.value;
 
-    return;
+    if (!email || !password) {
+        const msg = document.getElementById("auth-message");
+        if (msg) { msg.textContent = "Please enter an email and password."; msg.style.color = "#ff6b6b"; }
+        return;
+    }
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Logging In..."; }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        const msg = document.getElementById("auth-message");
+        if (msg) { msg.textContent = error.message; msg.style.color = "#ff6b6b"; msg.style.marginTop = "10px"; }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Login"; }
+        return;
+    }
+
+    if (submitBtn) { submitBtn.classList.add("success"); submitBtn.textContent = "✓ Logged In!"; }
+    handleLoggedInUser(data.user);
+    if (document.getElementById('history-container')) loadHistory(data.user.id);
+
+    setTimeout(() => {
+        const returnTo = sessionStorage.getItem('studyPlanReturn')
+            ? '/studyplan.html'
+            : document.referrer && !document.referrer.includes('auth.html')
+                ? document.referrer
+                : '/quiz.html';
+        sessionStorage.removeItem('studyPlanReturn');
+        window.location.href = returnTo;
+    }, 700);
+
+    const msg = document.getElementById("auth-message");
+    if (msg) msg.textContent = "";
 }
-submitBtn.disabled = true;
-submitBtn.textContent = "Logging In...";
-    const { data, error } = await supabase.auth.signInWithPassword({  
-        email,
-        password
+
+// ─────────────────────────────────────────────
+// Reset Password
+// ─────────────────────────────────────────────
+export async function resetPassword() {
+    const email = document.getElementById("auth-email")?.value;
+    if (!email) { alert("Please enter your email first."); return; }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + "/auth.html"
     });
 
-    if (error) {
-         setAuthLoading(false);
-        const msg = document.getElementById("auth-message");
-msg.textContent = error.message;
-msg.style.color = "#ff6b6b";
-msg.style.marginTop = "10px";
-        submitBtn.disabled = false;
-submitBtn.textContent = "Login";
-        return;
-    }
-submitBtn.classList.add("success");
-submitBtn.textContent = "✓ Logged In!";
-    handleLoggedInUser(data.user);
-    loadHistory(data.user.id);
-    setTimeout(() => {
-         setAuthLoading(false);
-    const returnTo = document.referrer && !document.referrer.includes('auth.html')
-    ? document.referrer
-    : '/quiz.html';
-window.location.href = returnTo;
-}, 700);
-    document.getElementById("auth-message").textContent = "";
-}
-
-export async function resetPassword() {
-
-    const email =
-        document.getElementById("auth-email").value;
-
-    if (!email) {
-        alert("Please enter your email first.");
-        return;
-    }
-
-    const { error } =
-        await supabase.auth.resetPasswordForEmail(email, {
-
-            redirectTo:
-                window.location.origin + "/auth.html"
-
-        });
-
-    if (error) {
-        alert(error.message);
-        return;
-    }
-
+    if (error) { alert(error.message); return; }
     alert("Password reset email sent!");
 }
 
+// ─────────────────────────────────────────────
+// Logout
+// ─────────────────────────────────────────────
 export async function logout() {
     await supabase.auth.signOut();
 
-    ["choice-a", "choice-b", "choice-c", "choice-d"].forEach(id => {
+    ["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = "none";
     });
 
-   const dropdown = document.getElementById("account-dropdown");
-if (dropdown) dropdown.style.display = "none"; 
-updateUpgradeButton(null);
+    const dropdown = document.getElementById("account-dropdown");
+    if (dropdown) dropdown.style.display = "none";
+
+    updateUpgradeButton(null);
 }
-const authBtn = document.getElementById('header-auth-btn');
-if (authBtn) authBtn.style.display = 'none';
+
+// ─────────────────────────────────────────────
+// Auth state listener
+// ─────────────────────────────────────────────
 export function initAuthListener() {
-    // Hide nav link for current page
-const path = window.location.pathname;
-if (path.includes('quiz'))        document.getElementById('nav-quiz')?.style.setProperty('display','none');
-if (path.includes('diagnostics')) document.getElementById('nav-diagnostics')?.style.setProperty('display','none');
-if (path.includes('pricing'))     document.getElementById('nav-pricing')?.style.setProperty('display','none');
-
-// On mobile: swap upgrade/create account based on auth state
-// (already handled by handleLoggedInUser and initAuthListener)
-// header-auth-btn hides when logged in via handleLoggedInUser — 
-// add this to handleLoggedInUser():
-//   document.getElementById('header-auth-btn')?.style.setProperty('display','none');
-// and to the logged-out branch of initAuthListener():
-//   document.getElementById('header-auth-btn')?.style.setProperty('display','block');
     supabase.auth.onAuthStateChange((event, session) => {
-
         const user = session?.user;
         const authContainer = document.getElementById("auth-container");
 
         if (user) {
             updateExamLocks();
             handleLoggedInUser(user);
-            loadHistory(user.id);
-updateUpgradeButton(user);
-            // hide inputs
-            // Whatever is on line 199, e.g.:
-const el = document.getElementById("auth-email");
-if (el) el.style.display = "none";  // add the if check
-            const pwEl = document.getElementById("auth-password");
-if (pwEl) pwEl.style.display = "none";
+            if (document.getElementById('history-container')) loadHistory(user.id);
+            updateUpgradeButton(user);
 
-            // 🔥 HIDE ENTIRE AUTH CARD
+            const emailEl = document.getElementById("auth-email");
+            if (emailEl) emailEl.style.display = "none";
+            const pwEl = document.getElementById("auth-password");
+            if (pwEl) pwEl.style.display = "none";
             if (authContainer) authContainer.style.display = "none";
 
         } else {
-updateExamLocks();
-// Show "Create Account" when logged out
-const authBtn = document.getElementById('header-auth-btn');
-if (authBtn) authBtn.style.display = 'block';
-            const loginBtn = document.getElementById("login-tab");
-            const signupBtn = document.getElementById("signup-tab");
-updateUpgradeButton(null);
-            if (loginBtn) loginBtn.style.display = "inline-block";
-            if (signupBtn) signupBtn.style.display = "inline-block";
+            updateExamLocks();
+            updateUpgradeButton(null);
+
+            const authBtn = document.getElementById('header-auth-btn');
+            if (authBtn) authBtn.style.display = 'block';
+
+            const upgradeBtn = document.getElementById('header-upgrade-btn');
+            if (upgradeBtn) upgradeBtn.style.display = 'none';
+
+            const gear = document.getElementById("account-gear");
+            if (gear) gear.style.display = "none";
 
             const emailEl = document.getElementById("account-email");
             if (emailEl) emailEl.textContent = "";
 
-            const gear = document.getElementById("account-gear");
-            if (gear) gear.style.display = "none";
-            const authBtnOut = document.getElementById('header-auth-btn');
-if (authBtnOut) authBtnOut.style.display = 'block';
- 
-const upgradeOut = document.getElementById('header-upgrade-btn');
-if (upgradeOut) upgradeOut.style.display = 'none';
-            // Show upgrade button to logged-out users too
-const headerUpgradeBtn = document.getElementById('header-upgrade-btn');
-if (headerUpgradeBtn) headerUpgradeBtn.style.display = 'block';
+            const loginBtn = document.getElementById("login-tab");
+            const signupBtn = document.getElementById("signup-tab");
+            if (loginBtn) loginBtn.style.display = "inline-block";
+            if (signupBtn) signupBtn.style.display = "inline-block";
 
-            // 🔥 SHOW AUTH CARD AGAIN
             if (authContainer) authContainer.style.display = "block";
         }
     });
 }
 
-
-// AUTH PAGE LOGIC
-const loginTab = document.getElementById("login-tab");
-const signupTab = document.getElementById("signup-tab");
-const submitBtn = document.getElementById("auth-submit-btn");
-const authTitle = document.getElementById("auth-title");
-
-let authMode = "login";
-
-function setAuthLoading(isLoading) {
-
-    if (!submitBtn) return;
-
-    submitBtn.disabled = isLoading;
-
-    if (isLoading) {
-        submitBtn.textContent = "Loading...";
-        submitBtn.style.opacity = "0.7";
-        submitBtn.style.cursor = "not-allowed";
-    } else {
-
-        submitBtn.style.opacity = "1";
-        submitBtn.style.cursor = "pointer";
-
-        submitBtn.textContent =
-            authMode === "login"
-                ? "Login"
-                : "Create Account";
-    }
-}
-
-if (loginTab) {
-    loginTab.classList.add("active");
-}
-// SWITCH TO LOGIN
-if (loginTab) {
-    loginTab.addEventListener("click", () => {
-        authMode = "login";
-
-        authTitle.textContent = "Welcome Back";
-        submitBtn.textContent = "Login";
-
-        loginTab.classList.add("active");
-        signupTab.classList.remove("active");
-    });
-}
-
-// SWITCH TO SIGNUP
-if (signupTab) {
-    signupTab.addEventListener("click", () => {
-        authMode = "signup";
-
-        authTitle.textContent = "Create Account";
-        submitBtn.textContent = "Create Account";
-
-        signupTab.classList.add("active");
-        loginTab.classList.remove("active");
-    });
-}
-
-// SUBMIT BUTTON
-if (submitBtn) {
-    submitBtn.addEventListener("click", async () => {
-
-        if (authMode === "login") {
-            await login();
-        } else {
-            await signUp();
-        }
-
-    });
-}
-
-const forgotPasswordLink =
-    document.getElementById("forgot-password-link");
-
-if (forgotPasswordLink) {
-
-    forgotPasswordLink.addEventListener("click", async () => {
-
-        await resetPassword();
-
-    });
-
-}
-
+// ─────────────────────────────────────────────
+// Header buttons (dropdown, logout, nav hiding)
+// ─────────────────────────────────────────────
 export function initHeaderButtons() {
-    const path = window.location.pathname;
-document.querySelectorAll('.header-nav-link').forEach(btn => {
-    const href = btn.getAttribute('onclick') || '';
-    if (
-        (path.includes('quiz')        && href.includes('quiz')) ||
-        (path.includes('diagnostics') && href.includes('diagnostics')) ||
-        (path.includes('pricing')     && href.includes('pricing')) ||
-        (path.includes('feedback')    && href.includes('feedback')) ||
-        (path === '/' || path.includes('index')) && href.includes('index')
-    ) {
-        btn.style.display = 'none';
-    }
-});
+    // Hide nav link for current page
+    
+
     // Logout
     document.getElementById("logout-btn")
         ?.addEventListener("click", logout);
@@ -391,6 +248,68 @@ document.querySelectorAll('.header-nav-link').forEach(btn => {
     }
 }
 
-// Bottom of auth.js — runs on every page
+// ─────────────────────────────────────────────
+// Auth page tab/submit logic (only runs on auth.html)
+// ─────────────────────────────────────────────
+const loginTab  = document.getElementById("login-tab");
+const signupTab = document.getElementById("signup-tab");
+const submitBtn = document.getElementById("auth-submit-btn");
+const authTitle = document.getElementById("auth-title");
+
+let authMode = "login";
+
+function setAuthLoading(isLoading) {
+    if (!submitBtn) return;
+    submitBtn.disabled = isLoading;
+    if (isLoading) {
+        submitBtn.textContent = "Loading...";
+        submitBtn.style.opacity = "0.7";
+        submitBtn.style.cursor = "not-allowed";
+    } else {
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
+        submitBtn.textContent = authMode === "login" ? "Login" : "Create Account";
+    }
+}
+
+if (loginTab) loginTab.classList.add("active");
+
+if (loginTab) {
+    loginTab.addEventListener("click", () => {
+        authMode = "login";
+        if (authTitle) authTitle.textContent = "Welcome Back";
+        if (submitBtn) submitBtn.textContent = "Login";
+        loginTab.classList.add("active");
+        signupTab?.classList.remove("active");
+    });
+}
+
+if (signupTab) {
+    signupTab.addEventListener("click", () => {
+        authMode = "signup";
+        if (authTitle) authTitle.textContent = "Create Account";
+        if (submitBtn) submitBtn.textContent = "Create Account";
+        signupTab.classList.add("active");
+        loginTab?.classList.remove("active");
+    });
+}
+
+if (submitBtn) {
+    submitBtn.addEventListener("click", async () => {
+        if (authMode === "login") await login();
+        else await signUp();
+    });
+}
+
+const forgotPasswordLink = document.getElementById("forgot-password-link");
+if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener("click", async () => {
+        await resetPassword();
+    });
+}
+
+// ─────────────────────────────────────────────
+// Auto-init on every page that loads auth.js
+// ─────────────────────────────────────────────
 initAuthListener();
 initHeaderButtons();

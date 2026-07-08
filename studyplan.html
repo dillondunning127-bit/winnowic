@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Your Study Plan — Winnowic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <meta name="description" content="Get a personalized SAT Math study plan built from your diagnostic results. Week-by-week schedule with daily practice batches, half tests, and full simulations timed to your test date.">
+<meta property="og:title" content="Personalized SAT Math Study Plan — Winnowic">
+<meta property="og:description" content="Week-by-week SAT Math study plan built from your diagnostic results. Daily practice, half tests, and full 44-question simulations timed to your test date.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.winnowic.com/studyplan.html">
+<link rel="canonical" href="https://www.winnowic.com/studyplan.html">
+    <style>
+        .plan-container {
+            max-width: 860px;
+            margin: 32px auto 60px;
+            padding: 0 20px;
+        }
+
+        .plan-hero {
+            background: #0B1F3B;
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .plan-hero-left h1 {
+            color: #FFD84D;
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0 0 6px;
+        }
+
+        .plan-hero-left p {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .plan-hero-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .plan-stat {
+            text-align: center;
+        }
+
+        .plan-stat-value {
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFD84D;
+            line-height: 1;
+        }
+
+        .plan-stat-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-top: 4px;
+        }
+
+        .plan-sessions-selector {
+            background: rgba(255,255,255,0.9);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        }
+
+        .plan-sessions-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0B1F3B;
+        }
+
+        .plan-sessions-label span {
+            font-size: 13px;
+            font-weight: 400;
+            color: #888;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .sessions-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .session-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            background: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0B1F3B;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .session-btn.active {
+            background: #0B1F3B;
+            border-color: #0B1F3B;
+            color: #FFD84D;
+        }
+
+        .session-btn:hover:not(.active) {
+            border-color: #0B1F3B;
+        }
+
+        .plan-weeks {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .week-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border-left: 4px solid #e0e0e0;
+            transition: border-color 0.2s;
+        }
+
+        .week-card.week-current {
+            border-left-color: #FFD84D;
+        }
+
+        .week-card.week-upcoming {
+            border-left-color: #0B1F3B;
+            opacity: 0.75;
+        }
+
+        .week-card.week-sim {
+            border-left-color: #C62828;
+            background: #FFF8F8;
+        }
+
+        .week-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .week-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+        }
+
+        .week-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .week-badge.badge-current {
+            background: #FFD84D;
+            color: #0B1F3B;
+        }
+
+        .week-badge.badge-upcoming {
+            background: rgba(11,31,59,0.08);
+            color: #0B1F3B;
+        }
+
+        .week-badge.badge-sim {
+            background: #C62828;
+            color: #fff;
+        }
+
+        .week-units {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .unit-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #F5F5F5;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0B1F3B;
+        }
+
+        .unit-pill-accuracy {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .unit-pill-accuracy.acc-weak   { background: #FFEBEE; color: #C62828; }
+        .unit-pill-accuracy.acc-ok     { background: #FFF8E1; color: #FF8F00; }
+        .unit-pill-accuracy.acc-strong { background: #E8F5E9; color: #2E7D32; }
+
+        .week-meta {
+            font-size: 12px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .week-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .week-action {
+            margin-top: 14px;
+        }
+
+        .btn-start-batch {
+            background: #0B1F3B;
+            color: #FFD84D;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: opacity 0.15s;
+        }
+
+/* Force plan content above any global overlays */
+.plan-container {
+    position: relative;
+    z-index: 10;
+}
+
+.plan-hero,
+.plan-sessions-selector,
+.week-card,
+.plan-projection,
+.plan-auth-wall {
+    position: relative;
+    z-index: 10;
+    background-color: white; /* override rgba transparency */
+}
+
+.plan-hero {
+    background-color: #0B1F3B !important;
+}
+
+/* Prevent body pseudo-elements from overlapping */
+body.study-plan-page::before,
+body.study-plan-page::after {
+    display: none !important;
+}
+
+        .btn-start-batch:hover { opacity: 0.85; }
+
+        .btn-start-sim {
+            background: #C62828;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: opacity 0.15s;
+        }
+
+        .btn-start-sim:hover { opacity: 0.85; }
+
+        .plan-projection {
+            background: rgba(255,255,255,0.9);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-top: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .projection-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .projection-score {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0B1F3B;
+        }
+
+        .projection-note {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 6px;
+        }
+
+        .plan-loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #888;
+        }
+
+        .plan-auth-wall {
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .plan-auth-wall h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0B1F3B;
+            margin-bottom: 10px;
+        }
+
+        .plan-auth-wall p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .plan-hero { padding: 20px; }
+            .plan-sessions-selector { padding: 16px; }
+            .week-card { padding: 16px; }
+            .plan-hero-stats { gap: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-row-1">
+        <div class="header-row-1-left">
+            <a href="/index.html" style="display:inline-flex; text-decoration:none;">
+                <img src="/assets/Logo-Large.png"
+                     class="header-logo-img header-logo-large"
+                     alt="Winnowic">
+                <img src="/assets/Logo-Small.png"
+                     class="header-logo-img header-logo-small"
+                     alt="Winnowic">
+            </a>
+        </div>
+        <div class="header-row-1-right">
+            <button id="header-upgrade-btn"
+                    onclick="window.location.href='/pricing.html'"
+                    style="display:none;">
+                Upgrade to Premium
+            </button>
+            <div class="account-menu" style="position:relative;">
+                <button id="account-gear" class="gear-btn"
+                        style="display:none;" aria-label="Account settings">
+                    <i data-lucide="settings"></i>
+                </button>
+                <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                    <div id="account-email" class="dropdown-email"></div>
+                    <button id="logout-btn" class="dropdown-item">
+                        <i data-lucide="log-out"></i> Log Out
+                    </button>
+                    <button id="cnclsub-btn" class="dropdown-item">
+                        <i data-lucide="x-circle"></i> Cancel Subscription
+                    </button>
+                    <button id="dltact-btn" class="dropdown-item danger">
+                        <i data-lucide="trash-2"></i> Delete Account
+                    </button>
+                </div>
+            </div>
+            <button id="header-auth-btn" class="header-auth-link">
+                Create Account
+            </button>
+        </div>
+    </div>
+    <div class="header-row-2">
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
+            Premium Diagnostics
+        </button>
+        <button class="header-nav-link"
+                onclick="window.location.href='/quiz.html'">
+            Study Questions
+        </button>
+         <button class="header-nav-link"
+                onclick="window.location.href='/studyplan.html'">
+            Study Plan
+        </button>
+        <button class="header-nav-link"
+                onclick="window.location.href='/pricing.html'">
+            Pricing
+        </button>
+        <button class="header-nav-link"
+                onclick="window.location.href='/feedback.html'">
+            Feedback
+        </button>
+    </div>
+</header>
+
+<div class="plan-container">
+    <div id="plan-loading" class="plan-loading">
+        <p>Building your study plan...</p>
+    </div>
+    <div id="plan-auth-wall" class="plan-auth-wall" style="display:none;">
+        <h2>Save Your Study Plan</h2>
+        <p>Create a free account to save your diagnostic results and get a personalized week-by-week study plan based on your weak areas.</p>
+        <button class="btn-primary" style="font-size:15px; padding:14px 28px;"
+                onclick="window.location.href='/auth.html?mode=signup&return=studyPlan'">
+            Create Free Account
+        </button>
+        <p style="margin-top:14px; font-size:13px; color:#aaa;">
+            Already have an account?
+            <a href="/auth.html?return=studyPlan" style="color:#0B1F3B; font-weight:600;">Sign in</a>
+        </p>
+    </div>
+    <div id="plan-content" style="display:none;"></div>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-left">© 2026 <span>Winnowic™</span> · All rights reserved</div>
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+          <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
+    </nav>
+    <div class="footer-social">
+        <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/trywinnowic/" target="_blank" class="footer-social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@Winnowic" target="_blank" class="footer-social-link" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+    </div>
+</footer>
+
+<script type="module" src="./js/studyPlan.js"></script>
+<script type="module" src="./js/auth.js"></script>
+<script type="module" src="./js/customer_manage.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+</script>
+</body>
+</html>

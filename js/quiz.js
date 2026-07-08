@@ -8,6 +8,8 @@ import { renderDiagnosticResults } from './diagnostics-mini.js';
 // In quiz.js — add at top
 import { startSession, endSession } from './sessions.js';
 import { getDailyBatch, markBatchComplete } from './dailyBatch.js';
+import { maybeShowReviewPrompt } from './reviewPrompt.js';
+import { checkAchievements, showAchievementCelebration } from './achievements.js';
 getDailyBatch('SAT_MATH').then(console.log);
 let usedQuestionIds = new Set();
 let allQuizQuestions = [];
@@ -41,6 +43,392 @@ let sectionStartIndex = 0;
 let reviewMode = false;
 let currentSessionId = null;
 import { stopTimer } from "./quizSettings.js";
+
+let currentChartInstance = null;
+
+// Builds dashed reference-line datasets for the x-axis (y = 0) and
+// y-axis (x = 0), each only included if zero actually falls within
+// the chart's visible range. Placed first in the dataset array so
+// they render underneath the actual function/data line.
+function buildAxisDatasets(xMin, xMax, yMin, yMax) {
+   const axisStyle = {
+    borderColor: 'rgba(11, 31, 59, 0.55)',
+    borderWidth: 1.75,
+    borderDash: [6, 4],
+    pointRadius: 0,
+    tension: 0,
+    fill: false
+};
+    const datasets = [];
+
+    if (yMin <= 0 && yMax >= 0) {
+        // x-axis: horizontal dashed line at y = 0
+        datasets.push({ data: [{ x: xMin, y: 0 }, { x: xMax, y: 0 }], ...axisStyle });
+    }
+
+    if (xMin <= 0 && xMax >= 0) {
+        // y-axis: vertical dashed line at x = 0
+        datasets.push({ data: [{ x: 0, y: yMin }, { x: 0, y: yMax }], ...axisStyle });
+    }
+
+    return datasets;
+}
+
+// ============================================================
+// renderQuestionChart — supports: line, bar, quadratic,
+// exponential, logarithmic, rational, polar, parametric
+// Requires Chart.js (loaded globally via CDN script tag)
+// ============================================================
+
+
+function buildPoints(fn, xMin, xMax, steps = 100) {
+    const points = [];
+    const stepSize = (xMax - xMin) / steps;
+    for (let i = 0; i <= steps; i++) {
+        const x = xMin + i * stepSize;
+        const y = fn(x);
+        if (Number.isFinite(y)) points.push({ x, y });
+    }
+    return points;
+}
+
+// Splits points into separate line segments wherever there's
+// a discontinuity (used for rational functions to avoid Chart.js
+// drawing a vertical asymptote line across the gap)
+function splitOnDiscontinuity(points, maxJump = 1000) {
+    const segments = [[]];
+    for (let i = 0; i < points.length; i++) {
+        if (i > 0) {
+            const prevY = points[i - 1].y;
+            const currY = points[i].y;
+            if (Math.abs(currY - prevY) > maxJump) {
+                segments.push([]);
+            }
+        }
+        segments[segments.length - 1].push(points[i]);
+    }
+    return segments.filter(seg => seg.length > 1);
+}
+
+export function renderQuestionChart(config) {
+    const canvas = document.getElementById('question-chart');
+    if (!canvas) return;
+
+    if (currentChartInstance) {
+        currentChartInstance.destroy();
+        currentChartInstance = null;
+    }
+
+    if (!config || !config.type) {
+        canvas.style.display = 'none';
+        return;
+    }
+
+    canvas.style.display = 'block';
+
+    const baseOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1,
+    plugins: { legend: { display: false } },
+    scales: {
+        x: {
+            type: 'linear',
+            title: { display: true, text: config.labels?.xAxis || 'x' },
+            ticks: { stepSize: 1 }
+        },
+        y: {
+            title: { display: false },
+            ticks: { stepSize: 1 }
+        }
+    }
+};
+
+    const lineStyle = {
+        borderColor: '#0B1F3B',
+        borderWidth: 2.5,
+        pointRadius: 0,
+        tension: 0,
+        fill: false
+    };
+
+    switch (config.type) {
+
+case 'piecewise': {
+    const allPoints = [];
+    const datasets = config.segments.map(seg => {
+        const { slope, intercept, xRange: segRange } = seg;
+        const [segMin, segMax] = segRange;
+        const points = buildPoints(x => slope * x + intercept, segMin, segMax, 2);
+        allPoints.push(...points);
+        return { data: points, ...lineStyle };
+    });
+
+    const overallXMin = Math.min(...config.segments.map(s => s.xRange[0]));
+    const overallXMax = Math.max(...config.segments.map(s => s.xRange[1]));
+    const [yMin, yMax] = computeSquareYRange(allPoints, overallXMin, overallXMax);
+
+    currentChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: { datasets },
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: overallXMin, max: overallXMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+case 'scatter': {
+    const { points, bestFit, xRange } = config;
+    const [xMin, xMax] = xRange;
+
+    const datasets = [{
+        data: points,
+        type: 'scatter',
+        backgroundColor: '#0B1F3B',
+        pointRadius: 5,
+        showLine: false
+    }];
+
+    let allPoints = [...points];
+
+    if (bestFit) {
+        const { slope, intercept } = bestFit;
+        const linePoints = buildPoints(x => slope * x + intercept, xMin, xMax, 2);
+        allPoints = allPoints.concat(linePoints);
+        datasets.push({
+            data: linePoints,
+            type: 'line',
+            borderColor: '#0B1F3B',
+            borderWidth: 2,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            tension: 0,
+            fill: false
+        });
+    }
+
+    const [yMin, yMax] = computeSquareYRange(allPoints, xMin, xMax);
+
+    currentChartInstance = new Chart(canvas, {
+        type: 'scatter',
+        data: { datasets },
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: xMin, max: xMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+        case 'line': {
+    const { slope, intercept } = config.function;
+    const [xMin, xMax] = config.xRange;
+    const points = buildPoints(x => slope * x + intercept, xMin, xMax, 2);
+    const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
+    const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
+    currentChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: xMin, max: xMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+        case 'bar': {
+            currentChartInstance = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: config.categories,
+                    datasets: [{
+                        data: config.values,
+                        backgroundColor: '#0B1F3B',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    ...baseOptions,
+                    scales: {
+                        x: { title: baseOptions.scales.x.title },
+                        y: { ...baseOptions.scales.y, beginAtZero: true }
+                    }
+                }
+            });
+            break;
+        }
+
+        case 'quadratic': {
+    const { a, b, c } = config.function;
+    const [xMin, xMax] = config.xRange;
+    const points = buildPoints(x => a * x * x + b * x + c, xMin, xMax, 100);
+    const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
+    const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);   // ← new
+    currentChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },  // ← spread axisDatasets first
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: xMin, max: xMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+case 'exponential': {
+    const { a, b } = config.function;
+    const [xMin, xMax] = config.xRange;
+    const points = buildPoints(x => a * Math.pow(b, x), xMin, xMax, 100);
+    const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
+    const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
+    currentChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: xMin, max: xMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+case 'logarithmic': {
+    const { a, b, c } = config.function;
+    const [xMin, xMax] = config.xRange;
+    const points = buildPoints(
+        x => x > 0 ? a * (Math.log(x) / Math.log(b)) + c : NaN,
+        Math.max(xMin, 0.01),
+        xMax,
+        100
+    );
+    const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
+    const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
+    currentChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: xMin, max: xMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+case 'rational': {
+    const { a, h, k } = config.function;
+    const [xMin, xMax] = config.xRange;
+    const raw = buildPoints(
+        x => Math.abs(x - h) < 0.01 ? NaN : a / (x - h) + k,
+        xMin, xMax, 200
+    );
+    const segments = splitOnDiscontinuity(raw);
+    const allPoints = segments.flat();
+    const [yMin, yMax] = computeSquareYRange(allPoints, xMin, xMax);
+    const datasets = segments.map(seg => ({ data: seg, ...lineStyle }));
+    currentChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: { datasets },
+        options: {
+            ...baseOptions,
+            scales: {
+                ...baseOptions.scales,
+                x: { ...baseOptions.scales.x, min: xMin, max: xMax },
+                y: { ...baseOptions.scales.y, min: yMin, max: yMax }
+            }
+        }
+    });
+    break;
+}
+
+        case 'polar': {
+            // Converts polar r(θ) into x/y points for Chart.js scatter/line rendering
+            const { a, b, trig } = config.function;
+            const [tMin, tMax] = config.thetaRange;
+            const points = [];
+            const steps = 200;
+            const xs = points.map(p => p.x);
+const ys = points.map(p => p.y);
+const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
+            for (let i = 0; i <= steps; i++) {
+                const theta = tMin + (i / steps) * (tMax - tMin);
+                const r = a + b * (trig === 'sin' ? Math.sin(theta) : Math.cos(theta));
+                points.push({ x: r * Math.cos(theta), y: r * Math.sin(theta) });
+            }
+            currentChartInstance = new Chart(canvas, {
+                type: 'line',
+                data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
+                options: {
+                    ...baseOptions,
+                    scales: {
+                        x: { type: 'linear', title: baseOptions.scales.x.title },
+                        y: { title: baseOptions.scales.y.title }
+                    }
+                }
+            });
+            break;
+        }
+
+        case 'parametric': {
+            const { a: ax, b: bx } = config.xFunction;
+            const { a: ay, b: by } = config.yFunction;
+            const [tMin, tMax] = config.tRange;
+            const points = [];
+            const steps = 100;
+            const xs = points.map(p => p.x);
+const ys = points.map(p => p.y);
+const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
+            for (let i = 0; i <= steps; i++) {
+                const t = tMin + (i / steps) * (tMax - tMin);
+                points.push({ x: ax * t + bx, y: ay * t + by });
+            }
+            currentChartInstance = new Chart(canvas, {
+                type: 'line',
+                data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
+                options: baseOptions
+            });
+            break;
+        }
+
+        default: {
+            console.warn('Unsupported chart_config type:', config.type);
+            canvas.style.display = 'none';
+        }
+    }
+}
+
+function computeSquareYRange(points, xMin, xMax) {
+    const xSpan = xMax - xMin;
+    const yValues = points.map(p => p.y).filter(Number.isFinite);
+    const yCenter = (Math.max(...yValues) + Math.min(...yValues)) / 2;
+    return [yCenter - xSpan / 2, yCenter + xSpan / 2];
+}
 
 export async function startQuiz(mode, externalConfig = null) {
     
@@ -333,34 +721,6 @@ function isQuestionInCurrentSection(index) {
     return true; // temporary placeholder we will refine
 }
 
-export function goToNextSection() {
-
-  currentSectionIndex++;
-sectionStartIndex = currentQuestions.length;
-  if (currentSectionIndex >= examSections.length) {
-    finishQuiz();
-    return;
-  }
-
-  const nextSection = examSections[currentSectionIndex];
-sectionQuestionsLoaded = 0;
-currentQuestionIndex = 0;
-  showSectionTransition(nextSection, async () => {
-  currentQuestionIndex = 0;
-
-  if (isAdaptiveMode) {
-    await loadAdaptiveQuestionsForSection();
-  } else {
-    await loadQuestions(exam, unit);
-  }
-});
-
-answeredQuestions = new Set();
-flaggedQuestions = new Set();
-renderQuestionPalette();
-renderQuestionNav();
-}
-
 export function showSectionTransition(section, onContinue) {
 
   isTransitioning = true;
@@ -395,21 +755,21 @@ currentQuestionIndex = 0;   // 🔥 ADD THIS
   let continued = false;
 
   function proceed() {
-    currentQuestions = [];
-renderQuestionPalette();
-renderQuestionNav();
     if (continued) return;
     continued = true;
 
-    overlay.style.display = "none";
+    currentQuestions = [];
+    renderQuestionPalette();
+    renderQuestionNav();
 
+    overlay.style.display = "none";
     isTransitioning = false;
 
     questionsInCurrentSection = section.question_count;
     startSectionTimer(section.section_time_seconds);
-updateNextButtonState();
+    updateNextButtonState();
     if (onContinue) onContinue();
-  }
+}
 
   btn.onclick = proceed;
   setTimeout(proceed, 5000);
@@ -419,6 +779,11 @@ export async function loadQuestions(exam, unit, quizLength = null) {
  const questionCard = document.getElementById("question-card");
  renderQuestionPalette();
   if (questionCard) questionCard.style.display = "block";
+  const settingsCard = document.getElementById('settings-card');
+if (settingsCard) settingsCard.style.display = 'none';
+
+const modeSelectorCard = document.getElementById('mode-selector-card');
+if (modeSelectorCard) modeSelectorCard.style.display = 'none';
     if (!examSections || examSections.length === 0) {
         console.error("No sections configured for this exam.");  ///line 274 
         return false;
@@ -671,16 +1036,20 @@ if (questionObj && !shuffledQuestionData[questionObj.id]) {
     console.warn("Forcing prepareQuestion fallback:", questionObj.id);
     prepareQuestion(questionObj);
 }
-    // IMAGE SUPPORT
-    const imageContainer = document.getElementById("question-image-container");
-    const imageElement = document.getElementById("question-image");
+const imageContainer = document.getElementById("question-image-container");
+const imageElement = document.getElementById("question-image");
 
-    if (questionObj.image_url) {
-        imageElement.src = questionObj.image_url;
-        imageContainer.style.display = "block";
-    } else {
-        imageContainer.style.display = "none";
-    }
+if (questionObj.chart_config) {
+    imageContainer.style.display = "none";
+    renderQuestionChart(questionObj.chart_config);
+} else if (questionObj.image_url) {
+    renderQuestionChart(null);
+    imageElement.src = questionObj.image_url;
+    imageContainer.style.display = "block";
+} else {
+    renderQuestionChart(null);
+    imageContainer.style.display = "none";
+}
 
     // QUESTION TEXT
     document.getElementById("question").textContent =
@@ -699,10 +1068,20 @@ if (questionObj && !shuffledQuestionData[questionObj.id]) {
     gridContainer.style.display = "block";
 gridInput.disabled = false;
 document.getElementById("grid-submit").disabled = false;
-    gridInput.value = "";
-    gridInput.style.border = ""; // reset border
-    document.getElementById("grid-result").textContent = ""; // reset checkmark
+   gridInput.value = "";
+gridInput.style.border = "";
+gridInput.style.color = "";
+document.getElementById("grid-result").textContent = "";
 
+// Reset numpad
+const numpadDisplay = document.getElementById('numpad-display-value');
+if (numpadDisplay) {
+    numpadDisplay.textContent = '—';
+    numpadDisplay.style.color = '';
+}
+// Clear the internal value by dispatching a custom reset event
+document.dispatchEvent(new CustomEvent('numpadReset'));
+if (typeof window.resetNumpad === 'function') window.resetNumpad();
     } else {
 
         gridContainer.style.display = "none";
@@ -722,6 +1101,8 @@ renderQuestionNav();
 renderQuestionPalette();
 updateNextButtonState();
 syncFlagButton();
+ const card = document.getElementById('question-card');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderQuestionPalette() {
@@ -731,9 +1112,10 @@ function renderQuestionPalette() {
 
     palette.innerHTML = "";
 
-    currentQuestions
-    .filter(q => q.sectionIndex === currentSectionIndex)
-    .forEach((q, index) => {
+const filtered = currentQuestions.filter(q => q.sectionIndex === currentSectionIndex);
+    console.log("renderQuestionPalette: currentSectionIndex =", currentSectionIndex, "filtered count =", filtered.length, "currentQuestions total =", currentQuestions.length);
+
+    filtered.forEach((q, index) => {
 
         const btn = document.createElement("button");
         
@@ -1035,6 +1417,7 @@ export async function nextQuestion() {
         showQuestion();
         updateNextButtonState();
     }
+   
 }
 
 function showQuizControls() {
@@ -1073,22 +1456,20 @@ function hideQuizControls() {
 }
 
 export function checkSectionCompletion() {
-
     const unanswered = [];
 
-    currentQuestions.forEach((q, index) => {
-        if (userAnswers[index] === undefined) {
-            unanswered.push(index + 1);
-        }
-    });
+    currentQuestions
+        .filter(q => q.sectionIndex === currentSectionIndex)
+        .forEach((q, displayIndex) => {
+            if (userAnswers[q.id] === undefined) {
+                unanswered.push(displayIndex + 1);
+            }
+        });
 
-    // unanswered questions remain
     if (unanswered.length > 0) {
-
         const proceed = confirm(
             `You still have ${unanswered.length} unanswered question(s).\n\nSubmit anyway?`
         );
-
         if (!proceed) return;
     }
 
@@ -1096,7 +1477,7 @@ export function checkSectionCompletion() {
 }
 
 async function completeCurrentSection() {
-
+console.log("completeCurrentSection called, currentSectionIndex before increment:", currentSectionIndex, "examSections.length:", examSections.length);
     currentSectionIndex++;
 
     // ALL SECTIONS COMPLETE
@@ -1181,7 +1562,7 @@ if (questionObj.question_format === "GRID") {
 }
 
 async function finalizeQuizData() {
-
+console.log("finalizeQuizData CALLED — stack:", new Error().stack);
     console.log(
         "AUTH CHECK:",
         await supabase.auth.getSession()
@@ -1318,23 +1699,14 @@ hideQuizControls();
 }
 
 export async function selectAnswer(letter) {
-
-answeredQuestions.add(currentQuestionIndex);
-
+    answeredQuestions.add(currentQuestionIndex);
     if (isTransitioning) return;
-
     const questionObj = currentQuestions[currentQuestionIndex];
-
     if (!questionObj) return;
-
     userAnswers[questionObj.id] = letter;
-
     renderSavedAnswer();
-
-renderQuestionPalette();
-
+    renderQuestionPalette();
     renderQuestionNav();
-
     updateNextButtonState();
 }
 
@@ -1386,6 +1758,7 @@ export async function loadHistory(userId) {
 /* ============================= */
 
 async function showFinalScore() {
+    console.log("showFinalScore CALLED — stack:", new Error().stack);
 await endSession(answerResults.length);
 const reportBtn = document.getElementById("report-btn");
 if (reportBtn) reportBtn.style.display = "none";
@@ -1456,12 +1829,17 @@ if (quizConfig.mode === "daily_batch") {
     });
     stopTimer();
     await finalizeQuizData();
+    const achievements = await checkAchievements(user, { mode: 'daily_batch', score, total: totalQuestions, streakDays: streak });
+    showAchievementCelebration(achievements, () => maybeShowReviewPrompt(user));
     return;
 }
 
 if (isDiagnosticMode) {
     await endSession(answerResults.length);
     await finalizeQuizData();
+    const { data: { user: diagUser } } = await supabase.auth.getUser();
+    const achievements = await checkAchievements(diagUser, { mode: 'diagnostic' });
+    showAchievementCelebration(achievements, () => maybeShowReviewPrompt(diagUser));
 
     // Hide all quiz UI
     document.getElementById("prev-btn").style.display = "none";
@@ -1514,12 +1892,12 @@ if (isDiagnosticMode) {
             document.getElementById('mode-selector-card').style.display='block';
             document.getElementById('settings-card').style.display='block';
         " class="btn-primary" style="padding:10px 24px; width:auto;">
-            Keep Practicing
+            Continue Free Practice
         </button>
-        <button onclick="window.location.href='/diagnostics.html'"
-            class="btn-secondary" style="padding:10px 24px; width:auto;">
-            Full Diagnostics
-        </button>
+        <button onclick="window.location.href='/studyPlan.html'"
+    class="btn-primary" style="padding:10px 24px; width:auto; background:#FFD84D; color:#0B1F3B;">
+    Build Study Plan →
+</button>
     `;
     questionEl.appendChild(btnWrap);
 
@@ -1531,6 +1909,20 @@ if (isDiagnosticMode) {
     document.getElementById("question").textContent =
         `Quiz finished! Your score: ${score} / ${total}`;
 
+const playAgainWrap = document.createElement("div");
+playAgainWrap.style.cssText = "text-align:center; margin-top:16px;";
+playAgainWrap.innerHTML = `
+    <button id="play-again-btn" class="btn-primary" style="padding:10px 24px; width:auto;">
+        Practice Again
+    </button>
+`;
+document.getElementById("question").appendChild(playAgainWrap);
+
+document.getElementById("play-again-btn").addEventListener("click", () => {
+    document.getElementById("question-card").style.display = "none";
+    document.getElementById("mode-selector-card").style.display = "block";
+    document.getElementById("settings-card").style.display = "block";
+});
 
 document.getElementById("grid-container").style.display = "none";
 document.getElementById("explanation").textContent = "";
@@ -1564,6 +1956,20 @@ if (!user || !user.id) {
             total: total
         }
     ]);
+}
+if (user) {
+    await supabase.from("quiz_attempts").insert([
+        {
+            user_id: user.id,
+            score: score,
+            total: total
+        }
+    ]);
+    if (user) {
+    await supabase.from("quiz_attempts").insert([{ user_id: user.id, score, total }]);
+    const achievements = await checkAchievements(user, { mode: quizConfig.mode, score, total });
+    showAchievementCelebration(achievements, () => maybeShowReviewPrompt(user));
+}
 }
 
 // always refresh UI (logged in OR not)

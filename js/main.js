@@ -8,13 +8,13 @@ import {
     getCurrentQuestionIndex
 } from './quiz.js';
 import { supabase } from './supabase.js';
+ import { maybeShowReviewBanner } from './reviewBanner.js';
 import { initQuizSettings } from "./quizSettings.js";
 import { checkExamAccess, getUserExams } from "./subscription.js";
 import { startQuiz } from "./quiz.js";
 import {
     checkSectionCompletion
 } from "./quiz.js";
-import { renderGoalBanner } from './goals.js';
 let currentMode = "normal";
 
 import { getUserGoal, saveUserGoal, getDaysUntilTest } from './goals.js';
@@ -23,24 +23,98 @@ import { initQuizBanner } from './quizBanner.js';
 
 
 window.addEventListener("DOMContentLoaded", async () => {
+    const message = document.getElementById("message");
     console.log("App loaded");
+function launchQuiz(mode) {
+    const exam = document.getElementById("exam-select").value;
 
+    const config = {
+        exam,
+        unit: null,
+        quizLength: mode === "diagnostic"
+            ? 20
+            : parseInt(document.getElementById("time-select").value)
+    };
+
+    console.log("LAUNCH QUIZ:", mode, config);
+
+    startQuiz(mode, config);
+}
+const modeNormal = document.getElementById("mode-normal");
+const modeAdaptive = document.getElementById("mode-adaptive");
+const modeDiagnostic = document.getElementById("mode-diagnostic");
+const modeDaily = document.getElementById("mode-daily");
+function setMode(mode) {
+    currentMode = mode;
+
+    // visual reset
+    modeNormal.classList.remove("active-mode");
+    modeAdaptive.classList.remove("active-mode");
+    modeDiagnostic.classList.remove("active-mode");
+    modeDaily.classList.remove("active-mode");
+
+    // highlight selected
+    if (mode === "normal") modeNormal.classList.add("active-mode");
+    if (mode === "adaptive") modeAdaptive.classList.add("active-mode");
+    if (mode === "diagnostic") modeDiagnostic.classList.add("active-mode");
+    if (mode === "daily_batch") modeDaily.classList.add("active-mode");
+
+   
+    updateUIForMode(); // 🔥 ADD THIS LINE
+    updateStartButtonState();
+}
     initQuizSettings();
     initAuthListener();
+selectExamCard('SAT_MATH');
+    // Auto-start from URL params (e.g. from diagnostic CTA buttons)
+const params = new URLSearchParams(window.location.search);
+const paramMode = params.get('mode');
+const paramLength = params.get('length');
 
+// Set mode if provided
+// Set mode if provided
+if (paramMode) setMode(paramMode);
+
+const paramAutostart = params.get('autostart');
+
+// Wait for exam sections / length options to finish populating before
+// touching time-select or launching the quiz
+if (paramMode) {
+    setTimeout(async () => {
+        if (paramLength) {
+            const lengthSelect = document.getElementById('time-select');
+            if (lengthSelect) {
+                lengthSelect.value = paramLength;
+                lengthSelect.dispatchEvent(new Event('change'));
+            }
+        }
+
+        if (paramAutostart !== '0') {
+            const exam = document.getElementById('exam-select')?.value;
+            if (exam) {
+                launchQuiz(paramMode);
+            }
+        }
+    }, 1200);
+}
+
+// Hide exam selector row entirely
+// Hide exam selector + settings header ONLY when auto-starting in diagnostic mode
+if (paramMode === 'diagnostic') {
+    const quizSelectRow = document.querySelector('.quiz-select-row');
+    if (quizSelectRow) quizSelectRow.style.display = 'none';
+
+    const practiceHeader = document.querySelector('.practice-header h2');
+    if (practiceHeader) practiceHeader.style.display = 'none';
+}
     const diagnosticsBtn = document.getElementById("diagnostics-btn");
     const examSelect = document.getElementById("exam-select");
-    const message = document.getElementById("message");
+    
     const select = document.getElementById("time-select");
     const cancelBtn = document.getElementById("cnclsub-btn");
     const deleteBtn = document.getElementById("dltact-btn");
 
 
-
-const modeNormal = document.getElementById("mode-normal");
-const modeAdaptive = document.getElementById("mode-adaptive");
-const modeDiagnostic = document.getElementById("mode-diagnostic");
-const modeDaily = document.getElementById("mode-daily");
 
 modeNormal.addEventListener("click", () => setMode("normal"));
 modeAdaptive.addEventListener("click", () => setMode("adaptive"));
@@ -49,6 +123,11 @@ modeDaily.addEventListener("click", () => setMode("daily_batch"));
 
 
 // After user state loads:
+ console.log("Mode set to:", currentMode);
+   
+// ...
+const { data: { user } } = await supabase.auth.getUser();
+maybeShowReviewBanner(user);
 async function initGoalBanner(user, exam) {
   const banner = document.getElementById('goal-banner');
   if (!banner || !user || !exam) return;
@@ -88,28 +167,6 @@ async function initGoalBanner(user, exam) {
 }
 
 
-examSelect.addEventListener("change", async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user && examSelect.value) {
-        const { renderGoalBanner } = await import('./goals.js');
-        renderGoalBanner(
-            document.getElementById('goal-banner-card'),
-            examSelect.value
-        );
-    }
-});
-
-examSelect.addEventListener('change', async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user && examSelect.value) {
-        initQuizBanner(examSelect.value);
-        renderGoalBanner(
-            document.getElementById('goal-banner-card'),
-            examSelect.value
-        );
-    }
-});
-
 // Call when exam changes:
 examSelect.addEventListener('change', async () => {
   const { data: { user } } = await supabase.auth.getUser();
@@ -128,6 +185,75 @@ document.getElementById("prev-btn")
 
 });
 
+function initNumpad() {
+    const display = document.getElementById('numpad-display-value');
+    const hiddenInput = document.getElementById('grid-input');
+    const clearBtn = document.getElementById('numpad-clear');
+    const submitBtn = document.getElementById('numpad-submit');
+document.addEventListener('numpadReset', () => {
+    currentValue = '';
+    updateDisplay();
+});
+    if (!display || !hiddenInput) return () => {};
+
+    let currentValue = '';
+
+    function updateDisplay() {
+        display.textContent = currentValue === '' ? '—' : currentValue;
+        hiddenInput.value = currentValue;
+    }
+
+    document.querySelectorAll('.numpad-key[data-key]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const key = btn.dataset.key;
+            if (key === '-') {
+                if (currentValue.startsWith('-')) {
+                    currentValue = currentValue.slice(1);
+                } else if (currentValue !== '') {
+                    currentValue = '-' + currentValue;
+                }
+            } else if (key === '.') {
+                if (!currentValue.includes('.')) {
+                    currentValue += currentValue === '' ? '0.' : '.';
+                }
+            } else {
+                if (currentValue.replace('-','').replace('.','').length < 6) {
+                    currentValue += key;
+                }
+            }
+            updateDisplay();
+        });
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            currentValue = currentValue.slice(0, -1);
+            updateDisplay();
+        });
+    }
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            if (currentValue === '') return;
+            selectAnswer(currentValue);
+            display.style.color = '#2e7d32';
+            setTimeout(() => { display.style.color = ''; }, 800);
+        });
+    }
+
+    // Return reset so showQuestion() can call it
+    return function resetNumpad() {
+        currentValue = '';
+        updateDisplay();
+    };
+}
+
+// Store the reset function globally so quiz.js can reach it
+window.resetNumpad = initNumpad();
+ 
+// Call it:
+initNumpad();
+
 document.getElementById("flag-btn")
 .addEventListener("click", toggleFlag);
 
@@ -143,50 +269,6 @@ document.getElementById("mode-adaptive").addEventListener("click", () => {
 document.getElementById("mode-diagnostic").addEventListener("click", () => {
     currentMode = "diagnostic";
 });
-
-// Inside DOMContentLoaded in main.js
-const params = new URLSearchParams(window.location.search);
-const paramExam = params.get('exam');
-const paramMode = params.get('mode');
-
-if (paramExam) selectExamCard(paramExam);
-if (paramMode) setMode(paramMode);
-
-function launchQuiz(mode) {
-    const exam = document.getElementById("exam-select").value;
-
-    const config = {
-        exam,
-        unit: null,
-        quizLength: mode === "diagnostic"
-            ? 20
-            : parseInt(document.getElementById("time-select").value)
-    };
-
-    console.log("LAUNCH QUIZ:", mode, config);
-
-    startQuiz(mode, config);
-}
-
-function setMode(mode) {
-    currentMode = mode;
-
-    // visual reset
-    modeNormal.classList.remove("active-mode");
-    modeAdaptive.classList.remove("active-mode");
-    modeDiagnostic.classList.remove("active-mode");
-    modeDaily.classList.remove("active-mode");
-
-    // highlight selected
-    if (mode === "normal") modeNormal.classList.add("active-mode");
-    if (mode === "adaptive") modeAdaptive.classList.add("active-mode");
-    if (mode === "diagnostic") modeDiagnostic.classList.add("active-mode");
-    if (mode === "daily_batch") modeDaily.classList.add("active-mode");
-
-    console.log("Mode set to:", currentMode);
-    updateUIForMode(); // 🔥 ADD THIS LINE
-    updateStartButtonState();
-}
 
 function updateUIForMode() {
     const timeSelect = document.getElementById("time-select");
@@ -298,17 +380,7 @@ async function updateStartButtonState() {
         }, 3000);
     }
 
-    /* ============================= */
-    /* USER STATE INIT */
-    /* ============================= */
-
-    const { data: { user } } = await supabase.auth.getUser();
-
-
-    /* ============================= */
-    /* DIAGNOSTICS BUTTON */
-    /* ============================= */
-
+ 
     if (diagnosticsBtn) {
         diagnosticsBtn.addEventListener("click", () => {
             window.location.href = "diagnostics.html";

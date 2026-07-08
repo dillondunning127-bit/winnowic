@@ -1,33 +1,641 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <title>Winnowic</title>
+    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Winnowic — Free SAT Math Diagnostic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-icons@v11/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <meta name="description" content="Free SAT Math diagnostic, personalized study plan, and daily practice questions. Get your predicted score range and find your weak areas in 15 minutes — no account required.">
+<meta name="keywords" content="SAT math practice, free SAT diagnostic, SAT math study plan, SAT math questions, SAT math prep">
+<meta property="og:title" content="Winnowic — Free SAT Math Diagnostic & Study Plan">
+<meta property="og:description" content="Take a free 20-question SAT Math diagnostic. Get your predicted score range, a personalized week-by-week study plan, and daily practice questions targeting your weakest units.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.winnowic.com">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Winnowic — Free SAT Math Diagnostic & Study Plan">
+<meta name="twitter:description" content="Free SAT Math diagnostic. Predicted score range. Personalized study plan. Daily practice questions. No account required.">
+<link rel="canonical" href="https://www.winnowic.com">
+    <script>
+        
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('indexScoreChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    const ctx = canvas.getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [20, 40, 60, 80, 100, 120, 140, 160],
+            datasets: [{
+                label: 'Predicted Score',
+                data: [510, 530, 545, 560, 575, 590, 605, 618],
+                borderColor: '#FF6B00',
+                backgroundColor: 'rgba(255,107,0,0.08)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 3,
+                pointBackgroundColor: '#FF6B00',
+                pointBorderColor: '#FF6B00',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => 'Score: ' + ctx.raw
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Questions Answered', font: { size: 11 } },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                y: {
+                    min: 480,
+                    max: 650,
+                    title: { display: true, text: 'Predicted SAT Math Score', font: { size: 11 } },
+                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    ticks: {
+                        callback: val => val
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+    <style id="index-new-styles">
+
+/* ── Score tracking section ── */
+.score-track-section {
+    padding: 60px 0;
+    background: #fff;
+}
+
+.score-track-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.score-track-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #FF6B00;
+    margin-bottom: 10px;
+}
+
+.score-track-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0B1F3B;
+    line-height: 1.15;
+    margin-bottom: 14px;
+}
+
+.score-track-desc {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.score-track-units {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.score-track-unit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.score-track-unit-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0B1F3B;
+    width: 180px;
+    flex-shrink: 0;
+}
+
+.score-track-unit-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.score-track-unit-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+.score-track-unit-pct {
+    font-size: 12px;
+    font-weight: 700;
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.score-track-chart-wrap {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    border: 1px solid #f0f0f0;
+}
+
+.score-track-chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.score-track-chart-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0B1F3B;
+}
+
+.score-track-chart-badge {
+    background: #0B1F3B;
+    color: #FFD84D;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+/* ── Study plan preview section ── */
+.study-plan-preview-section {
+    padding: 60px 0;
+    background: #F8F6F0;
+}
+
+.study-plan-preview-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.study-plan-preview-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.study-plan-preview-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #FF6B00;
+    margin-bottom: 10px;
+}
+
+.study-plan-preview-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #0B1F3B;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.study-plan-preview-sub {
+    font-size: 15px;
+    color: #666;
+    max-width: 520px;
+    margin: 0 auto 8px;
+    line-height: 1.6;
+}
+
+.study-plan-preview-link {
+    font-size: 13px;
+    color: #FF6B00;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.study-plan-preview-link:hover { text-decoration: underline; }
+
+/* Mock study plan card */
+.sp-mock {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    overflow: hidden;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.sp-mock-header {
+    background: #0B1F3B;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.sp-mock-header-title {
+    color: #FFD84D;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.sp-mock-header-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.sp-mock-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.sp-mock-stat-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: #FFD84D;
+    line-height: 1;
+}
+
+.sp-mock-stat-lbl {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sp-mock-body {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Session selector pills */
+.sp-mock-sessions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.sp-mock-sessions-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0B1F3B;
+    flex-shrink: 0;
+}
+
+.sp-mock-session-pill {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0B1F3B;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.sp-mock-session-pill.active {
+    background: #0B1F3B;
+    border-color: #0B1F3B;
+    color: #FFD84D;
+}
+
+/* Week cards */
+.sp-mock-weeks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sp-mock-week {
+    border-radius: 12px;
+    padding: 14px 18px;
+    border-left: 4px solid #e0e0e0;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sp-mock-week.wk-current { border-left-color: #FFD84D; background: #FFFDF0; }
+.sp-mock-week.wk-sim     { border-left-color: #C62828; background: #FFF8F8; }
+.sp-mock-week.wk-half    { border-left-color: #E65100; background: #FFF5F0; }
+
+.sp-mock-week-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0B1F3B;
+}
+
+.sp-mock-week-desc {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.sp-mock-week-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.badge-this-week { background: #FFD84D; color: #0B1F3B; }
+.badge-upcoming  { background: rgba(11,31,59,0.08); color: #0B1F3B; }
+.badge-half      { background: #E65100; color: #fff; }
+.badge-sim       { background: #C62828; color: #fff; }
+
+.sp-mock-cta {
+    text-align: center;
+    padding: 20px 28px 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+@media (max-width: 900px) {
+    .score-track-inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
+@media (max-width: 600px) {
+    .study-plan-preview-title { font-size: 24px; }
+    .score-track-title { font-size: 24px; }
+    .sp-mock-header { padding: 18px 18px; }
+    .sp-mock-body { padding: 18px 18px; }
+    .sp-mock-stat-val { font-size: 20px; }
+}
+</style>
+    <style>
+        .floating-cta {
+    /* keep existing yellow/navy styles from before,
+       but remove any animation class that was on it */
+    animation: none !important;
+}
+ 
+/* Hero responsive — stack on mobile */
+@media (max-width: 860px) {
+    .hero-section > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+        text-align: center;
+    }
+ 
+    .hero-section h1 {
+        font-size: 28px !important;
+    }
+ 
+    .hero-section p {
+        max-width: 100% !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+ 
+    /* Center the trust pills */
+    .hero-section > div > div:first-child > div:last-child {
+        justify-content: center;
+    }
+ 
+    /* Hide arc arrow on mobile — doesn't work in stacked layout */
+    .hero-section svg[viewBox="0 0 180 90"] {
+        display: none !important;
+    }
+ 
+    /* CTA card full width on mobile */
+    .hero-section > div > div:last-child > div {
+        max-width: 100% !important;
+    }
+}
+ 
+/* Feature strip — 2 columns on tablet, 1 on mobile */
+@media (max-width: 860px) {
+    .feature-strip {
+        grid-template-columns: 1fr 1fr !important;
+    }
+ 
+    .feature-strip-item {
+        border-right: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+ 
+    .feature-strip-item:nth-child(odd) {
+        border-right: 1px solid #f0f0f0 !important;
+    }
+ 
+    .feature-strip-item:nth-last-child(-n+2) {
+        border-bottom: none !important;
+    }
+}
+ 
+@media (max-width: 480px) {
+    .feature-strip {
+        grid-template-columns: 1fr !important;
+    }
+ 
+    .feature-strip-item {
+        border-right: none !important;
+    }
+ 
+    .feature-strip-item:nth-child(odd) {
+        border-right: none !important;
+    }
+ 
+    .feature-strip-item:last-child {
+        border-bottom: none !important;
+    }
+}
+        /* ── Logo larger ── */
+        .header-logo { height: 40px !important; max-width: 160px !important; }
+.feature-strip {
+    position: relative;
+    z-index: 10;
+}
+
+.feature-strip-item {
+    position: relative;
+    z-index: 10;
+}
+
+        /* ── Hero CTA pops yellow ── */
+        #hero-diagnostic-btn {
+            background: #FFD84D !important;
+            color: #0B1F3B !important;
+            font-weight: 800 !important;
+            font-size: 17px !important;
+            padding: 18px 36px !important;
+            border-radius: 14px !important;
+            border: none !important;
+            box-shadow: 0 6px 24px rgba(255,216,77,0.45) !important;
+            transition: transform 0.15s, box-shadow 0.15s !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #hero-diagnostic-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 32px rgba(255,216,77,0.55) !important;
+        }
+
+        /* ── Floating CTA yellow ── */
+        .floating-cta {
+            background: #FFD84D !important;
+            color: #0B1F3B !important;
+            font-weight: 800 !important;
+            border: none !important;
+            box-shadow: 0 4px 20px rgba(255,216,77,0.4) !important;
+        }
+
+        /* ── Hero text higher / less padding ── */
+        .hero-section {
+            padding-top: 52px !important;
+            padding-bottom: 48px !important;
+            min-height: auto !important;
+        }
+
+        /* Remove decorative background lines/pencils from hero */
+        .hero-section::after { display: none !important; }
+
+        /* ── Feature strip ── */
+        .feature-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0;
+            background: #fff;
+            border-radius: 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            margin: 0;
+        }
+        .feature-strip-item {
+            padding: 28px 28px;
+            border-right: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .feature-strip-item:last-child { border-right: none; }
+        .feature-strip-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: #FFD84D;
+            display: flex; align-items: center; justify-content: center;
+            color: #0B1F3B;
+            flex-shrink: 0;
+        }
+        .feature-strip-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0B1F3B;
+            line-height: 1.2;
+        }
+        .feature-strip-why {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.5;
+        }
+        .feature-strip-benefit {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0B1F3B;
+            background: rgba(255,216,77,0.2);
+            border-radius: 20px;
+            padding: 3px 10px;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        /* Remove chart lines from stats section */
+        .fake-chart, .chart-line, .chart-dot { display: none !important; }
+        .analytics-preview { display: none !important; }
+
+        @media (max-width: 768px) {
+            .feature-strip { grid-template-columns: 1fr 1fr; }
+            .feature-strip-item { border-right: none; border-bottom: 1px solid #f0f0f0; }
+            .feature-strip-item:last-child { border-bottom: none; }
+        }
+        @media (max-width: 480px) {
+            .feature-strip { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
+
 <button class="floating-cta" id="floating-cta">
-  Take Free Diagnostic
+  <i data-lucide="zap" style="width:15px;height:15px;vertical-align:middle;margin-right:5px;"></i>Take Free SAT Diagnostic
 </button>
+
 <body>
 
-
-  <!-- ========================= -->
+<!-- ========================= -->
 <!-- TOP NAVIGATION -->
 <!-- ========================= -->
-
 <header class="site-header">
- 
-    <!-- ROW 1: gear | logo | auth -->
+
+    <!-- ROW 1: white background — logo left, auth/gear right -->
     <div class="header-row-1">
- 
-        <!-- Left: gear + upgrade -->
+
+        <!-- LEFT: Logo -->
         <div class="header-row-1-left">
-            <div class="account-menu">
+            <!-- Desktop: full logo with text -->
+            <img src="/assets/Logo-Large.png"
+                 class="header-logo-img header-logo-large"
+                 alt="Winnowic">
+            <!-- Mobile: W mark only -->
+            <img src="/assets/Logo-Small.png"
+                 class="header-logo-img header-logo-small"
+                 alt="Winnowic">
+        </div>
+
+        <!-- RIGHT: Create Account (logged out) or Gear (logged in) -->
+        <div class="header-row-1-right">
+
+            <!-- Upgrade pill — hidden on index, shown on other pages when logged in -->
+            <button id="header-upgrade-btn"
+                    onclick="window.location.href='/pricing.html'"
+                    style="display:none;">
+                Upgrade to Premium
+            </button>
+
+            <!-- Gear (logged in) -->
+            <div class="account-menu" style="position:relative;">
                 <button id="account-gear" class="gear-btn"
                         style="display:none;" aria-label="Account settings">
                     <i data-lucide="settings"></i>
@@ -45,428 +653,927 @@
                     </button>
                 </div>
             </div>
- 
-            <button id="header-upgrade-btn"
-                    class="header-upgrade-btn"
-                    onclick="window.location.href='/pricing.html'"
-                    style="display:none;">
-                Upgrade to Premium
-            </button>
-        </div>
- 
-        <!-- Center: logo -->
-        <div class="header-center">
-        
-            <a href="/index.html" class="logo-tm-wrap">
-                <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-                <sup class="logo-tm-mark">™</sup>
-            </a>
 
-        </div>
- 
-        <!-- Right: create account -->
-        <div class="header-row-1-right">
+            <!-- Create Account (logged out) -->
             <button id="header-auth-btn" class="header-auth-link">
                 Create Account
             </button>
+
         </div>
- 
     </div>
- 
-    <!-- ROW 2: nav links -->
-    <div class="header-row-2">
-        <!-- REMOVE the link for whichever page you're on -->
+
+    <!-- ROW 2: dark navy — nav links -->
+     <div class="header-row-2">
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
+            Premium Diagnostics
+        </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/quiz.html'">
             Study Questions
         </button>
-        <button class="header-nav-link"
-                onclick="window.location.href='/diagnostics.html'">
-            Diagnostics
+         <button class="header-nav-link"
+                onclick="window.location.href='/studyplan.html'">
+            Study Plan
         </button>
-      
+        <button class="header-nav-link"
+                onclick="window.location.href='/pricing.html'">
+            Pricing
+        </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/feedback.html'">
             Feedback
         </button>
     </div>
- 
+
 </header>
 
 <!-- ========================= -->
-<!-- HERO SECTION -->
+<!-- HERO SECTION — revised -->
 <!-- ========================= -->
+<section class="hero-section" style="
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+    min-height: auto !important;
+">
+  <div style="
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 120px;
+      align-items: center;
+  ">
 
-<section class="hero-section">
-  <div class="hero-content">
+    <!-- LEFT: headline + description only -->
+    <div style="padding-left: 0px;">
+      <h1 class="hero-title" style="
+          margin: 0 0 16px;
+          font-size: 50px;
+      ">
+        Find Your Weak Spots.<br>
+        <span style="color:#FFD84D;">Raise Your SAT Math Score.</span>
+      </h1>
 
-    <!-- Badge -->
-    <div style="
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255,216,77,0.15);
-        border: 1px solid rgba(255,216,77,0.3);
-        border-radius: 20px;
-        padding: 5px 14px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #FFD84D;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-    ">
-        Free — No Account Required
+      <p style="
+          font-size: 18px;
+          color: rgba(255,255,255,0.78);
+          line-height: 1.75;
+          margin: 0;
+          max-width: 480px;
+      ">
+        Take a <strong style="color:#fff;">free 20-question SAT Math
+        diagnostic test</strong>. Get your
+        <strong style="color:#FFD84D;">predicted score range</strong>,
+        see which units are holding you back, and get a
+        <strong style="color:#fff;">personalized study plan</strong> —
+        in under <strong style="color:#FFD84D;">15 minutes</strong>.
+      </p>
     </div>
 
-    <h1 class="hero-title">
-      Know Exactly What To Study For Your SAT
-    </h1>
+    <!-- RIGHT: arrow image + button only -->
+    <div style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        position: relative;
+    ">
+      <!-- Arrow PNG from Canva — sits above the button -->
+      <!-- 
+        ARROW SPECS FOR CANVA:
+        - Canvas size: ~200px wide × 100px tall, transparent background
+        - Color: #FFD84D
+        - Shape: stretched U flipped vertically (∩ shape) —
+          starts bottom-left, arcs UP then curves back DOWN to bottom-right
+          with arrowhead pointing DOWN-RIGHT toward the button
+        - Style: dashed stroke ~3px, or solid — your choice
+        - Export as PNG with transparent background
+        - Save as /assets/hero-arrow.png
+      -->
+     
 
-    <p class="hero-subtext">
-      Take a free 20-question diagnostic. Get your predicted score range,
-      see which units are holding you back, and start practicing smarter —
-      in under 15 minutes.
-    </p>
-
-    <div class="hero-buttons" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center;">
-
-      <button id="hero-diagnostic-btn" class="primary-btn"
-              style="font-size:17px; padding:16px 32px;">
-        Take Free SAT Diagnostic
-      </button>
-
-      <button id="hero-practice-btn" style="
-          background: none;
-          border: 2px solid rgba(255,255,255,0.35);
-          color: rgba(255,255,255,0.85);
-          border-radius: 12px;
-          padding: 14px 24px;
+      <button id="hero-diagnostic-btn" style="
+          display: block;
+          background: #FFD84D;
+          color: #0B1F3B;
+          border: none;
+          border-radius: 14px;
+          padding: 16px 28px;
           font-size: 15px;
-          font-weight: 600;
+          font-weight: 800;
           cursor: pointer;
           font-family: 'Inter', sans-serif;
-          transition: border-color 0.15s, color 0.15s;
+          transition: opacity 0.15s, transform 0.15s;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          gap: 8px;
       "
-      onmouseover="this.style.borderColor='rgba(255,255,255,0.7)'; this.style.color='#fff';"
-      onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'; this.style.color='rgba(255,255,255,0.85)';"
+      onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)';"
+      onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';"
       >
-        Browse Practice Questions
+        Start Free SAT Math Diagnostic Test
+        <i data-lucide="arrow-right" style="width:17px;height:17px;flex-shrink:0;"></i>
       </button>
-
-    </div>
-
-    <!-- Social proof strip -->
-    <div style="
-        margin-top: 28px;
-        font-size: 13px;
-        color: rgba(255,255,255,0.55);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-    ">
-        <span>✓ 20 questions</span>
-        <span>✓ Predicted score range</span>
-        <span>✓ Unit breakdown</span>
-        <span>✓ Free forever</span>
     </div>
 
   </div>
 </section>
 
+<!-- Sentinel — floating CTA appears after this -->
+<div id="hero-fold-sentinel" style="height:1px;"></div>
+
+
+<!-- ========================= -->
+<!-- FEATURE STRIP -->
+<!-- ========================= -->
+<div class="feature-strip" style="
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    margin: 0;
+    padding: 0;
+">
+
+    <div class="feature-strip-item" style="padding: 18px 20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
+            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+                <i data-lucide="activity" style="width:18px;height:18px;"></i>
+            </div>
+            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Smart Diagnostic Test</div>
+        </div>
+        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
+            20 questions pinpoint exactly which SAT Math units are costing you points.
+            <span style="
+                display:inline-block;
+                margin-top:5px;
+                font-size:11px;
+                font-weight:700;
+                color:#0B1F3B;
+                background:rgba(255,216,77,0.25);
+                border-radius:20px;
+                padding:2px 9px;
+            ">Results in 20 minutes</span>
+        </div>
+    </div>
+
+    <div class="feature-strip-item" style="padding: 18px 20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
+            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+                <i data-lucide="calendar" style="width:18px;height:18px;"></i>
+            </div>
+            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Personalized Study Plan</div>
+        </div>
+        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
+            Week-by-week schedule built from your diagnostic test results — daily batches, half tests, full simulations.
+            <span style="
+                display:inline-block;
+                margin-top:5px;
+                font-size:11px;
+                font-weight:700;
+                color:#0B1F3B;
+                background:rgba(255,216,77,0.25);
+                border-radius:20px;
+                padding:2px 9px;
+            ">Built from your results</span>
+        </div>
+    </div>
+
+    <div class="feature-strip-item" style="padding: 18px 20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
+            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+                <i data-lucide="trending-up" style="width:18px;height:18px;"></i>
+            </div>
+            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Track Your Progress</div>
+        </div>
+        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
+            Predicted SAT Math score range updates every 20 questions as weak areas become strengths.
+            <span style="
+                display:inline-block;
+                margin-top:5px;
+                font-size:11px;
+                font-weight:700;
+                color:#0B1F3B;
+                background:rgba(255,216,77,0.25);
+                border-radius:20px;
+                padding:2px 9px;
+            ">Score updates in real time</span>
+        </div>
+    </div>
+
+    <div class="feature-strip-item" style="padding: 18px 20px; border-right:none;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
+            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+                <i data-lucide="trophy" style="width:18px;height:18px;"></i>
+            </div>
+            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Score Higher</div>
+        </div>
+        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
+            Adaptive practice focuses every session on your lowest-scoring units automatically.
+            <span style="
+                display:inline-block;
+                margin-top:5px;
+                font-size:11px;
+                font-weight:700;
+                color:#0B1F3B;
+                background:rgba(255,216,77,0.25);
+                border-radius:20px;
+                padding:2px 9px;
+            ">Targeted, not generic</span>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- FLOATING CTA -->
+<!-- ========================= -->
+<button class="floating-cta" id="floating-cta" style="display:none; animation:none !important;">
+  <i data-lucide="zap" style="width:15px;height:15px;vertical-align:middle;margin-right:5px;"></i>
+  Take Free SAT Diagnostic Test
+</button>
+
+<script>
+(function() {
+    const sentinel = document.getElementById('hero-fold-sentinel');
+    const floatingBtn = document.getElementById('floating-cta');
+    if (!sentinel || !floatingBtn) return;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            floatingBtn.style.display = entry.isIntersecting ? 'none' : 'block';
+        });
+    }, { threshold: 0 });
+    observer.observe(sentinel);
+})();
+</script>
+
 <!-- ========================= -->
 <!-- HOW IT WORKS -->
 <!-- ========================= -->
-
 <section class="how-section reveal-on-scroll">
 
   <div class="how-header">
     <h2>How Winnowic Works</h2>
-    <p>From zero to a personalized study plan — in four steps.</p>
+    <p>From zero to a personalized SAT Math study plan — in four steps.</p>
   </div>
 
   <div class="how-steps-grid">
 
-    <!-- STEP 1 -->
     <div class="how-step-card reveal-on-scroll">
       <div class="how-step-top">
         <div class="how-number">1</div>
         <div class="how-step-tag">Start Here</div>
       </div>
-      <h3>Take a Free Diagnostic</h3>
-      <p>
-        Answer 20 SAT Math questions covering all major units.
-        No account needed. Takes about 12 minutes.
-      </p>
-      <button class="how-step-cta" id="step1-diagnostic-btn">
-        Start Diagnostic →
-      </button>
+      <h3>Take a Free SAT Math Diagnostic</h3>
+      <p>Answer 20 SAT Math questions covering all major units. No account needed. Takes about 12 minutes.</p>
+      <button class="how-step-cta" id="step1-diagnostic-btn">Start SAT Math Diagnostic →</button>
     </div>
 
-    <!-- ARROW -->
     <div class="how-step-arrow">→</div>
 
-    <!-- STEP 2 -->
     <div class="how-step-card reveal-on-scroll">
       <div class="how-step-top">
         <div class="how-number">2</div>
         <div class="how-step-tag how-step-tag--then">Then</div>
       </div>
       <h3>See Your Weak Areas</h3>
-      <p>
-        Get a predicted score range and a unit-by-unit breakdown.
-        Know exactly where points are being lost.
-      </p>
+      <p>Get a predicted SAT Math score range and a unit-by-unit accuracy breakdown. Know exactly where points are being lost.</p>
     </div>
 
-    <!-- ARROW -->
     <div class="how-step-arrow">→</div>
 
-    <!-- STEP 3 -->
     <div class="how-step-card reveal-on-scroll">
       <div class="how-step-top">
         <div class="how-number">3</div>
         <div class="how-step-tag how-step-tag--then">Then</div>
       </div>
       <h3>Get a Daily Practice Batch</h3>
-      <p>
-        10 personalized questions every day targeting your weakest units.
-        Builds a streak and adapts as you improve.
-      </p>
+      <p>10 personalized SAT Math questions every day targeting your weakest units. Builds a streak and adapts as you improve.</p>
     </div>
 
-    <!-- ARROW -->
     <div class="how-step-arrow">→</div>
 
-    <!-- STEP 4 -->
     <div class="how-step-card reveal-on-scroll">
       <div class="how-step-top">
         <div class="how-number">4</div>
         <div class="how-step-tag how-step-tag--then">Then</div>
       </div>
       <h3>Track Score Improvement</h3>
-      <p>
-        Diagnostics update your predicted score every 20 questions.
-        Watch your range climb week over week.
-      </p>
+      <p>Your SAT Math score range updates every 20 questions. Watch it climb week over week as weak areas become strengths.</p>
     </div>
 
   </div>
 
-  <!-- Video below steps -->
-  <div class="how-video-wrap reveal-on-scroll">
-    <iframe
-      src="https://www.youtube.com/embed/L9Lq_mPNJYo"
-      title="Winnowic Demo"
-      frameborder="0"
-      allowfullscreen>
-    </iframe>
-  </div>
-
-  <!-- Bottom CTA -->
-  <div style="text-align:center; margin-top:36px;">
-    <button id="how-diagnostic-btn" class="primary-btn"
-            style="font-size:16px; padding:14px 32px;">
-      Start Free Diagnostic Now
-    </button>
-  </div>
-
 </section>
 
-<!-- ========================= -->
-<!-- DIAGNOSTICS PREVIEW -->
-<!-- ========================= -->
 
-<section class="stats-section reveal-on-scroll">
+<section class="study-plan-preview-section reveal-on-scroll">
+  <div class="study-plan-preview-inner">
 
-  <div class="stats-content">
-
-    <div class="stats-left">
-
-      <span class="stats-label">
-        PERFORMANCE ANALYTICS
-      </span>
-
-      <h2>
-        Track Your Improvement Over Time
+    <div class="study-plan-preview-header">
+      <div class="study-plan-preview-label">FREE FEATURE</div>
+      <h2 class="study-plan-preview-title">
+        Your Personal SAT Math Study Plan
       </h2>
-
-      <p>
-        Winnowic diagnostics help students identify weak areas, estimate scores, and improve faster with targeted practice.
+      <p class="study-plan-preview-sub">
+        After your diagnostic, Winnowic builds a week-by-week schedule tailored to your results —
+        with daily practice batches, half tests, and a full simulation timed to your test date.
+        No guessing what to study next.
       </p>
+      <a href="/studyplan.html" class="study-plan-preview-link">
+        Take your free diagnostic to get your study plan →
+      </a>
+    </div>
 
-      <div class="stat-row">
+    <!-- Mock study plan -->
+    <div class="sp-mock">
 
-        <div class="stat-box">
-          <div class="stat-number" data-target="92">0</div>
-          <div class="stat-text">
-            Practice Accuracy Tracking
+      <!-- Header -->
+      <div class="sp-mock-header">
+        <div>
+          <div class="sp-mock-header-title">Your SAT Math Study Plan</div>
+          <div class="sp-mock-header-sub">Test date: Aug 23, 2026 · 57 days away</div>
+        </div>
+        <div class="sp-mock-stats">
+          <div>
+            <div class="sp-mock-stat-val">580–620</div>
+            <div class="sp-mock-stat-lbl">Current Range</div>
+          </div>
+          <div>
+            <div class="sp-mock-stat-val">700</div>
+            <div class="sp-mock-stat-lbl">Target Score</div>
+          </div>
+          <div>
+            <div class="sp-mock-stat-val">57</div>
+            <div class="sp-mock-stat-lbl">Days Left</div>
           </div>
         </div>
+      </div>
 
-        <div class="stat-box">
-          <div class="stat-number" data-target="4">0</div>
-          <div class="stat-text">
-            Major Exams Supported
-          </div>
+      <!-- Body -->
+      <div class="sp-mock-body">
+
+        <!-- Sessions selector -->
+        <div class="sp-mock-sessions">
+          <span class="sp-mock-sessions-label">Sessions per week:</span>
+          <div class="sp-mock-session-pill">3</div>
+          <div class="sp-mock-session-pill active">5</div>
+          <div class="sp-mock-session-pill">7</div>
         </div>
 
+        <!-- Week cards -->
+        <div class="sp-mock-weeks">
+
+          <div class="sp-mock-week wk-current">
+            <div>
+              <div class="sp-mock-week-title">Week 1 — Algebra + Advanced Math</div>
+              <div class="sp-mock-week-desc">Daily batch of 10 questions · 5 sessions · 50 questions this week</div>
+            </div>
+            <div class="sp-mock-week-badge badge-this-week">This Week</div>
+          </div>
+
+          <div class="sp-mock-week wk-half">
+            <div>
+              <div class="sp-mock-week-title">Week 2 — 22-Question Half Test</div>
+              <div class="sp-mock-week-desc">Timed · all units · ~35 minutes</div>
+            </div>
+            <div class="sp-mock-week-badge badge-half">Half Test</div>
+          </div>
+
+          <div class="sp-mock-week">
+            <div>
+              <div class="sp-mock-week-title">Week 3 — Problem Solving + Geometry</div>
+              <div class="sp-mock-week-desc">Daily batch of 10 questions · 5 sessions</div>
+            </div>
+            <div class="sp-mock-week-badge badge-upcoming">Week 3</div>
+          </div>
+
+          <div class="sp-mock-week wk-sim">
+            <div>
+              <div class="sp-mock-week-title">Week 8 — Full SAT Math Simulation</div>
+              <div class="sp-mock-week-desc">44 questions · 2 modules · ~70 minutes</div>
+            </div>
+            <div class="sp-mock-week-badge badge-sim">Full Sim</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="sp-mock-cta">
+        <button onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'"
+                style="
+                  background:#FFD84D; color:#0B1F3B; border:none;
+                  border-radius:12px; padding:13px 28px; font-size:14px;
+                  font-weight:800; cursor:pointer; font-family:'Inter',sans-serif;
+                  transition:opacity 0.15s;
+                "
+                onmouseover="this.style.opacity='0.88'"
+                onmouseout="this.style.opacity='1'">
+          Take Free Diagnostic to Get Your Plan
+        </button>
+        <p style="font-size:12px;color:#aaa;margin-top:8px;">
+          Free · No account required · Takes 15 minutes
+        </p>
       </div>
 
     </div>
+  </div>
+</section>
+<!-- ========================= -->
+<!-- STATS SECTION -->
+<!-- ========================= -->
+<section class="score-track-section reveal-on-scroll">
+  <div class="score-track-inner">
 
-    <div class="stats-right">
+    <!-- LEFT: text + unit bars -->
+    <div>
+      <div class="score-track-label">PERFORMANCE ANALYTICS</div>
+      <h2 class="score-track-title">Track Your SAT Math Score<br>Over Time</h2>
+      <p class="score-track-desc">
+        Every question you answer updates your predicted score range.
+        Winnowic tracks all four SAT Math units individually — so you can see
+        exactly which ones are pulling your score down and how fast they're improving.
+      </p>
 
-      <div class="analytics-preview">
+      <div class="score-track-units">
 
-        <div class="fake-chart">
+        <div class="score-track-unit-row">
+          <div class="score-track-unit-name">Algebra</div>
+          <div class="score-track-unit-bar-bg">
+            <div class="score-track-unit-bar-fill" style="width:42%; background:#C62828;"></div>
+          </div>
+          <div class="score-track-unit-pct" style="color:#C62828;">42%</div>
+        </div>
 
-          <div class="chart-line"></div>
+        <div class="score-track-unit-row">
+          <div class="score-track-unit-name">Advanced Math</div>
+          <div class="score-track-unit-bar-bg">
+            <div class="score-track-unit-bar-fill" style="width:58%; background:#FF8F00;"></div>
+          </div>
+          <div class="score-track-unit-pct" style="color:#FF8F00;">58%</div>
+        </div>
 
-          <div class="chart-dot dot-1"></div>
-          <div class="chart-dot dot-2"></div>
-          <div class="chart-dot dot-3"></div>
-          <div class="chart-dot dot-4"></div>
+        <div class="score-track-unit-row">
+          <div class="score-track-unit-name">Problem Solving</div>
+          <div class="score-track-unit-bar-bg">
+            <div class="score-track-unit-bar-fill" style="width:71%; background:#FF8F00;"></div>
+          </div>
+          <div class="score-track-unit-pct" style="color:#FF8F00;">71%</div>
+        </div>
 
+        <div class="score-track-unit-row">
+          <div class="score-track-unit-name">Geometry & Trig</div>
+          <div class="score-track-unit-bar-bg">
+            <div class="score-track-unit-bar-fill" style="width:83%; background:#2E7D32;"></div>
+          </div>
+          <div class="score-track-unit-pct" style="color:#2E7D32;">83%</div>
         </div>
 
       </div>
 
+      <div style="
+        background: #0B1F3B;
+        border-radius: 14px;
+        padding: 16px 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      ">
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;
+                      letter-spacing:0.06em;color:rgba(255,216,77,0.6);margin-bottom:4px;">
+            Sample Predicted Range
+          </div>
+          <div style="font-size:28px;font-weight:800;color:#FFD84D;line-height:1;">
+            580 – 620
+          </div>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);max-width:160px;line-height:1.4;">
+          Updates every 20 questions answered
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Chart.js line graph -->
+    <div class="score-track-chart-wrap">
+      <div class="score-track-chart-header">
+        <div class="score-track-chart-title">Predicted Score Progress</div>
+        <div class="score-track-chart-badge">Sample Data</div>
+      </div>
+      <canvas id="indexScoreChart" height="220"></canvas>
+      <div style="font-size:11px;color:#aaa;margin-top:10px;text-align:center;">
+        X axis: questions answered &nbsp;·&nbsp; Updates every 20 questions
+      </div>
     </div>
 
   </div>
-
 </section>
 
-<!-- MAIN CONTENT -->
 
+<section style="
+    padding: 60px 0;
+    background: #fff;
+    position: relative;
+    z-index: 10;
+">
+  <div style="max-width: 760px; margin: 0 auto; padding: 0 24px;">
+ 
+    <div style="text-align:center; margin-bottom:40px;">
+      <div style="
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: #FF6B00;
+          margin-bottom: 10px;
+      ">COMMON QUESTIONS</div>
+      <h2 style="
+          font-size: 30px;
+          font-weight: 800;
+          color: #0B1F3B;
+          margin: 0 0 10px;
+          line-height: 1.2;
+      ">Everything you need to know</h2>
+      <p style="font-size: 15px; color: #666; margin: 0;">
+        Quick answers about Winnowic SAT Math prep.
+      </p>
+    </div>
+ 
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+ 
+      <details style="
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 20px 24px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          cursor: pointer;
+      ">
+        <summary style="
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        ">
+          Is Winnowic free?
+          <span style="font-size: 20px; color: #FFD84D; flex-shrink:0;">+</span>
+        </summary>
+        <p style="margin: 14px 0 0; font-size: 14px; color: #555; line-height: 1.7;">
+          Yes. The SAT Math diagnostic, personalized study plan, daily practice batches, and streak tracking are all completely free. No account is required to take the diagnostic.
+          Winnowic Premium ($6/month) unlocks 500+ hard SAT Math questions, adaptive practice that targets your weakest units, advanced diagnostics, and full 44-question SAT simulations.
+        </p>
+      </details>
+ 
+      <details style="
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 20px 24px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          cursor: pointer;
+      ">
+        <summary style="
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        ">
+          How does the SAT Math diagnostic work?
+          <span style="font-size: 20px; color: #FFD84D; flex-shrink:0;">+</span>
+        </summary>
+        <p style="margin: 14px 0 0; font-size: 14px; color: #555; line-height: 1.7;">
+          The free diagnostic is a 20-question test covering all major SAT Math units: Algebra, Advanced Math, Problem Solving & Data Analysis, and Geometry & Trigonometry.
+          After completing it, you get a predicted SAT Math score range and a unit-by-unit accuracy breakdown showing exactly where you are losing points.
+          It takes about 12–15 minutes and requires no account.
+        </p>
+      </details>
+ 
+      <details style="
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 20px 24px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          cursor: pointer;
+      ">
+        <summary style="
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        ">
+          How many SAT Math questions does Winnowic have?
+          <span style="font-size: 20px; color: #FFD84D; flex-shrink:0;">+</span>
+        </summary>
+        <p style="margin: 14px 0 0; font-size: 14px; color: #555; line-height: 1.7;">
+          Winnowic has 500+ SAT Math practice questions across all four SAT Math domains. Free users have access to a limited practice bank.
+          Winnowic Premium ($6/month) unlocks the full question bank including hard difficulty questions across every unit.
+        </p>
+      </details>
+ 
+      <details style="
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 20px 24px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          cursor: pointer;
+      ">
+        <summary style="
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        ">
+          What SAT Math topics does Winnowic cover?
+          <span style="font-size: 20px; color: #FFD84D; flex-shrink:0;">+</span>
+        </summary>
+        <p style="margin: 14px 0 0; font-size: 14px; color: #555; line-height: 1.7;">
+          Winnowic covers all four SAT Math domains:
+          <br><br>
+          <strong>Algebra</strong> — linear equations, systems of equations, inequalities, linear functions<br>
+          <strong>Advanced Math</strong> — quadratics, polynomials, exponential functions, function notation<br>
+          <strong>Problem Solving & Data Analysis</strong> — ratios, percentages, statistics, scatter plots, data interpretation<br>
+          <strong>Geometry & Trigonometry</strong> — angles, triangles, circles, right triangles, trigonometric ratios
+        </p>
+      </details>
+ 
+      <details style="
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 20px 24px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          cursor: pointer;
+      ">
+        <summary style="
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        ">
+          How is Winnowic different from Khan Academy SAT prep?
+          <span style="font-size: 20px; color: #FFD84D; flex-shrink:0;">+</span>
+        </summary>
+        <p style="margin: 14px 0 0; font-size: 14px; color: #555; line-height: 1.7;">
+          Both are free options for SAT Math prep. Winnowic focuses specifically on adaptive practice that targets your weakest units, a predicted score range that updates as you practice, and a personalized week-by-week study plan with daily question batches and full SAT Math simulations.
+          Khan Academy offers broader SAT prep including Reading and Writing sections.
+          Winnowic Premium adds 500+ hard SAT Math questions and advanced diagnostics for $6/month.
+        </p>
+      </details>
+ 
+      <details style="
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 20px 24px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          cursor: pointer;
+      ">
+        <summary style="
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        ">
+          How accurate is the SAT score prediction?
+          <span style="font-size: 20px; color: #FFD84D; flex-shrink:0;">+</span>
+        </summary>
+        <p style="margin: 14px 0 0; font-size: 14px; color: #555; line-height: 1.7;">
+          Winnowic provides a predicted SAT Math score range (e.g. 580–620) based on your accuracy across all units. The range updates every 20 questions answered and becomes more precise as you answer more questions.
+          It is designed to give a realistic estimate of your current scoring range — not a guaranteed score — and helps track your improvement over time.
+        </p>
+      </details>
+ 
+    </div>
+ 
+  </div>
+</section>
 
+<!-- ========================= -->
+<!-- PREMIUM SECTION -->
+<!-- ========================= -->
 
 <div class="premium-hero">
-
   <div class="premium-text">
     <p class="premium-badge">Winnowic Premium</p>
-
     <h2>
-      Smarter SAT Prep Built Around
+      Smarter SAT Math Prep Built Around
       <span>Your Weaknesses</span>
     </h2>
-
     <p class="premium-description">
-      Unlock adaptive quizzes, advanced diagnostics, score tracking,
-      improvement history, streaks, and targeted practice built from your real performance.
+      Unlock 500+ hard SAT Math questions, adaptive practice that targets your weakest units,
+      advanced diagnostics, and full SAT Math simulations — all for $6/month.
     </p>
-
     <div class="premium-features">
       <div class="feature-pill">500+ Hard SAT Math Questions</div>
       <div class="feature-pill">Adaptive Weakness Targeting</div>
-      <div class="feature-pill">Track Progress Over Time</div>
+      <div class="feature-pill">Full SAT Math Simulations</div>
       <div class="feature-pill">Unit Accuracy Breakdowns</div>
-      <div class="feature-pill">Improvement Calculators</div>
-      <div class="feature-pill">Current + Best Streaks</div>
+      <div class="feature-pill">Live Score Prediction</div>
+      <div class="feature-pill">Daily Practice Streaks</div>
     </div>
   </div>
-
   <div class="premium-actions">
-
-    <button id="upgrade-btn-global" class="premium-upgrade-btn">
-      Upgrade to Premium — Starting at $5
+    <button class="premium-diagnostics-btn" onclick="window.location.href='/diagnostics.html'">
+      View SAT Math Diagnostics
     </button>
-
-    <button
-      id="diagnostics-btn"
-      class="premium-diagnostics-btn"
-      onclick="window.location.href='diagnostics.html'"
-    >
-      View Diagnostics Demo
+    <button class="premium-upgrade-btn" onclick="window.location.href='/pricing.html'">
+      See Pricing — Starting at $6/mo
     </button>
-
   </div>
-
 </div>
 
-<div id="report-popup" class="report-popup" style="display:none;">
-  
-  <div class="popup-header">
-    <span>Report</span>
-    <span id="close-report" class="close-x">✕</span>
-  </div>
 
-  <select id="report-type" class="text-input">
-    <option value="incorrect">Incorrect Answer</option>
-    <option value="unclear">Unclear Wording</option>
-    <option value="other">Other</option>
-  </select>
-
-  <textarea id="report-message" placeholder="Optional details..." style="display:none;"></textarea>
-
-  <button id="submit-report" class="btn-primary">Submit</button>
-
-</div>
- 
 <footer class="site-footer">
-
-    <div class="footer-left">
-        © 2026 <span>Winnowic™</span> · All rights reserved
-    </div>
-
+    <div class="footer-left">© 2026 <span>Winnowic™</span> · All rights reserved</div>
     <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
-        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+          <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
     </nav>
-
     <div class="footer-social">
-
-        <!-- TikTok -->
-        <a href="https://www.tiktok.com/@trywinnowic" target="_blank"
-           class="footer-social-link" aria-label="TikTok">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
-            </svg>
+        <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
         </a>
-
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/trywinnowic/" target="_blank"
-           class="footer-social-link" aria-label="Instagram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-            </svg>
+        <a href="https://www.instagram.com/trywinnowic/" target="_blank" class="footer-social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
         </a>
-
-        <!-- YouTube -->
-        <a href="https://www.youtube.com/@Winnowic" target="_blank"
-           class="footer-social-link" aria-label="YouTube">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
+        <a href="https://www.youtube.com/@Winnowic" target="_blank" class="footer-social-link" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
         </a>
-
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank"
-           class="footer-social-link" aria-label="Facebook">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
+        <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank" class="footer-social-link" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         </a>
-
     </div>
-
 </footer>
+
 <script type="module" src="/js/auth.js"></script>
 <script type="module" src="/js/index.js"></script>
 <script type="module" src="/js/customer_manage.js"></script>
 <script>
-    // Initialize Lucide icons after DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     });
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Winnowic",
+      "url": "https://www.winnowic.com",
+      "description": "Winnowic is a free SAT Math prep platform that provides a 20-question diagnostic test, predicted score ranges, personalized week-by-week study plans, daily adaptive practice questions, and full SAT Math simulations. Students can identify weak areas, track progress over time, and improve their SAT Math score.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Starter — Free",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free SAT Math diagnostic, personalized study plan, daily practice batches, and streak tracking. No account required for the diagnostic."
+        },
+        {
+          "@type": "Offer",
+          "name": "SAT Math Premium",
+          "price": "6",
+          "priceCurrency": "USD",
+          "billingDuration": "P1M",
+          "description": "500+ SAT Math questions, adaptive practice targeting weak units, advanced diagnostics dashboard, live score prediction, and full 44-question SAT Math simulations."
+        }
+      ],
+      "featureList": [
+        "Free 20-question SAT Math diagnostic",
+        "Predicted SAT Math score range",
+        "Personalized week-by-week study plan",
+        "Daily adaptive practice batches (10 questions)",
+        "Unit-by-unit accuracy tracking",
+        "500+ SAT Math practice questions",
+        "Full 44-question SAT Math simulations",
+        "22-question half tests",
+        "Streak tracking and email reminders",
+        "Live score prediction updated every 20 questions"
+      ],
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student",
+        "audienceType": "High school students preparing for the SAT"
+      },
+      "educationalUse": "SAT Math test preparation",
+      "learningResourceType": "Practice questions, diagnostic assessment, study plan",
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Winnowic free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The SAT Math diagnostic, personalized study plan, daily practice batches, and streak tracking are all free. No account is required to take the diagnostic. Winnowic Premium ($6/month) unlocks 500+ hard SAT Math questions, adaptive practice, advanced diagnostics, and full SAT simulations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Winnowic SAT Math diagnostic work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The free SAT Math diagnostic is a 20-question test covering all major SAT Math units: Algebra, Advanced Math, Problem Solving & Data Analysis, and Geometry & Trigonometry. After completing it, you receive a predicted SAT Math score range and a unit-by-unit accuracy breakdown showing exactly where you are losing points. The diagnostic takes about 12-15 minutes and requires no account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many SAT Math questions does Winnowic have?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Winnowic has 500+ SAT Math practice questions across all four SAT Math domains. Free users have access to a limited question bank. Winnowic Premium ($6/month) unlocks the full question bank including hard difficulty questions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Winnowic's study plan work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "After completing the free SAT Math diagnostic, Winnowic generates a personalized week-by-week study plan based on your results. The plan prioritizes your weakest units first, includes daily practice batches of 10 targeted questions, and schedules half tests and full 44-question SAT simulations timed to your test date. You can set a target score and test date to customize the timeline."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is Winnowic's SAT score prediction?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Winnowic provides a predicted SAT Math score range (not a single number) based on your accuracy across all units. The prediction updates every 20 questions answered and widens or narrows based on how consistently you perform. It is designed to give a realistic estimate of your current scoring range, not a guaranteed score."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What SAT Math topics does Winnowic cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Winnowic covers all four SAT Math domains: Algebra (linear equations, systems, inequalities), Advanced Math (quadratics, polynomials, exponential functions), Problem Solving & Data Analysis (ratios, statistics, scatter plots, data interpretation), and Geometry & Trigonometry (angles, triangles, circles, right triangles, trigonometric ratios)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is Winnowic different from Khan Academy SAT prep?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Both are free options for SAT Math prep. Winnowic focuses specifically on adaptive practice that targets your weakest units, provides a predicted score range that updates as you practice, and includes a personalized week-by-week study plan with daily question batches and full SAT simulations. Khan Academy offers broader SAT prep including the Reading and Writing sections. Winnowic Premium adds 500+ hard questions and advanced diagnostics for $6/month."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "name": "Winnowic",
+      "url": "https://www.winnowic.com",
+      "description": "Free SAT Math diagnostic and personalized prep platform",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.winnowic.com/quiz.html?mode=diagnostic&exam=SAT_MATH",
+        "query-input": "SAT Math diagnostic"
+      }
+    }
+  ]
+}
+</script>
 </body>
-
 </html>

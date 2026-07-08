@@ -1,81 +1,291 @@
-<!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <title>Diagnostics</title>
+  <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>Premium Diagnostics — Winnowic</title>
   <link rel="stylesheet" href="./style.css">
   <script src="js/chart.js"></script>
-   <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/simple-icons@v11/index.min.js"></script>
+  <meta name="description" content="Track your SAT Math score over time with Winnowic's diagnostic dashboard. See unit-by-unit accuracy, predicted score range, and progress graphs updated after every quiz.">
+<meta property="og:title" content="SAT Math Diagnostics & Score Tracking — Winnowic">
+<meta property="og:description" content="Unit-by-unit accuracy breakdown, predicted SAT Math score range, and progress tracking over time. See exactly where points are being lost.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.winnowic.com/diagnostics.html">
+<link rel="canonical" href="https://www.winnowic.com/diagnostics.html">
+  <style>
+    /* ── Exam mode selector (replaces dropdown) ── */
+    .diag-exam-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .diag-exam-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.15s, background 0.15s;
+      min-width: 110px;
+    }
+
+    .diag-exam-btn:hover { border-color: #0B1F3B; }
+
+    .diag-exam-btn.selected {
+      border-color: #0B1F3B;
+      background: #0B1F3B;
+    }
+
+    .diag-exam-btn.selected .diag-exam-label { color: #FFD84D; }
+    .diag-exam-btn.selected .diag-exam-icon { color: #FFD84D; }
+
+    .diag-exam-icon {
+      font-size: 20px;
+      color: #0B1F3B;
+      opacity: 0.5;
+    }
+
+    .diag-exam-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0B1F3B;
+    }
+
+    /* ── Premium hero ── */
+    .diag-premium-hero {
+      background: #0B1F3B;
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .diag-premium-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(255,216,77,0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .diag-premium-badge {
+      display: inline-block;
+      background: #FFD84D;
+      color: #0B1F3B;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .diag-premium-hero h1 {
+      color: #fff;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 10px;
+      line-height: 1.2;
+    }
+
+    .diag-premium-hero h1 span { color: #FFD84D; }
+
+    .diag-premium-hero p {
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 20px;
+      max-width: 560px;
+    }
+
+    .diag-premium-stats {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .diag-premium-stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #FFD84D;
+      line-height: 1;
+    }
+
+    .diag-premium-stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 3px;
+    }
+
+    /* ── Free user wall ── */
+    .diag-free-wall {
+      text-align: center;
+      padding: 60px 24px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .diag-free-wall h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0B1F3B;
+      margin-bottom: 10px;
+    }
+
+    .diag-free-wall p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .diag-free-wall-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-see-example {
+      background: #FFD84D;
+      color: #0B1F3B;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 24px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-see-example:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .btn-upgrade-diag {
+      background: #0B1F3B;
+      color: #FFD84D;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 24px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.15s;
+    }
+
+    .btn-upgrade-diag:hover { opacity: 0.85; }
+
+    .diag-feature-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 28px 0;
+      text-align: left;
+    }
+
+    .diag-feature-preview-item {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 14px 16px;
+      border: 1px solid #e8e8e8;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .diag-feature-preview-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      background: #0B1F3B;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: #FFD84D;
+    }
+
+    .diag-feature-preview-text strong {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0B1F3B;
+      display: block;
+    }
+
+    .diag-feature-preview-text span {
+      font-size: 11px;
+      color: #888;
+    }
+
+    /* Hide old top-bar on this page */
+    .diagnostics-topbar { display: none !important; }
+    .upgrade-wrapper { display: none !important; }
+
+    @media (max-width: 600px) {
+      .diag-premium-hero { padding: 22px 18px; }
+      .diag-premium-hero h1 { font-size: 22px; }
+      .diag-exam-btn { min-width: 90px; padding: 10px 14px; }
+    }
+  </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
- 
-    <!-- ROW 1: gear | logo | auth -->
-    <div class="header-row-1">
- 
-        <!-- Left: gear + upgrade -->
-        <div class="header-row-1-left">
-            <div class="account-menu">
-                <button id="account-gear" class="gear-btn"
-                        style="display:none;" aria-label="Account settings">
-                    <i data-lucide="settings"></i>
-                </button>
-                <div id="account-dropdown" class="account-dropdown" style="display:none;">
-                    <div id="account-email" class="dropdown-email"></div>
-                    <button id="logout-btn" class="dropdown-item">
-                        <i data-lucide="log-out"></i> Log Out
-                    </button>
-                    <button id="cnclsub-btn" class="dropdown-item">
-                        <i data-lucide="x-circle"></i> Cancel Subscription
-                    </button>
-                    <button id="dltact-btn" class="dropdown-item danger">
-                        <i data-lucide="trash-2"></i> Delete Account
-                    </button>
-                </div>
-            </div>
- 
-            <button id="header-upgrade-btn"
-                    class="header-upgrade-btn"
-                    onclick="window.location.href='/pricing.html'"
-                    style="display:none;">
-                Upgrade to Premium
-            </button>
-        </div>
- 
-        <!-- Center: logo -->
-        <div class="header-center">
-        
-            <a href="/index.html" class="logo-tm-wrap">
-                <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-                <sup class="logo-tm-mark">™</sup>
-            </a>
-
-        </div>
- 
-        <!-- Right: create account -->
-        <div class="header-row-1-right">
-            <button id="header-auth-btn" class="header-auth-link">
-                Create Account
-            </button>
-        </div>
- 
+  <div class="header-row-1">
+    <div class="header-row-1-left">
+      <a href="/index.html" style="display:inline-flex; text-decoration:none;">
+        <img src="/assets/Logo-Large.png" class="header-logo-img header-logo-large" alt="Winnowic">
+        <img src="/assets/Logo-Small.png" class="header-logo-img header-logo-small" alt="Winnowic">
+      </a>
     </div>
- 
-    <!-- ROW 2: nav links -->
-    <div class="header-row-2">
-        <!-- REMOVE the link for whichever page you're on -->
+    <div class="header-row-1-right">
+      <button id="header-upgrade-btn" class="header-upgrade-btn"
+              onclick="window.location.href='/pricing.html'" style="display:none;">
+        Upgrade to Premium
+      </button>
+      <div class="account-menu" style="position:relative;">
+        <button id="account-gear" class="gear-btn" style="display:none;" aria-label="Account settings">
+          <i data-lucide="settings"></i>
+        </button>
+        <div id="account-dropdown" class="account-dropdown" style="display:none;">
+          <div id="account-email" class="dropdown-email"></div>
+          <button id="logout-btn" class="dropdown-item"><i data-lucide="log-out"></i> Log Out</button>
+          <button id="cnclsub-btn" class="dropdown-item"><i data-lucide="x-circle"></i> Cancel Subscription</button>
+          <button id="dltact-btn" class="dropdown-item danger"><i data-lucide="trash-2"></i> Delete Account</button>
+        </div>
+      </div>
+      <button id="header-auth-btn" class="header-auth-link">Create Account</button>
+    </div>
+  </div>
+  <div class="header-row-2">
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
+            Premium Diagnostics
+        </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/quiz.html'">
             Study Questions
         </button>
-        <button class="header-nav-link"
-                onclick="window.location.href='/diagnostics.html'">
-            Diagnostics
+         <button class="header-nav-link"
+                onclick="window.location.href='/studyplan.html'">
+            Study Plan
         </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/pricing.html'">
@@ -86,348 +296,315 @@
             Feedback
         </button>
     </div>
- 
 </header>
 
 <div class="container">
+  <div id="diag-free-wall" class="card" style="display:none;">
+    <div class="diag-free-wall">
+      <h2>Premium Diagnostics</h2>
+      <p>
+        See a full breakdown of your SAT Math performance — predicted score range,
+        unit-by-unit accuracy, and progress graphs that update as you practice.
+        This is a small preview of what a full Winnowic Premium subscription unlocks.
+      </p>
 
-  <!-- TOP BAR -->
- <!-- TOP BAR -->
-<div class="top-bar diagnostics-topbar">
-
-  <div class="diagnostics-page-header">
-
-    <div class="diagnostics-header-accent"></div>
-
-    <div>
-      <div class="diagnostics-page-label">
-        Performance Analytics
+      <!-- Feature preview grid -->
+      <div class="diag-feature-preview">
+        <div class="diag-feature-preview-item">
+          <div class="diag-feature-preview-icon">
+            <i data-lucide="pie-chart" style="width:14px;height:14px;"></i>
+          </div>
+          <div class="diag-feature-preview-text">
+            <strong>Score Prediction</strong>
+            <span>Live SAT Math score range</span>
+          </div>
+        </div>
+        <div class="diag-feature-preview-item">
+          <div class="diag-feature-preview-icon">
+            <i data-lucide="bar-chart-2" style="width:14px;height:14px;"></i>
+          </div>
+          <div class="diag-feature-preview-text">
+            <strong>Unit Breakdown</strong>
+            <span>Accuracy per unit, tracked over time</span>
+          </div>
+        </div>
+        <div class="diag-feature-preview-item">
+          <div class="diag-feature-preview-icon">
+            <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          </div>
+          <div class="diag-feature-preview-text">
+            <strong>Progress Graphs</strong>
+            <span>Score history every 20 questions</span>
+          </div>
+        </div>
+        <div class="diag-feature-preview-item">
+          <div class="diag-feature-preview-icon">
+            <i data-lucide="target" style="width:14px;height:14px;"></i>
+          </div>
+          <div class="diag-feature-preview-text">
+            <strong>Weakness Targeting</strong>
+            <span>Biggest improvement opportunity</span>
+          </div>
+        </div>
       </div>
 
-      <h1 class="diagnostics-page-title">
-        Diagnostics Dashboard
-      </h1>
-    </div>
-
-  </div>
-
-  <a href="index.html">
-    <button class="btn-secondary diagnostics-back-btn">
-      Back
-    </button>
-  </a>
-
-</div>
-
-  <section class="diagnostics-hero">
-
-  <div class="hero-badge">
-    Winnowic Premium Analytics
-  </div>
-
-  <h1 class="diagnostics-title">
-    Know Exactly What To Study.
-  </h1>
-
-  <p class="diagnostics-subtitle">
-    Winnowic analyzes every question you answer to predict your score,
-    identify weak units, and track improvement over time.
-  </p>
-
-  <div class="hero-feature-row">
-
-    <div class="hero-feature-card">
-      <div class="hero-feature-number">500+</div>
-      <div class="hero-feature-label">SAT Math Questions</div>
-    </div>
-
-    <div class="hero-feature-card">
-      <div class="hero-feature-number">Adaptive</div>
-      <div class="hero-feature-label">Weakness Targeting</div>
-    </div>
-
-    <div class="hero-feature-card">
-      <div class="hero-feature-number">Live</div>
-      <div class="hero-feature-label">Score Prediction</div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<div class="upgrade-wrapper">
-  <button id="upgrade-btn-global" class="primary-btn">
-    Pricing starting at just $5! - Adaptive Quizzes, Score Tracking/Breakdown and more!
-  </button>
-</div>
-
-<div id="preview-banner" class="preview-banner">
-  Preview Mode — Sample Data
-</div>
-
-  <!-- SELECTORS CARD -->
-   
-  <div class="card diagnostics-control-card">
-
-  <div class="diagnostics-control-top">
-
-    <div>
-
-      <div class="diagnostics-control-badge">
-        Interactive Demo
+      <div class="diag-free-wall-actions">
+        <button class="btn-see-example" id="preview-full">
+          👁 See Example Student Data
+        </button>
+        <button class="btn-upgrade-diag"
+                onclick="window.location.href='/pricing.html'">
+          Unlock Premium Diagnostics — $6/mo
+        </button>
       </div>
 
-      <h2 class="diagnostics-control-title">
-        Explore Your Diagnostics
-      </h2>
-
-      <p class="diagnostics-control-description">
-        Click preview to see how premium features work with
-        sample real user data.
+      <p style="font-size:12px; color:#aaa; margin-top:16px;">
+        Already have an account?
+        <a href="/auth.html" style="color:#0B1F3B; font-weight:600;">Sign in</a>
+        to view your real data.
       </p>
 
     </div>
-
-    <button id="preview-full" class="primary-btn diagnostics-preview-btn">
-      Preview Diagnostics
-    </button>
-
   </div>
 
-  <div class="diagnostics-selector-section">
+  <!-- ══════════════════════════════════════════
+       PAID USER EXAM SELECTOR (mode-card style)
+       Hidden from free users
+       ══════════════════════════════════════════ -->
+  <div class="card diagnostics-control-card" id="diag-paid-selector" style="display:none;">
+    <div class="diagnostics-control-top">
+      <div>
+        <div class="diagnostics-control-badge">Your Analytics</div>
+        <h2 class="diagnostics-control-title">Select Your Exam</h2>
+        <p class="diagnostics-control-description">
+          Choose an exam to load your full performance breakdown.
+        </p>
+      </div>
+    </div>
 
-    <label class="modern-label">
-      Select Exam
-    </label>
+    <!-- Mode-card style exam selector -->
+    <div class="diag-exam-selector">
+      <button class="diag-exam-btn selected" data-exam="SAT_MATH"
+              onclick="selectDiagExam('SAT_MATH', this)">
+        <span class="diag-exam-icon">∑</span>
+        <span class="diag-exam-label">SAT Math</span>
+      </button>
+      <button class="diag-exam-btn" data-exam="AP_PRECALC"
+              onclick="selectDiagExam('AP_PRECALC', this)">
+        <span class="diag-exam-icon">f(x)</span>
+        <span class="diag-exam-label">AP Precalc</span>
+      </button>
+      <button class="diag-exam-btn" data-exam="AP_CALC_AB"
+              onclick="selectDiagExam('AP_CALC_AB', this)">
+        <span class="diag-exam-icon">∫</span>
+        <span class="diag-exam-label">AP Calc AB</span>
+      </button>
+      <button class="diag-exam-btn" data-exam="AP_CALC_BC"
+              onclick="selectDiagExam('AP_CALC_BC', this)">
+        <span class="diag-exam-icon">∞</span>
+        <span class="diag-exam-label">AP Calc BC</span>
+      </button>
+    </div>
 
-    <select id="examSelect" class="modern-select">
+    <!-- Hidden select kept for JS compat -->
+    <select id="examSelect" style="display:none;">
       <option value="">Select Exam</option>
       <option value="SAT_MATH">SAT Math</option>
       <option value="AP_PRECALC">AP Precalculus</option>
       <option value="AP_CALC_AB">AP Calc AB</option>
       <option value="AP_CALC_BC">AP Calc BC</option>
     </select>
-
   </div>
-
-</div>
 
   <!-- READINESS CARD -->
   <div class="analytics-dashboard card" id="readiness-container" style="display:none;text-align:center;">
-
-  <div class="readiness-top-section">
-
-  <!-- LEFT DESCRIPTION -->
-  <div class="analytics-description-panel">
-
-    <div class="analytics-mini-badge">
-      PERFORMANCE ANALYTICS
+    <div class="readiness-top-section">
+      <div class="analytics-description-panel">
+        <div class="analytics-mini-badge">PERFORMANCE ANALYTICS</div>
+        <h2 class="analytics-side-title">Track your growth visually.</h2>
+        <p class="analytics-side-text">
+          Monitor your progress and identify which units are helping — or hurting — your predicted score.
+        </p>
+        <p class="analytics-side-text">
+          <strong>Hover over the donut chart</strong> to see how much each unit contributes to your readiness score.
+        </p>
+      </div>
+      <div>
+        <div class="chart-title-wrap">
+          <h2 class="readiness-main-title">SAT Math Score Predictor</h2>
+          <p class="readiness-main-subtitle">
+            Answer <strong>20 questions</strong> to begin generating a predicted score.
+          </p>
+        </div>
+        <div id="readinessChartContainer" style="display:none; margin:auto; position:relative; width:260px;">
+          <canvas id="readinessChart"></canvas>
+          <div id="chartCenterScore" style="
+            position:absolute; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            font-size:28px; font-weight:bold;">--</div>
+        </div>
+      </div>
+      <div class="readiness-side-info">
+        <div class="readiness-info-card">
+          <div class="readiness-label">Exam Readiness</div>
+          <div id="readinessPercentContainer"><span id="readinessScore"></span></div>
+        </div>
+        <div class="readiness-info-card">
+          <div class="readiness-label">Largest Improvement</div>
+          <div id="largestImprovement" style="margin-top:10px;font-weight:bold;"></div>
+        </div>
+      </div>
     </div>
 
-    <h2 class="analytics-side-title">
-      Track your growth visually.
-    </h2>
-
-    <p class="analytics-side-text">
-      This is where you can monitor your progress and identify
-      which units are helping — or hurting — your predicted score.
-    </p>
-
-    <p class="analytics-side-text">
-      <strong>Hover over the donut chart</strong> to see how much each
-      unit contributes to your readiness score and how much improvement
-      remains.
-    </p>
-
+    <div class="progress-chart-card">
+      <div class="progress-chart-header">
+        <div class="progress-chart-badge">LIVE TRACKING</div>
+        <h2 class="progress-chart-title">Progress Over Time</h2>
+        <p class="progress-chart-subtitle">
+          Updates every <strong>20 questions</strong>. Hover over points to see your score history.
+        </p>
+      </div>
+      <canvas id="progressChart"></canvas>
+      <div id="progressInsight" style="margin-top:14px; font-weight:500;"></div>
+    </div>
   </div>
 
-  <!-- CENTER CHART -->
-  <div>
-
-    <div class="chart-title-wrap">
-
-      <h2 class="readiness-main-title">
-        SAT Readiness Predictor
-      </h2>
-
-      <p class="readiness-main-subtitle">
-        Answer <strong>20 questions</strong> to begin generating
-        a predicted score and adaptive readiness insights.
-      </p>
-
-    </div>
-
-    <div id="readinessChartContainer"
-      style="display:none; margin:auto; position:relative; width:260px;">
-
-      <canvas id="readinessChart"></canvas>
-
-      <div id="chartCenterScore" style="
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%,-50%);
-        font-size:28px;
-        font-weight:bold;
-      ">
-        --
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- RIGHT SIDE -->
-  <div class="readiness-side-info">
-
-    <div class="readiness-info-card">
-
-      <div class="readiness-label">
-        Exam Readiness
-      </div>
-
-      <div id="readinessPercentContainer">
-        <span id="readinessScore"></span>
-      </div>
-
-    </div>
-
-    <div class="readiness-info-card">
-
-      <div class="readiness-label">
-        Largest Improvement
-      </div>
-
-      <div id="largestImprovement"
-        style="margin-top:10px;font-weight:bold;">
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-  <!-- PROGRESS CHART -->
-  <div class="progress-chart-card">
-
-  <div class="progress-chart-header">
-
-    <div class="progress-chart-badge">
-      LIVE TRACKING
-    </div>
-
-    <h2 class="progress-chart-title">
-      Progress Over Time
-    </h2>
-
-    <p class="progress-chart-subtitle">
-      This graph updates every <strong>20 questions</strong>.
-      Hover over individual points to see how your predicted
-      score and readiness have improved over time.
-    </p>
-
-  </div>
-
-  <canvas id="progressChart"></canvas>
-
-  <div id="progressInsight"
-    style="margin-top:14px; font-weight:500;">
-  </div>
-
-</div>
-</div>
-
-  
-  <!-- UNIT DETAILS CARD -->
+  <!-- UNIT DETAILS -->
   <div id="diagnosticResults" class="card" style="display:none;">
-
     <h2 id="unitTitle"></h2>
+    <div><strong>Accuracy (Last 20):</strong> <span id="accuracyScore"></span></div>
+    <div><strong>Current Streak:</strong> <span id="streakScore"></span></div>
+    <div><strong>Mastery Level:</strong> <div id="masteryBadge"></div></div>
+    <div class="progress-bar-bg" style="margin-top:10px;"><div id="masteryBar"></div></div>
+  </div>
 
-    <div>
-      <strong>Accuracy (Last 20):</strong>
-      <span id="accuracyScore"></span>
+  <!-- UPGRADE CTA for free users who used preview -->
+  <div id="diag-upgrade-cta" style="display:none; text-align:center; padding:40px 20px;">
+    <div style="
+      background:#0B1F3B; border-radius:20px; padding:32px 36px;
+      max-width:560px; margin:0 auto;
+    ">
+      <div style="font-size:13px;font-weight:700;text-transform:uppercase;
+                  letter-spacing:0.08em;color:rgba(255,216,77,0.6);margin-bottom:8px;">
+        You're seeing sample data
+      </div>
+      <h2 style="color:#FFD84D;font-size:22px;font-weight:800;margin:0 0 10px;">
+        Ready to see your real analytics?
+      </h2>
+      <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;margin:0 0 24px;">
+        Upgrade to Premium to unlock your full diagnostics dashboard —
+        live score prediction, unit tracking, and progress graphs that update every time you practice.
+      </p>
+      <button onclick="window.location.href='/pricing.html'"
+              style="background:#FFD84D;color:#0B1F3B;border:none;border-radius:12px;
+                     padding:14px 28px;font-size:15px;font-weight:800;cursor:pointer;
+                     font-family:'Inter',sans-serif;">
+        Unlock Full Analytics — $6/mo
+      </button>
+      <p style="color:rgba(255,255,255,0.35);font-size:12px;margin-top:12px;">
+        Cancel anytime · No hidden fees
+      </p>
     </div>
-
-    <div>
-      <strong>Current Streak:</strong>
-      <span id="streakScore"></span>
-    </div>
-
-    <div>
-      <strong>Mastery Level:</strong>
-      <div id="masteryBadge"></div>
-    </div>
-
-    <div class="progress-bar-bg" style="margin-top:10px;">
-      <div id="masteryBar"></div>
-    </div>
-
   </div>
 
 </div>
+
 <footer class="site-footer">
-
-    <div class="footer-left">
-        © 2026 <span>Winnowic™</span> · All rights reserved
-    </div>
-
-    <nav class="footer-links">
+  <div class="footer-left">© 2026 <span>Winnowic™</span> · All rights reserved</div>
+ <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
-        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+          <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
     </nav>
-
-    <div class="footer-social">
-
-        <!-- TikTok -->
-        <a href="https://www.tiktok.com/@trywinnowic" target="_blank"
-           class="footer-social-link" aria-label="TikTok">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
-            </svg>
-        </a>
-
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/trywinnowic/" target="_blank"
-           class="footer-social-link" aria-label="Instagram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-            </svg>
-        </a>
-
-        <!-- YouTube -->
-        <a href="https://www.youtube.com/@Winnowic" target="_blank"
-           class="footer-social-link" aria-label="YouTube">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
-        </a>
-
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank"
-           class="footer-social-link" aria-label="Facebook">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-        </a>
-
-    </div>
-
+  <div class="footer-social">
+    <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/trywinnowic/" target="_blank" class="footer-social-link" aria-label="Instagram">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@Winnowic" target="_blank" class="footer-social-link" aria-label="YouTube">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank" class="footer-social-link" aria-label="Facebook">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+  </div>
 </footer>
+
+<!-- Bridge script: wires exam mode cards to hidden select -->
+<script>
+function selectDiagExam(examValue, btn) {
+    document.querySelectorAll('.diag-exam-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const sel = document.getElementById('examSelect');
+    if (sel) {
+        sel.value = examValue;
+        sel.dispatchEvent(new Event('change'));
+    }
+}
+
+// Auth-based show/hide logic
+document.addEventListener('DOMContentLoaded', async function() {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+});
+</script>
+
+<script type="module">
+import { supabase } from './js/supabase.js';
+import { checkExamAccess } from './js/subscription.js';
+
+window.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
+
+    const freeWall     = document.getElementById('diag-free-wall');
+    const paidSelector = document.getElementById('diag-paid-selector');
+    const upgradeCta   = document.getElementById('diag-upgrade-cta');
+
+    if (!user) {
+        // Not logged in — show free wall
+        freeWall.style.display = 'block';
+        return;
+    }
+
+    const hasPaid = await checkExamAccess('SAT_MATH');
+
+    if (hasPaid) {
+        // Paid user — show exam selector, hide wall
+        paidSelector.style.display = 'block';
+        freeWall.style.display = 'none';
+        // Auto-load SAT Math
+        const sel = document.getElementById('examSelect');
+        if (sel) {
+            sel.value = 'SAT_MATH';
+            sel.dispatchEvent(new Event('change'));
+        }
+    } else {
+        // Logged in but not paid — show free wall
+        freeWall.style.display = 'block';
+
+        // After they click preview, show upgrade CTA below results
+        const previewBtn = document.getElementById('preview-full');
+        if (previewBtn) {
+            const originalClick = previewBtn.onclick;
+            previewBtn.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (upgradeCta) upgradeCta.style.display = 'block';
+                }, 500);
+            });
+        }
+    }
+});
+</script>
+
 <script type="module" src="js/diagnostics-mini.js"></script>
+<script type="module" src="js/diagnostics-auth.js"></script>
 <script type="module" src="js/diagnostics.js"></script>
 <script type="module" src="/js/auth.js"></script>
 <script type="module" src="/js/customer_manage.js"></script>
-<script>
-    // Initialize Lucide icons after DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    });
-</script>
 </body>
 </html>

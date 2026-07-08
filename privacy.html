@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <title>Privacy Policy — Winnowic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <meta name="description" content="Free SAT Math diagnostic, personalized study plan, and daily practice questions. Get your predicted score range and find your weak areas in 15 minutes — no account required.">
+<meta name="keywords" content="SAT math practice, free SAT diagnostic, SAT math study plan, SAT math questions, SAT math prep">
+<meta property="og:title" content="Winnowic — Free SAT Math Diagnostic & Study Plan">
+<meta property="og:description" content="Take a free 20-question SAT Math diagnostic. Get your predicted score range, a personalized week-by-week study plan, and daily practice questions targeting your weakest units.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.winnowic.com">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Winnowic — Free SAT Math Diagnostic & Study Plan">
+<meta name="twitter:description" content="Free SAT Math diagnostic. Predicted score range. Personalized study plan. Daily practice questions. No account required.">
+<link rel="canonical" href="https://www.winnowic.com">
     <style>
         .privacy-content {
             max-width: 860px;
@@ -22,13 +32,24 @@
 <body>
 
 <header class="site-header">
- 
-    <!-- ROW 1: gear | logo | auth -->
     <div class="header-row-1">
- 
-        <!-- Left: gear + upgrade -->
         <div class="header-row-1-left">
-            <div class="account-menu">
+            <a href="/index.html" style="display:inline-flex; text-decoration:none;">
+                <img src="/assets/Logo-Large.png"
+                     class="header-logo-img header-logo-large"
+                     alt="Winnowic">
+                <img src="/assets/Logo-Small.png"
+                     class="header-logo-img header-logo-small"
+                     alt="Winnowic">
+            </a>
+        </div>
+        <div class="header-row-1-right">
+            <button id="header-upgrade-btn"
+                    onclick="window.location.href='/pricing.html'"
+                    style="display:none;">
+                Upgrade to Premium
+            </button>
+            <div class="account-menu" style="position:relative;">
                 <button id="account-gear" class="gear-btn"
                         style="display:none;" aria-label="Account settings">
                     <i data-lucide="settings"></i>
@@ -46,52 +67,33 @@
                     </button>
                 </div>
             </div>
- 
-            <button id="header-upgrade-btn"
-                    class="header-upgrade-btn"
-                    onclick="window.location.href='/pricing.html'"
-                    style="display:none;">
-                Upgrade to Premium
-            </button>
-        </div>
- 
-        <!-- Center: logo -->
-        <div class="header-center">
-        
-            <a href="/index.html" class="logo-tm-wrap">
-                <img src="/assets/logo-full.png" class="logo-img header-logo" alt="Winnowic">
-                <sup class="logo-tm-mark">™</sup>
-            </a>
-
-        </div>
- 
-        <!-- Right: create account -->
-        <div class="header-row-1-right">
             <button id="header-auth-btn" class="header-auth-link">
                 Create Account
             </button>
         </div>
- 
     </div>
- 
-    <!-- ROW 2: nav links -->
-    <div class="header-row-2">
-        <!-- REMOVE the link for whichever page you're on -->
+     <div class="header-row-2">
+        <button class="header-nav-link"
+                onclick="window.location.href='/diagnostics.html'">
+            Premium Diagnostics
+        </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/quiz.html'">
             Study Questions
         </button>
-        <button class="header-nav-link"
-                onclick="window.location.href='/diagnostics.html'">
-            Diagnostics
+         <button class="header-nav-link"
+                onclick="window.location.href='/studyplan.html'">
+            Study Plan
         </button>
-      
+        <button class="header-nav-link"
+                onclick="window.location.href='/pricing.html'">
+            Pricing
+        </button>
         <button class="header-nav-link"
                 onclick="window.location.href='/feedback.html'">
             Feedback
         </button>
     </div>
- 
 </header>
 
 <div class="container">
@@ -162,9 +164,11 @@ word-break: break-word !important;
 
     <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
-        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+          <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/feedback.html" class="footer-link">Feedback</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
     </nav>
 
     <div class="footer-social">

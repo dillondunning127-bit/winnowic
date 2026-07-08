@@ -25,8 +25,6 @@ if(previewFullBtn){
 previewFullBtn.onclick = async () => {
   PREVIEW_MODE = true;
 
-  enablePreviewUI();
-
   PREVIEW_EXAM = "SAT_MATH";
 
   examSelect.value = "SAT_MATH";
@@ -397,10 +395,12 @@ function renderProgressChart(linelabels, data, labelName = "Progress") {
         borderWidth: 5,
         borderColor: "#FF6B00",
         pointRadius: 5,
-pointHoverRadius: 8,
-pointBackgroundColor: "#FF6B00",
-pointBorderColor: "#FF6B00",
-        pointHitRadius: 12
+        pointHoverRadius: 8,
+        pointBackgroundColor: "#FF6B00",
+        pointBorderColor: "#FF6B00",
+        pointHitRadius: 12,
+        fill: true,
+        backgroundColor: "rgba(255, 107, 0, 0.15)"
       }]
     },
     options: {
@@ -419,17 +419,16 @@ pointBorderColor: "#FF6B00",
           }
         },
         y: {
-  display: true,
-  title: {
-    display: true,
-    text: labelName
-  }
-}
+          display: true,
+          title: {
+            display: true,
+            text: labelName
+          }
+        }
       }
     }
   });
 }
-
 export async function renderDiagnostics(data) {
 
   const exam = examSelect.value;
@@ -1325,32 +1324,6 @@ resultsDiv.style.display = "none";
   // reset dropdowns (blank state)
   examSelect.value = "";
 
-  // hide preview banner
-  const banner = document.getElementById("preview-banner");
-  if (banner) {
-    banner.style.display = "none";
-    const btn = document.getElementById("exit-preview-btn");
-    if (btn) btn.remove();
-  }
-
   // optional: reload clean state
   await updateExamLocks();
-}
-
-function enablePreviewUI() {
-  const banner = document.getElementById("preview-banner");
-  banner.style.display = "block";
-
-  if (!document.getElementById("exit-preview-btn")) {
-    const exitBtn = document.createElement("button");
-    exitBtn.id = "exit-preview-btn";
-    exitBtn.innerText = "Turn off preview";
-    exitBtn.classList.add("exit-preview-btn");
-
-    exitBtn.onclick = exitPreviewMode;
-
-    banner.appendChild(exitBtn);
-  }
-
-  examSelect.disabled = true;
 }
