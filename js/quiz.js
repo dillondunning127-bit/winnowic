@@ -8,7 +8,7 @@ import { renderDiagnosticResults } from './diagnostics-mini.js';
 // In quiz.js — add at top
 import { startSession, endSession } from './sessions.js';
 import { getDailyBatch, markBatchComplete } from './dailyBatch.js';
-import { maybeShowReviewPrompt } from './reviewPrompt.js';
+import { maybeShowReviewPrompt } from './reviewprompt.js';
 import { checkAchievements, showAchievementCelebration } from './achievements.js';
 getDailyBatch('SAT_MATH').then(console.log);
 let usedQuestionIds = new Set();
@@ -109,7 +109,13 @@ function splitOnDiscontinuity(points, maxJump = 1000) {
     }
     return segments.filter(seg => seg.length > 1);
 }
-
+// Enforce minimum 10-unit x span
+function enforceMinXRange(xMin, xMax) {
+    const span = xMax - xMin;
+    if (span >= 10) return [xMin, xMax];
+    const center = (xMin + xMax) / 2;
+    return [center - 5, center + 5];
+}
 export function renderQuestionChart(config) {
     const canvas = document.getElementById('question-chart');
     if (!canvas) return;
@@ -159,6 +165,7 @@ case 'piecewise': {
     const datasets = config.segments.map(seg => {
         const { slope, intercept, xRange: segRange } = seg;
         const [segMin, segMax] = segRange;
+        const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
         const points = buildPoints(x => slope * x + intercept, segMin, segMax, 2);
         allPoints.push(...points);
         return { data: points, ...lineStyle };
@@ -166,6 +173,7 @@ case 'piecewise': {
 
     const overallXMin = Math.min(...config.segments.map(s => s.xRange[0]));
     const overallXMax = Math.max(...config.segments.map(s => s.xRange[1]));
+    
     const [yMin, yMax] = computeSquareYRange(allPoints, overallXMin, overallXMax);
 
     currentChartInstance = new Chart(canvas, {
@@ -185,7 +193,8 @@ case 'piecewise': {
 
 case 'scatter': {
     const { points, bestFit, xRange } = config;
-    const [xMin, xMax] = xRange;
+    const [rawXMin, rawXMax] = xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax);
 
     const datasets = [{
         data: points,
@@ -232,7 +241,8 @@ case 'scatter': {
 
         case 'line': {
     const { slope, intercept } = config.function;
-    const [xMin, xMax] = config.xRange;
+    
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
     const points = buildPoints(x => slope * x + intercept, xMin, xMax, 2);
     const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
     const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
@@ -275,7 +285,7 @@ case 'scatter': {
 
         case 'quadratic': {
     const { a, b, c } = config.function;
-    const [xMin, xMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
     const points = buildPoints(x => a * x * x + b * x + c, xMin, xMax, 100);
     const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
     const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);   // ← new
@@ -296,7 +306,7 @@ case 'scatter': {
 
 case 'exponential': {
     const { a, b } = config.function;
-    const [xMin, xMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
     const points = buildPoints(x => a * Math.pow(b, x), xMin, xMax, 100);
     const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
     const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
@@ -317,7 +327,7 @@ case 'exponential': {
 
 case 'logarithmic': {
     const { a, b, c } = config.function;
-    const [xMin, xMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
     const points = buildPoints(
         x => x > 0 ? a * (Math.log(x) / Math.log(b)) + c : NaN,
         Math.max(xMin, 0.01),
@@ -343,7 +353,7 @@ case 'logarithmic': {
 
 case 'rational': {
     const { a, h, k } = config.function;
-    const [xMin, xMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
     const raw = buildPoints(
         x => Math.abs(x - h) < 0.01 ? NaN : a / (x - h) + k,
         xMin, xMax, 200
@@ -424,10 +434,11 @@ const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.mi
 }
 
 function computeSquareYRange(points, xMin, xMax) {
-    const xSpan = xMax - xMin;
+    const xSpan = Math.max(xMax - xMin, 10); // minimum 10 units wide
     const yValues = points.map(p => p.y).filter(Number.isFinite);
     const yCenter = (Math.max(...yValues) + Math.min(...yValues)) / 2;
-    return [yCenter - xSpan / 2, yCenter + xSpan / 2];
+    const ySpan = Math.max(xSpan, 10); // minimum 10 units tall
+    return [yCenter - ySpan / 2, yCenter + ySpan / 2];
 }
 
 export async function startQuiz(mode, externalConfig = null) {
@@ -439,7 +450,6 @@ quizConfig = {
     length: null
 };
    
-  console.log("ENTRY:", mode, externalConfig);
     resetQuizState();
 showQuizControls();
  let exam;
@@ -476,7 +486,6 @@ if (!length || isNaN(length)) {
         length
     };
     await startSession(quizConfig.exam, mode);
-console.log("QUIZ CONFIG:", quizConfig);
     if (mode === "adaptive") {
         return startAdaptiveFlow();
     }
@@ -498,7 +507,6 @@ async function startNormalFlow() {
     exam,
     Number(quizConfig.length) // ✅ FORCE NUMBER
     );
-console.log("Loading sections for:", exam, quizConfig.length);
     if (!examSections.length) {
         console.error("No sections found");
         return;
@@ -1113,7 +1121,6 @@ function renderQuestionPalette() {
     palette.innerHTML = "";
 
 const filtered = currentQuestions.filter(q => q.sectionIndex === currentSectionIndex);
-    console.log("renderQuestionPalette: currentSectionIndex =", currentSectionIndex, "filtered count =", filtered.length, "currentQuestions total =", currentQuestions.length);
 
     filtered.forEach((q, index) => {
 
@@ -1477,7 +1484,6 @@ export function checkSectionCompletion() {
 }
 
 async function completeCurrentSection() {
-console.log("completeCurrentSection called, currentSectionIndex before increment:", currentSectionIndex, "examSections.length:", examSections.length);
     currentSectionIndex++;
 
     // ALL SECTIONS COMPLETE
@@ -1562,17 +1568,8 @@ if (questionObj.question_format === "GRID") {
 }
 
 async function finalizeQuizData() {
-console.log("finalizeQuizData CALLED — stack:", new Error().stack);
-    console.log(
-        "AUTH CHECK:",
-        await supabase.auth.getSession()
-    );
-
     const { data: { user } } =
         await supabase.auth.getUser();
-
-    console.log("USER INSIDE FINALIZE:", user);
-
     if (!user) {
         console.error("NO USER IN FINALIZE");
         return;
@@ -1599,7 +1596,6 @@ console.log("finalizeQuizData CALLED — stack:", new Error().stack);
     }));
 
     if (topicAttempts.length > 0) {
-console.log("TOPIC ATTEMPTS INSERT:", topicAttempts);
         await supabase
             .from("topic_attempts")
             .insert(topicAttempts);
@@ -1631,7 +1627,6 @@ console.log("TOPIC ATTEMPTS INSERT:", topicAttempts);
     exam: quizConfig.exam,
     unit: quizConfig.unit
 });
-console.log("FINALIZE USER CHECK:", user);
 }
 
 function updateNextButtonState() {
@@ -1758,7 +1753,6 @@ export async function loadHistory(userId) {
 /* ============================= */
 
 async function showFinalScore() {
-    console.log("showFinalScore CALLED — stack:", new Error().stack);
 await endSession(answerResults.length);
 const reportBtn = document.getElementById("report-btn");
 if (reportBtn) reportBtn.style.display = "none";
@@ -1830,7 +1824,9 @@ if (quizConfig.mode === "daily_batch") {
     stopTimer();
     await finalizeQuizData();
     const achievements = await checkAchievements(user, { mode: 'daily_batch', score, total: totalQuestions, streakDays: streak });
-    showAchievementCelebration(achievements, () => maybeShowReviewPrompt(user));
+   showAchievementCelebration(achievements, () =>
+    maybeShowReviewPrompt(user, { mode: 'daily_batch', score, total: totalQuestions, streakDays: streak })
+);
     return;
 }
 
@@ -1839,7 +1835,9 @@ if (isDiagnosticMode) {
     await finalizeQuizData();
     const { data: { user: diagUser } } = await supabase.auth.getUser();
     const achievements = await checkAchievements(diagUser, { mode: 'diagnostic' });
-    showAchievementCelebration(achievements, () => maybeShowReviewPrompt(diagUser));
+    showAchievementCelebration(achievements, () =>
+    maybeShowReviewPrompt(diagUser, { mode: 'diagnostic' })
+);
 
     // Hide all quiz UI
     document.getElementById("prev-btn").style.display = "none";
@@ -1944,7 +1942,6 @@ stopTimer();
 const { data: { user }, error: userError } = await supabase.auth.getUser();
 
 if (!user || !user.id) {
-    console.log("No valid user → skipping quiz_attempt insert");
     return;
 }
 
@@ -1968,7 +1965,9 @@ if (user) {
     if (user) {
     await supabase.from("quiz_attempts").insert([{ user_id: user.id, score, total }]);
     const achievements = await checkAchievements(user, { mode: quizConfig.mode, score, total });
-    showAchievementCelebration(achievements, () => maybeShowReviewPrompt(user));
+    showAchievementCelebration(achievements, () =>
+    maybeShowReviewPrompt(user, { mode: quizConfig.mode, score, total })
+);
 }
 }
 
@@ -2036,7 +2035,7 @@ alert("adaptive quiz loading...");
 }
 
 if (!stats || stats.length === 0) {
-    console.log("No diagnostic data → fallback to normal quiz");
+
 }
 
   // ==============================
@@ -2051,7 +2050,6 @@ if (!stats || stats.length === 0) {
     .limit(500);
 
   if (attemptsError || !attempts) {
-    console.log("No attempts data.");
     return false;
   }
 
@@ -2094,7 +2092,6 @@ if (!stats || stats.length === 0) {
   }
 
   if (weakUnits.length === 0) {
-    console.log("All units mastered or insufficient data.");
     return false;
   }
 
@@ -2110,7 +2107,6 @@ if (!stats || stats.length === 0) {
     .contains("exams", [examArrayValue]);
 
   if (qError || !allQuestions) {
-    console.log("No questions found.");
     return false;
   }
 
@@ -2163,7 +2159,6 @@ if (!stats || stats.length === 0) {
   // 8. FINAL SAFETY CHECK
   // ==============================
   if (selectedQuestions.length === 0) {
-    console.log("No adaptive questions generated.");
     return false;
   }
 
@@ -2231,7 +2226,6 @@ if (!section) {
     .contains("exams", [examArrayValue]);
 
   if (!allQuestions || allQuestions.length === 0) {
-    console.log("No questions in section:", section);
     return false;
   }
 

@@ -390,7 +390,20 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 20px 28px 24px;
     border-top: 1px solid #f0f0f0;
 }
-
+@media (max-width: 700px) {
+    .how-it-works-grid,
+    [style*="grid-template-columns: repeat(2, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+ 
+/* Premium section — stack on mobile */
+@media (max-width: 700px) {
+    [style*="grid-template-columns: 1fr auto"] {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+}
 @media (max-width: 900px) {
     .score-track-inner {
         grid-template-columns: 1fr;
@@ -407,6 +420,16 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
     <style>
+        @media (max-width: 860px) {
+    .premium-feature-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+@media (max-width: 540px) {
+    .premium-feature-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
         .floating-cta {
     /* keep existing yellow/navy styles from before,
        but remove any animation class that was on it */
@@ -613,16 +636,13 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="header-row-1">
 
         <!-- LEFT: Logo -->
-        <div class="header-row-1-left">
-            <!-- Desktop: full logo with text -->
-            <img src="/assets/Logo-Large.png"
-                 class="header-logo-img header-logo-large"
-                 alt="Winnowic">
-            <!-- Mobile: W mark only -->
-            <img src="/assets/Logo-Small.png"
-                 class="header-logo-img header-logo-small"
-                 alt="Winnowic">
-        </div>
+         <div class="header-row-1-left">
+        <a href="/index.html" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none;">
+            <img src="/assets/Logo-Large.png" class="header-logo-img header-logo-large" alt="Winnowic">
+            <img src="/assets/Logo-Small.png" class="header-logo-img header-logo-small" alt="Winnowic">
+            <span style="font-size:10px; font-weight:700; color:#0B1F3B; opacity:0.4; vertical-align:super; margin-left:1px; font-family:'Inter',sans-serif; line-height:1;">TM</span>
+        </a>
+    </div>
 
         <!-- RIGHT: Create Account (logged out) or Gear (logged in) -->
         <div class="header-row-1-right">
@@ -681,9 +701,9 @@ document.addEventListener('DOMContentLoaded', function() {
             Pricing
         </button>
         <button class="header-nav-link"
-                onclick="window.location.href='/feedback.html'">
-            Feedback
-        </button>
+            onclick="window.location.href='/contact.html'">
+        Contact
+    </button>
     </div>
 
 </header>
@@ -713,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function() {
           font-size: 50px;
       ">
         Find Your Weak Spots.<br>
-        <span style="color:#FFD84D;">Raise Your SAT Math Score.</span>
+        <span style="color:#FFD84D;">Study Smarter for <br>SAT Math.</span>
       </h1>
 
       <p style="
@@ -800,7 +820,7 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 0;
 ">
 
-    <div class="feature-strip-item" style="padding: 18px 20px;">
+     <div class="feature-strip-item" style="padding: 18px 20px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
             <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
                 <i data-lucide="activity" style="width:18px;height:18px;"></i>
@@ -808,20 +828,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Smart Diagnostic Test</div>
         </div>
         <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            20 questions pinpoint exactly which SAT Math units are costing you points.
-            <span style="
-                display:inline-block;
-                margin-top:5px;
-                font-size:11px;
-                font-weight:700;
-                color:#0B1F3B;
-                background:rgba(255,216,77,0.25);
-                border-radius:20px;
-                padding:2px 9px;
-            ">Results in 20 minutes</span>
+            <strong>Results in 20 minutes:</strong> 20 questions pinpoint exactly which SAT Math units are costing you points.
         </div>
     </div>
-
+ 
     <div class="feature-strip-item" style="padding: 18px 20px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
             <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
@@ -830,20 +840,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Personalized Study Plan</div>
         </div>
         <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            Week-by-week schedule built from your diagnostic test results — daily batches, half tests, full simulations.
-            <span style="
-                display:inline-block;
-                margin-top:5px;
-                font-size:11px;
-                font-weight:700;
-                color:#0B1F3B;
-                background:rgba(255,216,77,0.25);
-                border-radius:20px;
-                padding:2px 9px;
-            ">Built from your results</span>
+            <strong>Built from your results:</strong> Week-by-week schedule with daily batches, half tests, and full simulations timed to your test date.
         </div>
     </div>
-
+ 
     <div class="feature-strip-item" style="padding: 18px 20px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
             <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
@@ -852,20 +852,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Track Your Progress</div>
         </div>
         <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            Predicted SAT Math score range updates every 20 questions as weak areas become strengths.
-            <span style="
-                display:inline-block;
-                margin-top:5px;
-                font-size:11px;
-                font-weight:700;
-                color:#0B1F3B;
-                background:rgba(255,216,77,0.25);
-                border-radius:20px;
-                padding:2px 9px;
-            ">Score updates in real time</span>
+            <strong>Score updates in real time:</strong> Predicted SAT Math score range refreshes every 20 questions as weak areas become strengths.
         </div>
     </div>
-
+ 
     <div class="feature-strip-item" style="padding: 18px 20px; border-right:none;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
             <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
@@ -874,22 +864,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Score Higher</div>
         </div>
         <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            Adaptive practice focuses every session on your lowest-scoring units automatically.
-            <span style="
-                display:inline-block;
-                margin-top:5px;
-                font-size:11px;
-                font-weight:700;
-                color:#0B1F3B;
-                background:rgba(255,216,77,0.25);
-                border-radius:20px;
-                padding:2px 9px;
-            ">Targeted, not generic</span>
+            <strong>Targeted, not generic:</strong> Adaptive practice focuses every session automatically on your lowest-scoring units.
         </div>
     </div>
-
 </div>
-
 
 <!-- ========================= -->
 <!-- FLOATING CTA -->
@@ -916,60 +894,202 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================= -->
 <!-- HOW IT WORKS -->
 <!-- ========================= -->
-<section class="how-section reveal-on-scroll">
-
-  <div class="how-header">
-    <h2>How Winnowic Works</h2>
-    <p>From zero to a personalized SAT Math study plan — in four steps.</p>
+<section style="
+    padding: 64px 0;
+    background: #F8F6F0;
+    position: relative;
+    z-index: 10;
+">
+  <div style="max-width: 1100px; margin: 0 auto; padding: 0 24px;">
+ 
+    <div style="text-align:center; margin-bottom:52px;">
+      <div style="
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: #FF6B00;
+          margin-bottom: 10px;
+      ">HOW IT WORKS</div>
+      <h2 style="
+          font-size: 30px;
+          font-weight: 800;
+          color: #0B1F3B;
+          margin: 0 0 10px;
+          line-height: 1.2;
+      ">From zero to a personalized SAT Math plan — in 15 minutes</h2>
+      <p style="font-size: 15px; color: #666; margin: 0; max-width: 520px; margin: 0 auto;">
+        No tutor. No guesswork. Winnowic figures out what you need and builds
+        a plan around it — starting with a free diagnostic test.
+      </p>
+    </div>
+ 
+    <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:20px;">
+ 
+      <div style="
+          background: #fff;
+          border-radius: 20px;
+          border: 1px solid #f0f0f0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          padding: 28px 28px 28px 32px;
+          border-left: 4px solid #FFD84D;
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
+      ">
+        <div style="
+            width: 44px;
+            height: 44px;
+            background: #0B1F3B;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFD84D;
+            font-family: 'Inter', sans-serif;
+        ">1</div>
+        <div>
+          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">Take the Free Diagnostic Test</h3>
+          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
+            Answer 20 SAT Math questions covering all four units. No account needed.
+            Takes about 12 minutes. At the end, you get a
+            <strong style="color:#0B1F3B;">predicted score range</strong> and a clear
+            picture of where you're losing points.
+          </p>
+          <button id="step1-diagnostic-btn" style="
+              margin-top: 14px;
+              background: #FFD84D;
+              color: #0B1F3B;
+              border: none;
+              border-radius: 8px;
+              padding: 8px 18px;
+              font-size: 13px;
+              font-weight: 700;
+              cursor: pointer;
+              font-family: 'Inter', sans-serif;
+          ">Start Diagnostic Test →</button>
+        </div>
+      </div>
+ 
+      <div style="
+          background: #fff;
+          border-radius: 20px;
+          border: 1px solid #f0f0f0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          padding: 28px 28px 28px 32px;
+          border-left: 4px solid rgba(11,31,59,0.15);
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
+      ">
+        <div style="
+            width: 44px;
+            height: 44px;
+            background: #0B1F3B;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFD84D;
+            font-family: 'Inter', sans-serif;
+        ">2</div>
+        <div>
+          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">See Exactly Where You're Losing Points</h3>
+          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
+            Your results break down by unit — Algebra, Advanced Math, Problem Solving,
+            and Geometry. You'll see your <strong style="color:#0B1F3B;">accuracy percentage per unit</strong>
+            and a predicted score range, so you know precisely what to work on first.
+          </p>
+        </div>
+      </div>
+ 
+      <div style="
+          background: #fff;
+          border-radius: 20px;
+          border: 1px solid #f0f0f0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          padding: 28px 28px 28px 32px;
+          border-left: 4px solid rgba(11,31,59,0.15);
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
+      ">
+        <div style="
+            width: 44px;
+            height: 44px;
+            background: #0B1F3B;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFD84D;
+            font-family: 'Inter', sans-serif;
+        ">3</div>
+        <div>
+          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">Practice Daily — 10 Questions, ~10 Minutes</h3>
+          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
+            Every day, Winnowic generates a <strong style="color:#0B1F3B;">fresh batch of 10 questions</strong>
+            targeting your weakest units. Consistent daily practice is the single biggest
+            predictor of score improvement — streaks and reminders keep you on track.
+          </p>
+        </div>
+      </div>
+ 
+      <div style="
+          background: #fff;
+          border-radius: 20px;
+          border: 1px solid #f0f0f0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          padding: 28px 28px 28px 32px;
+          border-left: 4px solid rgba(11,31,59,0.15);
+          display: flex;
+          gap: 20px;
+          align-items: flex-start;
+      ">
+        <div style="
+            width: 44px;
+            height: 44px;
+            background: #0B1F3B;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFD84D;
+            font-family: 'Inter', sans-serif;
+        ">4</div>
+        <div>
+          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">Watch Your Score Climb</h3>
+          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
+            Your predicted score range updates every 20 questions. As weak areas
+            turn into strengths, your range tightens and shifts upward.
+            <strong style="color:#0B1F3B;">You can see the improvement happening</strong> —
+            week over week, not just on test day.
+          </p>
+        </div>
+      </div>
+ 
+    </div>
+ 
+    <!-- Mobile responsive note -->
+    <style>
+      @media (max-width: 640px) {
+        .how-it-works-grid { grid-template-columns: 1fr !important; }
+      }
+    </style>
+ 
   </div>
-
-  <div class="how-steps-grid">
-
-    <div class="how-step-card reveal-on-scroll">
-      <div class="how-step-top">
-        <div class="how-number">1</div>
-        <div class="how-step-tag">Start Here</div>
-      </div>
-      <h3>Take a Free SAT Math Diagnostic</h3>
-      <p>Answer 20 SAT Math questions covering all major units. No account needed. Takes about 12 minutes.</p>
-      <button class="how-step-cta" id="step1-diagnostic-btn">Start SAT Math Diagnostic →</button>
-    </div>
-
-    <div class="how-step-arrow">→</div>
-
-    <div class="how-step-card reveal-on-scroll">
-      <div class="how-step-top">
-        <div class="how-number">2</div>
-        <div class="how-step-tag how-step-tag--then">Then</div>
-      </div>
-      <h3>See Your Weak Areas</h3>
-      <p>Get a predicted SAT Math score range and a unit-by-unit accuracy breakdown. Know exactly where points are being lost.</p>
-    </div>
-
-    <div class="how-step-arrow">→</div>
-
-    <div class="how-step-card reveal-on-scroll">
-      <div class="how-step-top">
-        <div class="how-number">3</div>
-        <div class="how-step-tag how-step-tag--then">Then</div>
-      </div>
-      <h3>Get a Daily Practice Batch</h3>
-      <p>10 personalized SAT Math questions every day targeting your weakest units. Builds a streak and adapts as you improve.</p>
-    </div>
-
-    <div class="how-step-arrow">→</div>
-
-    <div class="how-step-card reveal-on-scroll">
-      <div class="how-step-top">
-        <div class="how-number">4</div>
-        <div class="how-step-tag how-step-tag--then">Then</div>
-      </div>
-      <h3>Track Score Improvement</h3>
-      <p>Your SAT Math score range updates every 20 questions. Watch it climb week over week as weak areas become strengths.</p>
-    </div>
-
-  </div>
-
 </section>
 
 
@@ -1386,44 +1506,124 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- PREMIUM SECTION -->
 <!-- ========================= -->
 
-<div class="premium-hero">
-  <div class="premium-text">
-    <p class="premium-badge">Winnowic Premium</p>
-    <h2>
-      Smarter SAT Math Prep Built Around
-      <span>Your Weaknesses</span>
-    </h2>
-    <p class="premium-description">
-      Unlock 500+ hard SAT Math questions, adaptive practice that targets your weakest units,
-      advanced diagnostics, and full SAT Math simulations — all for $6/month.
-    </p>
-    <div class="premium-features">
-      <div class="feature-pill">500+ Hard SAT Math Questions</div>
-      <div class="feature-pill">Adaptive Weakness Targeting</div>
-      <div class="feature-pill">Full SAT Math Simulations</div>
-      <div class="feature-pill">Unit Accuracy Breakdowns</div>
-      <div class="feature-pill">Live Score Prediction</div>
-      <div class="feature-pill">Daily Practice Streaks</div>
-    </div>
-  </div>
-  <div class="premium-actions">
-    <button class="premium-diagnostics-btn" onclick="window.location.href='/diagnostics.html'">
-      View SAT Math Diagnostics
-    </button>
-    <button class="premium-upgrade-btn" onclick="window.location.href='/pricing.html'">
-      See Pricing — Starting at $6/mo
-    </button>
-  </div>
-</div>
+<!-- ========================= -->
+<!-- PREMIUM SECTION — revised -->
+<!-- ========================= -->
+<section style="padding:72px 0; background:#fff; position:relative; z-index:10;">
+  <div style="max-width:1100px; margin:0 auto; padding:0 24px;">
 
+    <!-- Header -->
+    <div style="text-align:center; margin-bottom:48px;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#FF6B00; margin-bottom:10px;">WINNOWIC PREMIUM</div>
+      <h2 style="font-size:32px; font-weight:800; color:#0B1F3B; margin:0 0 14px; line-height:1.2;">Most SAT prep costs $150–$500.<br>Winnowic is $6/month.</h2>
+      <p style="font-size:16px; color:#666; max-width:480px; margin:0 auto; line-height:1.6;">
+        Everything a serious SAT Math student needs — built with the same precision as the test itself.
+      </p>
+    </div>
+
+    <!-- Feature grid -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:32px;">
+
+      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
+        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <i data-lucide="library" style="width:18px;height:18px;color:#FFD84D;"></i>
+        </div>
+        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">500+ Hard SAT Math Questions</div>
+        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
+          <li>Covers all four SAT Math domains</li>
+          <li>Hard difficulty — the questions that decide your score</li>
+          <li>Continuously expanding question bank</li>
+          <li>MCQ and student-produced response (grid-in) formats</li>
+        </ul>
+      </div>
+
+      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
+        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <i data-lucide="zap" style="width:18px;height:18px;color:#FFD84D;"></i>
+        </div>
+        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Infinite Adaptive Practice</div>
+        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
+          <li>Automatically targets your weakest units every session</li>
+          <li>Difficulty adjusts as you improve</li>
+          <li>Never runs out — new batches generated daily</li>
+          <li>Streak tracking with email reminders</li>
+        </ul>
+      </div>
+
+      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
+        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <i data-lucide="bar-chart-2" style="width:18px;height:18px;color:#FFD84D;"></i>
+        </div>
+        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Advanced Diagnostics</div>
+        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
+          <li>Predicted SAT Math score range — updated in real time</li>
+          <li>Unit-by-unit accuracy tracked over time</li>
+          <li>Identifies your single weakest unit automatically</li>
+          <li>Progress graphs showing improvement week over week</li>
+        </ul>
+      </div>
+
+      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
+        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <i data-lucide="clipboard-list" style="width:18px;height:18px;color:#FFD84D;"></i>
+        </div>
+        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Full SAT Simulations</div>
+        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
+          <li>44-question full simulation — authentic 2-module SAT format</li>
+          <li>22-question half tests to build endurance</li>
+          <li>Timed with section breaks</li>
+          <li>Full review with explanations after each simulation</li>
+        </ul>
+      </div>
+
+      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
+        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <i data-lucide="calendar-check" style="width:18px;height:18px;color:#FFD84D;"></i>
+        </div>
+        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Personalized Study Plan</div>
+        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
+          <li>Built from your diagnostic test results</li>
+          <li>Week-by-week schedule timed to your test date</li>
+          <li>Balances daily practice, half tests, and full simulations</li>
+          <li>Adjusts as your weak areas change</li>
+        </ul>
+      </div>
+
+      <div style="background:#0B1F3B; border-radius:16px; padding:24px; border:1px solid #0B1F3B; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="font-size:13px; font-weight:700; color:rgba(255,216,77,0.7); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Get started today</div>
+          <div style="font-size:48px; font-weight:800; color:#FFD84D; line-height:1; margin-bottom:4px;">$6</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:20px;">/month · cancel anytime · no hidden fees</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin-bottom:20px;">
+            Less than a coffee a week for the focused, data-driven SAT Math prep that most platforms charge hundreds for.
+          </div>
+        </div>
+        <div>
+          <button onclick="window.location.href='/pricing.html'" style="display:block;width:100%;background:#FFD84D;color:#0B1F3B;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:8px;">See Pricing →</button>
+          <button onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'" style="display:block;width:100%;background:transparent;color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Start Free Diagnostic Test</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom trust line -->
+    <p style="text-align:center; font-size:13px; color:#aaa; margin:0;">
+      Free plan always available · Premium unlocks everything · No commitment required
+    </p>
+
+  </div>
+</section>
 
 <footer class="site-footer">
-    <div class="footer-left">© 2026 <span>Winnowic™</span> · All rights reserved</div>
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+        <span style="display:block; font-size:10px; color:rgba(255,255,255,0.3); margin-top:3px; font-style:italic;">Patent Pending Diagnostic Technology</span>
+    </div>
     <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
           <a href="/studyplan.html" class="footer-link">Study Plan</a>
-        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/contact.html" class="footer-link">Contact</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
         <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
     </nav>

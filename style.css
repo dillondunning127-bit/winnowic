@@ -97,21 +97,24 @@ input[type="email"],
 input[type="password"],
 select {
     width: 100%;
-    padding: 10px 40px 10px 12px;
+    padding: 10px 12px;
     margin: 8px 0;
     border-radius: 10px;
     border: 2px solid #ddd;
     font-size: 14px;
     background-color: white;
-    cursor: pointer;
     transition: 0.2s;
+}
+
+select {
+    padding-right: 40px;
+    cursor: pointer;
 
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
 
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='%231D3557' d='M5 7l5 5 5-5z'/></svg>");
-
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 16px;

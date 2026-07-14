@@ -41,7 +41,7 @@ export async function startSession(exam, mode, source = 'organic') {
   }
 
   currentSessionId = data.id;
-  console.log('Session started:', currentSessionId);
+
 }
 
 // ─────────────────────────────────────────────
@@ -67,7 +67,7 @@ export async function endSession(questionsAttempted = 0) {
   if (error) {
     console.error('endSession error:', error);
   } else {
-    console.log('Session ended:', currentSessionId, `(${questionsAttempted} questions)`);
+   
   }
 
   currentSessionId = null;

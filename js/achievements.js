@@ -170,7 +170,7 @@ export function showAchievementCelebration(achievements, onClose = null) {
             </button>
         </div>
     `;
-
+overlay.style.zIndex = '9000';
     document.body.appendChild(overlay);
     if (window.lucide) window.lucide.createIcons();
 
@@ -182,11 +182,14 @@ export function showAchievementCelebration(achievements, onClose = null) {
 
 function fireConfetti() {
     if (typeof window.confetti === 'function') {
+        
         window.confetti({
             particleCount: 120,
             spread: 80,
             origin: { y: 0.6 },
-            colors: ['#FFD84D', '#0B1F3B', '#ffffff']
+            colors: ['#FFD84D', '#0B1F3B', '#ffffff'],
+            zIndex: 10000 
+            
         });
     }
 }

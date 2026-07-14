@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Contact — Winnowic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Winnowic — get help, report a bug, or share feedback about your SAT Math prep experience.">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        .contact-page-wrap {
+            max-width: 960px;
+            margin: 48px auto 80px;
+            padding: 0 24px;
+            z-index: 1;
+        }
+
+        .contact-hero {
+            background: #0B1F3B;
+            border-radius: 20px;
+            padding: 40px 44px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            box-shadow: 0 8px 32px rgba(11,31,59,0.15);
+        }
+
+        .contact-hero-left h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFD84D;
+            margin: 0 0 8px;
+            line-height: 1.2;
+        }
+
+        .contact-hero-left p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin: 0;
+            max-width: 420px;
+            line-height: 1.6;
+        }
+
+        .contact-hero-right {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .contact-info-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+        }
+
+        .contact-info-pill a {
+            color: #FFD84D;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-info-pill a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .contact-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            padding: 24px;
+        }
+
+        .contact-card-icon {
+            width: 40px;
+            height: 40px;
+            background: #FFD84D;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0B1F3B;
+            margin-bottom: 12px;
+        }
+
+        .contact-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0B1F3B;
+            margin: 0 0 6px;
+        }
+
+        .contact-card p {
+            font-size: 13px;
+            color: #888;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .contact-form-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            padding: 28px 32px;
+        }
+
+        .contact-form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .contact-form-header h2 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0B1F3B;
+            margin: 0;
+        }
+
+        .contact-form-header p {
+            font-size: 13px;
+            color: #888;
+            margin: 4px 0 0;
+        }
+
+        .contact-type-select {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .contact-type-btn {
+            padding: 7px 16px;
+            border-radius: 20px;
+            border: 1.5px solid #e8e8e8;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .contact-type-btn:hover {
+            border-color: #0B1F3B;
+            color: #0B1F3B;
+        }
+
+        .contact-type-btn.active {
+            background: #0B1F3B;
+            border-color: #0B1F3B;
+            color: #FFD84D;
+        }
+
+        .contact-name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .contact-field-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0B1F3B;
+            margin-bottom: 5px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .contact-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #0B1F3B;
+            background: #fff;
+            box-sizing: border-box;
+            transition: border-color 0.15s;
+            outline: none;
+        }
+
+        .contact-input:focus {
+            border-color: #0B1F3B;
+        }
+
+        .contact-textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #0B1F3B;
+            background: #fff;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 130px;
+            transition: border-color 0.15s;
+            outline: none;
+            margin-bottom: 16px;
+        }
+
+        .contact-textarea:focus {
+            border-color: #0B1F3B;
+        }
+
+        .contact-submit-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .contact-submit-btn {
+            background: #0B1F3B;
+            color: #FFD84D;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: opacity 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-submit-btn:hover {
+            opacity: 0.88;
+        }
+
+        #feedback-message {
+            font-size: 13px;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        #feedback-message.error {
+            color: #C62828;
+        }
+
+        @media (max-width: 640px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .contact-name-row { grid-template-columns: 1fr; }
+            .contact-hero { padding: 24px 20px; }
+            .contact-form-card { padding: 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="header-row-1">
+        <div class="header-row-1-left">
+            <a href="/index.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+                <img src="/assets/Logo-Large.png" class="header-logo-img header-logo-large" alt="Winnowic">
+                <img src="/assets/Logo-Small.png" class="header-logo-img header-logo-small" alt="Winnowic">
+                <span style="font-size:10px; font-weight:700; color:#0B1F3B; opacity:0.45; vertical-align:super; margin-left:1px; font-family:'Inter',sans-serif;">TM</span>
+            </a>
+        </div>
+        <div class="header-row-1-right">
+            <button id="header-upgrade-btn" onclick="window.location.href='/pricing.html'" style="display:none;">Upgrade to Premium</button>
+            <div class="account-menu" style="position:relative;">
+                <button id="account-gear" class="gear-btn" style="display:none;" aria-label="Account settings">
+                    <i data-lucide="settings"></i>
+                </button>
+                <div id="account-dropdown" class="account-dropdown" style="display:none;">
+                    <div id="account-email" class="dropdown-email"></div>
+                    <button id="logout-btn" class="dropdown-item"><i data-lucide="log-out"></i> Log Out</button>
+                    <button id="cnclsub-btn" class="dropdown-item"><i data-lucide="x-circle"></i> Cancel Subscription</button>
+                    <button id="dltact-btn" class="dropdown-item danger"><i data-lucide="trash-2"></i> Delete Account</button>
+                </div>
+            </div>
+            <button id="header-auth-btn" class="header-auth-link">Create Account</button>
+        </div>
+    </div>
+    <div class="header-row-2">
+        <button class="header-nav-link" onclick="window.location.href='/diagnostics.html'">Premium Diagnostics</button>
+        <button class="header-nav-link" onclick="window.location.href='/quiz.html'">Study Questions</button>
+        <button class="header-nav-link" onclick="window.location.href='/studyplan.html'">Study Plan</button>
+        <button class="header-nav-link" onclick="window.location.href='/pricing.html'">Pricing</button>
+        <button class="header-nav-link" onclick="window.location.href='/contact.html'">Contact</button>
+    </div>
+</header>
+
+<div class="contact-page-wrap">
+
+    <!-- CONTACT FORM -->
+    <div class="contact-form-card">
+        <div class="contact-form-header">
+            <div>
+                <h2>Contact Us</h2>
+                
+            </div>
+        </div>
+
+        <!-- Type selector -->
+        <div class="contact-type-select">
+            <button class="contact-type-btn active" data-type="feedback">General Feedback</button>
+            <button class="contact-type-btn" data-type="bug">Bug Report</button>
+            <button class="contact-type-btn" data-type="feature">Feature Request</button>
+            <button class="contact-type-btn" data-type="help">Get Help</button>
+        </div>
+
+        <!-- Name row -->
+        <div class="contact-name-row">
+            <div>
+                <label class="contact-field-label" for="contact-name">Name <span style="font-weight:400;color:#aaa;"></span></label>
+                <input type="text" id="contact-name" class="contact-input">
+            </div>
+            <div>
+                <label class="contact-field-label" for="contact-email">Email </label>
+                <input type="email" id="contact-email" class="contact-input">
+            </div>
+        </div>
+
+        <!-- Message -->
+        <label class="contact-field-label" for="feedback-input">Message</label>
+        <textarea
+            id="feedback-input"
+            class="contact-textarea"
+            placeholder="Tell us what's on your mind — be as specific as you'd like. The more detail, the more we can help."
+        ></textarea>
+
+        <div class="contact-submit-row">
+            <button id="submit-feedback-btn" class="contact-submit-btn">
+                <i data-lucide="send" style="width:14px;height:14px;"></i>
+                Send Message
+            </button>
+            <p id="feedback-message"></p>
+        </div>
+    </div>
+
+</div>
+
+<footer class="site-footer">
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+        <span style="display:block; font-size:10px; color:rgba(255,255,255,0.3); margin-top:3px; font-style:italic;">Patent Pending Diagnostic Technology</span>
+    </div>
+    <nav class="footer-links">
+        <a href="/pricing.html" class="footer-link">Pricing</a>
+        <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
+        <a href="/studyplan.html" class="footer-link">Study Plan</a>
+        <a href="/contact.html" class="footer-link">Contact</a>
+        <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
+    </nav>
+    <div class="footer-social">
+        <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/trywinnowic/" target="_blank" class="footer-social-link" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@Winnowic" target="_blank" class="footer-social-link" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61590916226198" target="_blank" class="footer-social-link" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+    </div>
+</footer>
+
+<script type="module" src="/js/contact.js"></script>
+<script type="module" src="/js/auth.js"></script>
+<script type="module" src="/js/customer_manage.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lucide icons
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Type selector buttons
+        document.querySelectorAll('.contact-type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.contact-type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

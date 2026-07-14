@@ -129,7 +129,6 @@ async function generateBatch(userId, exam) {
   }
 
   // ── 6. Persist the batch ──
-  console.log('Attempting batch insert for:', userId, exam, questionIds.length, 'questions');
   const { data: batch, error: insertError } = await supabase
     .from('daily_batches')
     .insert({

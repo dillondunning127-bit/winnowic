@@ -3,7 +3,7 @@
 <head>
     <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <title>Leave a Review — Winnowic</title>
+    <title>Share Feedback — Winnowic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -25,22 +25,11 @@
         .review-field label {
             display: block; font-size: 13px; font-weight: 600; color: #0B1F3B; margin-bottom: 6px;
         }
-        .review-name-row { display: flex; gap: 12px; margin-bottom: 18px; }
-        .review-name-row .review-field { flex: 1; margin-bottom: 0; }
-        .review-field input[type="text"],
         .review-field textarea {
             width: 100%; box-sizing: border-box; padding: 10px 12px;
             border: 1px solid #E2E6ED; border-radius: 10px;
-            font-family: 'Inter', sans-serif; font-size: 14px; resize: none;
+            font-family: 'Inter', sans-serif; font-size: 14px; resize: none; min-height: 100px;
         }
-        .review-field textarea { min-height: 70px; }
-
-        .star-rating { display: inline-flex; gap: 4px; }
-        .star-wrap { position: relative; width: 34px; height: 34px; cursor: pointer; }
-        .star-wrap svg { position: absolute; top: 0; left: 0; display: block; }
-        .star-fill-wrap { position: absolute; top: 0; left: 0; height: 100%; width: 0%; overflow: hidden; }
-        #rating-label { font-size: 12px; color: #888; margin-top: 6px; }
-
         .reward-callout {
             display: flex; align-items: center; gap: 10px; background: #F7F9FC;
             border-radius: 14px; padding: 12px 14px; margin-bottom: 22px;
@@ -51,8 +40,8 @@
             border: none; border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer;
         }
         .review-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        #review-thanks-screen, #review-already-screen { display: none; text-align: center; }
-        #review-thanks-screen .icon-circle, #review-already-screen .icon-circle {
+        #feedback-thanks-screen, #feedback-already-screen { display: none; text-align: center; }
+        #feedback-thanks-screen .icon-circle, #feedback-already-screen .icon-circle {
             width: 56px; height: 56px; border-radius: 50%; background: #FFD84D;
             display:flex; align-items:center; justify-content:center; margin: 0 auto 16px;
         }
@@ -98,58 +87,35 @@
 <div class="review-page-shell">
 <div class="review-card">
 
-    <div id="review-form-screen">
+    <div id="feedback-form-screen">
         <div class="review-eyebrow">Under 60 seconds</div>
-        <div class="review-title">How's Winnowic working for you?</div>
+        <div class="review-title">Help us make Winnowic better</div>
         <div class="review-honest-note">We'd love your honest feedback — good, bad, or in between.</div>
 
         <div class="reward-callout">
             <i data-lucide="gift" style="width:18px;height:18px;color:#FFD84D;flex-shrink:0;"></i>
-            <span>In thanks for your feedback, Winnowic's FREE Premium Diagnostics is available to you for the next 24 hours! </span>
+            <span>In thanks for your feedback, Winnowic's FREE Premium Diagnostics is available to you for the next 24 hours!</span>
         </div>
 
-        <form id="review-form">
-            <div class="review-name-row">
-                <div class="review-field">
-                    <label>First Name</label>
-                    <input type="text" id="first-name" required>
-                </div>
-                <div class="review-field">
-                    <label>Last Name</label>
-                    <input type="text" id="last-name" required>
-                </div>
+        <form id="feedback-form">
+            <div class="review-field">
+                <label>How have Winnowic's features impacted your experience?</label>
+                <textarea id="feedback-response" required minlength="50"></textarea>
+<div id="feedback-response-count" style="font-size:11px; color:#999; margin-top:4px; text-align:right;">0 / 50 minimum</div>
             </div>
 
-            <div class="review-field">
-                <label>Overall, how would you rate Winnowic?</label>
-                <div class="star-rating" id="star-rating"></div>
-                <input type="hidden" id="rating-value" value="0">
-            </div>
-<div id="rating-label"></div>
-            <div class="review-field">
-                <label>What did you like most about Winnowic?</label>
-                <textarea id="liked-most" required minlength="50"></textarea>
-<div id="liked-most-count" style="font-size:11px; color:#999; margin-top:4px; text-align:right;">0 / 50 minimum</div>
-            </div>
-
-            <button type="submit" class="review-submit-btn" id="review-submit-btn">Submit Review</button>
-            <p style="font-size:11px; color:#999; text-align:center; margin-top:14px; line-height:1.5;">
-    By submitting, you agree Winnowic may publish and share your review (including your name and rating) on our website and marketing materials.
-</p>
+            <button type="submit" class="review-submit-btn" id="feedback-submit-btn">Submit Feedback</button>
         </form>
     </div>
 
-    <div id="review-thanks-screen">
+    <div id="feedback-thanks-screen">
         <div class="icon-circle"><i data-lucide="check" style="width:28px;height:28px;color:#0B1F3B;"></i></div>
         <div class="review-title">Thank you!</div>
         <div class="review-honest-note">Your 24-hour Premium Diagnostics unlock is active now — go track and attack your weak spots.</div>
-        <p style="font-size:11px; color:#999; margin-bottom:16px; line-height:1.5;">
-    Your review may be featured on winnowic.com or in our marketing.
-</p>
         <button class="review-submit-btn" onclick="window.location.href='/diagnostics.html'">Go to Diagnostics</button>
     </div>
 
-    <div id="review-already-screen">
+    <div id="feedback-already-screen">
         <div class="icon-circle"><i data-lucide="heart" style="width:26px;height:26px;color:#0B1F3B;"></i></div>
         <div class="review-title">You've already shared your feedback</div>
         <div class="review-honest-note">Thanks again — it's already been put to good use.</div>
@@ -186,7 +152,7 @@
 </footer>
 
 <script type="module" src="/js/auth.js"></script>
-<script type="module" src="/js/reviews.js"></script>
+<script type="module" src="/js/feedbacks.js"></script>
 <script type="module" src="/js/customer_manage.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

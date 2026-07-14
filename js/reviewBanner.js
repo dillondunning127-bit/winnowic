@@ -1,42 +1,58 @@
 import { supabase } from './supabase.js';
+import { checkExamAccess } from './subscription.js';
 
-const CHECKPOINTS = [20, 50, 100];
+// Same trigger set the popup uses (achievements_unlocked is written by achievements.js
+// on the same events, so it doubles as the source of truth here).
+const RELEVANT_ACHIEVEMENT_KEYS = new Set([
+    'q50', 'q100',
+    'streak3', 'streak7', 'streak14', 'streak30', 'streak60', 'streak100',
+    'personal_best',
+    'first_diagnostic'
+]);
+
+// Intentionally NOT persisted to sessionStorage/localStorage — dismissing the banner
+// only hides it for the current page load. A refresh brings it back if still eligible.
+let dismissedThisLoad = false;
 
 /**
- * Call this once on any page that loads a signed-in user (e.g. from main.js).
- * Shows a small dismissible banner if the user has crossed a checkpoint
- * and hasn't left a review yet. Dismissing just hides it for this session —
- * it will reappear on next visit until they review or reach the next checkpoint.
+ * Call this once on any page that loads a signed-in user (quiz.html only, per current setup).
  */
 export async function maybeShowReviewBanner(user) {
     if (!user) return;
-    if (sessionStorage.getItem('reviewBannerDismissed')) return;
+    if (dismissedThisLoad) return;
     if (document.getElementById('review-banner')) return;
 
     try {
-        const { data: existingReview } = await supabase
-            .from('reviews')
-            .select('id')
-            .eq('user_id', user.id)
-            .maybeSingle();
+        // Permanently done once they've left a review OR feedback — never show again
+        const [{ data: existingReview }, { data: existingFeedback }] = await Promise.all([
+            supabase.from('reviews').select('id').eq('user_id', user.id).maybeSingle(),
+            supabase.from('feedbacks').select('id').eq('user_id', user.id).maybeSingle()
+        ]);
 
-        if (existingReview) return;
+        if (existingReview || existingFeedback) return;
 
-        const { count } = await supabase
-            .from('topic_attempts')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id);
+        const [{ data: unlocked }, { data: prompted }] = await Promise.all([
+            supabase.from('achievements_unlocked').select('achievement_key').eq('user_id', user.id),
+            supabase.from('review_prompts').select('trigger_key').eq('user_id', user.id)
+        ]);
 
-        if (count === null || !CHECKPOINTS.some(cp => count >= cp)) return;
+        const promptedSet = new Set((prompted || []).map(p => p.trigger_key));
+        const eligibleKey = (unlocked || [])
+            .map(a => a.achievement_key)
+            .find(key => RELEVANT_ACHIEVEMENT_KEYS.has(key) && !promptedSet.has(key));
 
-        renderBanner();
+        if (!eligibleKey) return;
+
+        const hasPremium = await checkExamAccess('SAT_MATH');
+
+        renderBanner(user, eligibleKey, hasPremium);
 
     } catch (err) {
         console.error('maybeShowReviewBanner failed:', err);
     }
 }
 
-function renderBanner() {
+function renderBanner(user, triggerKey, hasPremium) {
     const banner = document.createElement('div');
     banner.id = 'review-banner';
     banner.style.cssText = `
@@ -52,33 +68,59 @@ function renderBanner() {
         font-family: 'Inter', sans-serif;
         font-size: 13px;
         z-index: 9999;
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
     `;
 
+    const rewardLine = hasPremium
+        ? ''
+        : `<div style="color:#FFD84D; font-size:11px; font-weight:600; margin-top:8px;">Respond and get 24 hours of Winnowic Premium.</div>`;
+
     banner.innerHTML = `
-        <div style="flex:1;">
-            <div style="font-weight:700; margin-bottom:4px;">We'd love your honest feedback</div>
-            <div style="color:rgba(255,255,255,0.75); margin-bottom:10px;">
-                Leave a quick review and unlock 48 hours of Premium.
-            </div>
-            <a href="/reviews.html" style="
-                display:inline-block; background:#FFD84D; color:#0B1F3B;
-                padding:6px 14px; border-radius:8px; font-weight:600;
-                text-decoration:none; font-size:12px;
-            ">Leave a Review</a>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:10px;">
+            <div style="font-weight:700;">Are you enjoying Winnowic SAT Math prep?</div>
+            <button id="review-banner-dismiss" aria-label="Dismiss" style="
+                background:none; border:none; color:rgba(255,255,255,0.6);
+                cursor:pointer; font-size:14px; padding:0; flex-shrink:0;
+            ">✕</button>
         </div>
-        <button id="review-banner-dismiss" style="
-            background:none; border:none; color:rgba(255,255,255,0.6);
-            cursor:pointer; font-size:14px; padding:2px;
-        ">✕</button>
+        <div style="display:flex; gap:8px;">
+            <button id="review-banner-yes" style="
+                flex:1; background:#FFD84D; color:#0B1F3B; border:none;
+                padding:7px 0; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;
+            "><i data-lucide="thumbs-up" style="width:15px;height:15px;"></i> Yes</button>
+            <button id="review-banner-no" style="
+                flex:1; background:rgba(255,255,255,0.1); color:#fff; border:none;
+                padding:7px 0; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;
+            "><i data-lucide="thumbs-down" style="width:15px;height:15px;"></i> Not really</button>
+        </div>
+        ${rewardLine}
     `;
 
     document.body.appendChild(banner);
 
+    async function recordResponse(response) {
+        try {
+            await supabase.from('review_prompts').insert([{
+                user_id: user.id,
+                trigger_key: triggerKey,
+                response
+            }]);
+        } catch (err) {
+            console.error('Failed to record banner response:', err);
+        }
+    }
+
+    document.getElementById('review-banner-yes').addEventListener('click', async () => {
+        await recordResponse('yes');
+        window.location.href = `/reviews.html?trigger=${triggerKey}`;
+    });
+
+    document.getElementById('review-banner-no').addEventListener('click', async () => {
+        await recordResponse('no');
+        window.location.href = `/feedbacks.html?trigger=${triggerKey}`;
+    });
+
     document.getElementById('review-banner-dismiss').addEventListener('click', () => {
-        sessionStorage.setItem('reviewBannerDismissed', '1');
+        dismissedThisLoad = true;
         banner.remove();
     });
 }

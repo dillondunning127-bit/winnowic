@@ -1,6 +1,6 @@
 import { supabase } from "./supabase.js";
 import { getUserExams } from "./subscription.js";
-import { checkExamAccess } from "./subscription.js";
+import { checkExamAccess, checkDiagnosticsAccess } from "./subscription.js";
 import { initAuthListener } from './auth.js';
 initAuthListener();
 let readinessChart = null;
@@ -41,7 +41,6 @@ previewFullBtn.onclick = async () => {
 
   // 🚨 HARD GUARD — if no examSelect, STOP
   if (!examSelect) {
-    console.log("No examSelect found on this page.");
     return;
   }
 
@@ -173,22 +172,16 @@ export async function maybeCreateSnapshot({ user, exam, unit }) {
 
 const examArrayValue = getExamArrayValue(exam);
 
-console.log("examArrayValue RAW:", examArrayValue);
-console.log("isArray?", Array.isArray(examArrayValue));
-
 if (!examArrayValue) {
   console.error("Missing examArrayValue", exam);
   return;
 }
-
-  console.log("SNAPSHOT USER:", user);
 
 if (!user || !user.id) {
   console.error("❌ snapshot blocked: missing user");
   return;
 }
   try {
-    console.log("🔥 snapshot trigger fired", { user, exam, unit });
 
     const { data: attempts, error: attemptsError } = await supabase
   .from("topic_attempts")
@@ -289,11 +282,6 @@ for (const unitName of uniqueUnits) {
     .eq("user_id", user.id)
     .eq("unit", unitName)
     .contains("exams", [examArrayValue]);
-console.log("UNIT DEBUG:", {
-  unitName,
-  unitCount,
-  attemptsLength: unitAttempts?.length
-});
   if (
   unitCount &&
   unitCount >= 20 &&
@@ -328,12 +316,6 @@ console.log("UNIT DEBUG:", {
       accuracy: correct / 20,
       predicted_score: null
     });
-
-  console.log(
-    "✅ UNIT SNAPSHOT CREATED:",
-    unitName,
-    unitSnapshotThreshold
-  );
 }
 }
 
@@ -558,7 +540,6 @@ if (PREVIEW_MODE) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    console.log("No user found");
     return 0;
   }
 
@@ -770,11 +751,11 @@ if(unitSelect){
 export async function loadDiagnostics() {
 
   if (!examSelect || !resultsDiv) {
-    console.log("Elements not ready yet");
     return;
   }
 
   const exam = examSelect.value;
+
   const examArrayValue = getExamArrayValue(exam);
 
   const chartContainer = document.getElementById("readinessChartContainer");
@@ -1240,7 +1221,7 @@ const dataPoints =
 
 export async function getPredictedScore(exam, readinessPercent) {
 
-  console.log("Predicted Score Input:", exam, readinessPercent);
+
 
   const { data, error } = await supabase
     .from("exam_score_lookup")
@@ -1280,11 +1261,9 @@ export async function updateExamLocks() {
 }
 
 async function hasAccessToExam(exam) {
-  // 🔥 Preview ALWAYS allowed
   if (PREVIEW_MODE) return true;
-
-  // Normal flow
-  return await checkExamAccess(exam);
+  const result = await checkDiagnosticsAccess(exam);
+  return result;
 }
 
 async function getEffectiveUserId() {

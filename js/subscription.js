@@ -1,18 +1,24 @@
 import { supabase } from "./supabase.js";
+export async function checkDiagnosticsAccess(exam) {
+    const hasSubAccess = await checkExamAccess(exam);
+    if (hasSubAccess) return true;
 
-export async function checkExamAccess(exam) {
-const { data: { user } } = await supabase.auth.getUser();
-if (user) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+
     const { data: activeReward } = await supabase
         .from('reward_unlocks')
         .select('expires_at')
         .eq('user_id', user.id)
-        .eq('reward_type', 'premium_preview_48h')
+        .eq('reward_type', 'premium_diagnostics_24h')
         .gt('expires_at', new Date().toISOString())
         .maybeSingle();
 
-    if (activeReward) return true; // temporary premium access
+    return !!activeReward;
 }
+export async function checkExamAccess(exam) {
+const { data: { user } } = await supabase.auth.getUser();
+
   if (!user) return false;
 
   const { data, error } = await supabase
@@ -50,8 +56,6 @@ if (user) {
       return true;
     }
   }
-console.log("CHECKING ACCESS FOR:", exam);
-console.log("USER SUBS:", data);
   return false;
 }
 
@@ -72,10 +76,23 @@ export async function getUserExams() {
     if (sub.end_date && new Date(sub.end_date) < now) continue;
 
     if (sub.exam === "ALL") {
-      return ["ALL"]; // shortcut
+      return ["ALL"];
     }
 
     exams.push(sub.exam);
+  }
+
+  // Include reward-based diagnostics access alongside real subscriptions
+  const { data: activeReward } = await supabase
+    .from('reward_unlocks')
+    .select('expires_at')
+    .eq('user_id', user.id)
+    .eq('reward_type', 'premium_diagnostics_24h')
+    .gt('expires_at', now.toISOString())
+    .maybeSingle();
+
+  if (activeReward && !exams.includes('SAT_MATH')) {
+    exams.push('SAT_MATH');
   }
 
   return exams;

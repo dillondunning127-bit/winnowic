@@ -7,46 +7,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submit-feedback-btn");
   const input = document.getElementById("feedback-input");
   const messageEl = document.getElementById("feedback-message");
-  const backBtn = document.getElementById("back-btn");
 
-  // 🔙 Back button
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      window.location.href = "/index.html";
-    });
-  }
+  if (!submitBtn || !input || !messageEl) return;
 
-  // 📩 Submit feedback
   submitBtn.addEventListener("click", async () => {
 
     const text = input.value.trim();
 
     if (!text) {
-      messageEl.textContent = "Please enter feedback before submitting.";
+      messageEl.textContent = "Please enter a message before submitting.";
       return;
     }
 
     const { data: { user } } = await supabase.auth.getUser();
 
     const { error } = await supabase
-  .from("feedback")
-  .insert([
-    {
-      user_id: user?.id || null,
-      message: text,
-      is_anonymous: user ? false : true
-    }
-  ]);
+      .from("feedback")
+      .insert([
+        {
+          user_id: user?.id || null,
+          message: text,
+          is_anonymous: user ? false : true
+        }
+      ]);
 
     if (error) {
       console.error(error);
-      messageEl.textContent = "Error submitting feedback.";
+      messageEl.textContent = "Something went wrong. Please try again.";
       return;
     }
 
-    // ✅ Success UI
     input.value = "";
-    messageEl.textContent = "Thank you! Your feedback has been submitted.";
+    messageEl.textContent = "Message sent — we'll get back to you soon.";
   });
 
 });

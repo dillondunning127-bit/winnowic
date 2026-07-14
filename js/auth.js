@@ -275,7 +275,8 @@ function setAuthLoading(isLoading) {
 if (loginTab) loginTab.classList.add("active");
 
 if (loginTab) {
-    loginTab.addEventListener("click", () => {
+   loginTab.addEventListener("click", () => {
+        document.getElementById('signup-legal').style.display = 'none';
         authMode = "login";
         if (authTitle) authTitle.textContent = "Welcome Back";
         if (submitBtn) submitBtn.textContent = "Login";
@@ -286,6 +287,7 @@ if (loginTab) {
 
 if (signupTab) {
     signupTab.addEventListener("click", () => {
+        document.getElementById('signup-legal').style.display = 'block';
         authMode = "signup";
         if (authTitle) authTitle.textContent = "Create Account";
         if (submitBtn) submitBtn.textContent = "Create Account";
