@@ -20,6 +20,107 @@
 <link rel="canonical" href="https://www.winnowic.com">
 </head>
 <style>
+    .auth-card input:not([type="checkbox"]) {
+    color: #0B1F3B !important;
+    background: #fff !important;
+}
+    #agree-terms-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+#agree-terms-checkbox:hover {
+    border-color: #FF8A3D;
+}
+
+#agree-terms-checkbox:checked {
+    background: #FF8A3D;
+    border-color: #FF8A3D;
+}
+
+#agree-terms-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    left: 4.5px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+#agree-terms-checkbox:focus-visible {
+    outline: 2px solid #FF8A3D;
+    outline-offset: 2px;
+}
+.custom-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 11px;
+    color: #999;
+    text-align: left;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.custom-checkbox-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 16px;
+    height: 16px;
+    margin: 2px 0 0 0;
+    cursor: pointer;
+}
+
+.custom-checkbox-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.custom-checkbox-label:hover .custom-checkbox-box {
+    border-color: #FF8A3D;
+}
+
+#agree-terms-checkbox:checked ~ .custom-checkbox-box {
+    background: #FF8A3D;
+    border-color: #FF8A3D;
+}
+
+#agree-terms-checkbox:checked ~ .custom-checkbox-box::after {
+    content: "";
+    position: absolute;
+    left: 4.5px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+#agree-terms-checkbox:focus-visible ~ .custom-checkbox-box {
+    outline: 2px solid #FF8A3D;
+    outline-offset: 2px;
+}
     .auth-card input {
     color: #0B1F3B !important;
     background: #fff !important;
@@ -44,9 +145,19 @@
 
         <p id="forgot-password-link">Forgot Password?</p>
 
-        <p id="signup-legal" style="display:none; font-size:11px; color:#999; text-align:center; margin-top:14px; line-height:1.5;">
-    By creating an account, you agree to Winnowic's <a href="/Terms.html" style="color:#0B1F3B; font-weight:600;">Terms of Use</a> and <a href="/privacy.html" style="color:#0B1F3B; font-weight:600;">Privacy Policy</a>.
+        <p id="login-legal" style="font-size:11px; color:#999; text-align:center; margin-top:14px; line-height:1.5;">
+    By logging in, you agree to Winnowic's latest <a href="/Terms.html" style="color:#0B1F3B; font-weight:600;">Terms of Use</a> and <a href="/privacy.html" style="color:#0B1F3B; font-weight:600;">Privacy Policy</a>.
 </p>
+
+<div id="signup-legal" style="display:none; margin-top:14px;">
+    <label class="custom-checkbox-label">
+        <input type="checkbox" id="agree-terms-checkbox">
+        <span class="custom-checkbox-box"></span>
+        <span class="custom-checkbox-text">
+            I have read and agree to Winnowic's <a href="/Terms.html" style="color:#FF8A3D; font-weight:600;">Terms of Use</a> and <a href="/privacy.html" style="color:#FF8A3D; font-weight:600;">Privacy Policy</a>.
+        </span>
+    </label>
+</div>
 
         <button id="auth-submit-btn">
             Login

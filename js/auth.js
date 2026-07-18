@@ -52,8 +52,16 @@ export async function handleLoggedInUser(user) {
 // Sign Up
 // ─────────────────────────────────────────────
 export async function signUp() {
+    const agreeCheckbox = document.getElementById("agree-terms-checkbox");
+    if (agreeCheckbox && !agreeCheckbox.checked) {
+        const msg = document.getElementById("auth-message");
+        if (msg) { msg.textContent = "Please agree to the Terms of Use and Privacy Policy."; msg.style.color = "#ff6b6b"; }
+        return;
+    }
+
     const email    = document.getElementById("auth-email")?.value;
     const password = document.getElementById("auth-password")?.value;
+    // ... rest stays the same
 
     if (!email || !password) {
         const msg = document.getElementById("auth-message");
@@ -277,6 +285,7 @@ if (loginTab) loginTab.classList.add("active");
 if (loginTab) {
    loginTab.addEventListener("click", () => {
         document.getElementById('signup-legal').style.display = 'none';
+        document.getElementById('login-legal').style.display = 'block';
         authMode = "login";
         if (authTitle) authTitle.textContent = "Welcome Back";
         if (submitBtn) submitBtn.textContent = "Login";
@@ -287,6 +296,7 @@ if (loginTab) {
 
 if (signupTab) {
     signupTab.addEventListener("click", () => {
+        document.getElementById('login-legal').style.display = 'none';
         document.getElementById('signup-legal').style.display = 'block';
         authMode = "signup";
         if (authTitle) authTitle.textContent = "Create Account";

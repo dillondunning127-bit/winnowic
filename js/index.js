@@ -3,16 +3,6 @@
 import { initAuthListener } from './auth.js';
 initAuthListener();
 /* ── Scroll reveal ── */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("reveal-visible");
-    }
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll(".reveal-on-scroll")
-  .forEach(el => revealObserver.observe(el));
 
 /* ── Animated stat counters ── */
 const statObserver = new IntersectionObserver((entries) => {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" href="/assets/Logo-Small.png">
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <title>Winnowic: Free SAT Math Diagnostic Test, Predicted Score & Study Plan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .score-track-section {
     padding: 60px 0;
     background: #fff;
+    z-index: 1;
 }
 
 .score-track-inner {
@@ -195,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* ── Study plan preview section ── */
 .study-plan-preview-section {
+  z-index: 1;
     padding: 60px 0;
     background: #F8F6F0;
 }
@@ -420,16 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
     <style>
-        @media (max-width: 860px) {
-    .premium-feature-grid {
-        grid-template-columns: 1fr 1fr !important;
-    }
-}
-@media (max-width: 540px) {
-    .premium-feature-grid {
-        grid-template-columns: 1fr !important;
-    }
-}
+     
         .floating-cta {
     /* keep existing yellow/navy styles from before,
        but remove any animation class that was on it */
@@ -444,6 +437,10 @@ document.addEventListener('DOMContentLoaded', function() {
         text-align: center;
     }
  
+    .premium-feature-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
     .hero-section h1 {
         font-size: 28px !important;
     }
@@ -469,7 +466,11 @@ document.addEventListener('DOMContentLoaded', function() {
         max-width: 100% !important;
     }
 }
- 
+ @media (max-width: 540px) {
+    .premium-feature-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
 /* Feature strip — 2 columns on tablet, 1 on mobile */
 @media (max-width: 860px) {
     .feature-strip {
@@ -733,7 +734,7 @@ document.addEventListener('DOMContentLoaded', function() {
           font-size: 50px;
       ">
         Find Your Weak Spots.<br>
-        <span style="color:#FFD84D;">Study Smarter for <br>SAT Math.</span>
+        <span style="color:#FFD84D;">Know Exactly What to<br>Study Next.</span>
       </h1>
 
       <p style="
@@ -1522,7 +1523,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <!-- Feature grid -->
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:32px;">
+    <div class="premium-feature-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:32px; ">
 
       <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
         <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
@@ -1626,6 +1627,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <a href="/contact.html" class="footer-link">Contact</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
         <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
+
     </nav>
     <div class="footer-social">
         <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">

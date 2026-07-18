@@ -2024,17 +2024,6 @@ body {
 /* SCROLL REVEAL */
 /* ========================= */
 
-.reveal-on-scroll {
-  opacity: 0;
-
-  transform:
-    translateY(40px);
-
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
-}
-
 .reveal-visible {
   opacity: 1;
 

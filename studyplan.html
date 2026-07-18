@@ -367,23 +367,30 @@ body.study-plan-page::after {
 <body>
 
 <header class="site-header">
+
+    <!-- ROW 1: white background — logo left, auth/gear right -->
     <div class="header-row-1">
-        <div class="header-row-1-left">
-            <a href="/index.html" style="display:inline-flex; text-decoration:none;">
-                <img src="/assets/Logo-Large.png"
-                     class="header-logo-img header-logo-large"
-                     alt="Winnowic">
-                <img src="/assets/Logo-Small.png"
-                     class="header-logo-img header-logo-small"
-                     alt="Winnowic">
-            </a>
-        </div>
+
+        <!-- LEFT: Logo -->
+         <div class="header-row-1-left">
+        <a href="/index.html" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none;">
+            <img src="/assets/Logo-Large.png" class="header-logo-img header-logo-large" alt="Winnowic">
+            <img src="/assets/Logo-Small.png" class="header-logo-img header-logo-small" alt="Winnowic">
+            <span style="font-size:10px; font-weight:700; color:#0B1F3B; opacity:0.4; vertical-align:super; margin-left:1px; font-family:'Inter',sans-serif; line-height:1;">TM</span>
+        </a>
+    </div>
+
+        <!-- RIGHT: Create Account (logged out) or Gear (logged in) -->
         <div class="header-row-1-right">
+
+            <!-- Upgrade pill — hidden on index, shown on other pages when logged in -->
             <button id="header-upgrade-btn"
                     onclick="window.location.href='/pricing.html'"
                     style="display:none;">
                 Upgrade to Premium
             </button>
+
+            <!-- Gear (logged in) -->
             <div class="account-menu" style="position:relative;">
                 <button id="account-gear" class="gear-btn"
                         style="display:none;" aria-label="Account settings">
@@ -402,12 +409,17 @@ body.study-plan-page::after {
                     </button>
                 </div>
             </div>
+
+            <!-- Create Account (logged out) -->
             <button id="header-auth-btn" class="header-auth-link">
                 Create Account
             </button>
+
         </div>
     </div>
-    <div class="header-row-2">
+
+    <!-- ROW 2: dark navy — nav links -->
+     <div class="header-row-2">
         <button class="header-nav-link"
                 onclick="window.location.href='/diagnostics.html'">
             Premium Diagnostics
@@ -425,10 +437,11 @@ body.study-plan-page::after {
             Pricing
         </button>
         <button class="header-nav-link"
-                onclick="window.location.href='/feedback.html'">
-            Feedback
-        </button>
+            onclick="window.location.href='/contact.html'">
+        Contact
+    </button>
     </div>
+
 </header>
 
 <div class="plan-container">
@@ -451,14 +464,18 @@ body.study-plan-page::after {
 </div>
 
 <footer class="site-footer">
-    <div class="footer-left">© 2026 <span>Winnowic™</span> · All rights reserved</div>
+    <div class="footer-left">
+        © 2026 <span>Winnowic™</span> · All rights reserved
+        <span style="display:block; font-size:10px; color:rgba(255,255,255,0.3); margin-top:3px; font-style:italic;">Patent Pending Diagnostic Technology</span>
+    </div>
     <nav class="footer-links">
         <a href="/pricing.html" class="footer-link">Pricing</a>
         <a href="/diagnostics.html" class="footer-link">Diagnostics</a>
           <a href="/studyplan.html" class="footer-link">Study Plan</a>
-        <a href="/feedback.html" class="footer-link">Feedback</a>
+        <a href="/contact.html" class="footer-link">Contact</a>
         <a href="/privacy.html" class="footer-link">Privacy Policy</a>
         <a href="/Terms.html" class="footer-link">Terms & Conditions</a>
+
     </nav>
     <div class="footer-social">
         <a href="https://www.tiktok.com/@trywinnowic" target="_blank" class="footer-social-link" aria-label="TikTok">

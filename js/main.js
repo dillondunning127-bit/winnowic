@@ -587,38 +587,6 @@ if (heroStartBtn) {
 }
 
 /* ========================= */
-/* SCROLL REVEAL ANIMATIONS */
-/* ========================= */
-
-const revealElements = document.querySelectorAll(".reveal-on-scroll");
-
-const revealObserver = new IntersectionObserver(
-
-  (entries) => {
-
-    entries.forEach((entry) => {
-
-      if (entry.isIntersecting) {
-
-        entry.target.classList.add("reveal-visible");
-
-      }
-
-    });
-
-  },
-
-  {
-    threshold: 0.12
-  }
-
-);
-
-revealElements.forEach((el) => {
-  revealObserver.observe(el);
-});
-
-/* ========================= */
 /* ANIMATED STATS */
 /* ========================= */
 
