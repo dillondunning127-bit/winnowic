@@ -6210,8 +6210,6 @@ video {
     .hero-section {
         min-height: 380px;
         padding: 60px 18px 50px;
-        border-bottom-left-radius: 24px;
-        border-bottom-right-radius: 24px;
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
@@ -6955,7 +6953,7 @@ video {
     }
  
     .numpad-grid {
-        max-width: 100%;
+        max-width: 90%;
     }
  
     #choice-a,
@@ -6964,5 +6962,24 @@ video {
     #choice-d {
         font-size: 14px;
         padding: 12px 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .numpad-grid {
+      
+        gap: 5px;
+    }
+
+    .numpad-key {
+        padding: 10px 0;
+        font-size: 15px;
+      min-width: 90px !important;
+    }
+
+    .numpad-display {
+        font-size: 18px;
+        padding: 10px 14px;
+        min-height: 46px;
     }
 }

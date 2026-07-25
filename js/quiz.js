@@ -165,16 +165,16 @@ case 'piecewise': {
     const datasets = config.segments.map(seg => {
         const { slope, intercept, xRange: segRange } = seg;
         const [segMin, segMax] = segRange;
-        const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
         const points = buildPoints(x => slope * x + intercept, segMin, segMax, 2);
         allPoints.push(...points);
         return { data: points, ...lineStyle };
     });
 
-    const overallXMin = Math.min(...config.segments.map(s => s.xRange[0]));
-    const overallXMax = Math.max(...config.segments.map(s => s.xRange[1]));
-    
+    const rawXMin = Math.min(...config.segments.map(s => s.xRange[0]));
+    const rawXMax = Math.max(...config.segments.map(s => s.xRange[1]));
+    const [overallXMin, overallXMax] = enforceMinXRange(rawXMin, rawXMax);
     const [yMin, yMax] = computeSquareYRange(allPoints, overallXMin, overallXMax);
+    
 
     currentChartInstance = new Chart(canvas, {
         type: 'line',
@@ -241,8 +241,8 @@ case 'scatter': {
 
         case 'line': {
     const { slope, intercept } = config.function;
-    
-    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
+    const [rawXMin, rawXMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax);// enforce minimum
     const points = buildPoints(x => slope * x + intercept, xMin, xMax, 2);
     const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
     const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
@@ -285,7 +285,8 @@ case 'scatter': {
 
         case 'quadratic': {
     const { a, b, c } = config.function;
-    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
+    const [rawXMin, rawXMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax);// enforce minimum
     const points = buildPoints(x => a * x * x + b * x + c, xMin, xMax, 100);
     const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
     const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);   // ← new
@@ -306,7 +307,8 @@ case 'scatter': {
 
 case 'exponential': {
     const { a, b } = config.function;
-    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
+    const [rawXMin, rawXMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax);// enforce minimum
     const points = buildPoints(x => a * Math.pow(b, x), xMin, xMax, 100);
     const [yMin, yMax] = computeSquareYRange(points, xMin, xMax);
     const axisDatasets = buildAxisDatasets(xMin, xMax, yMin, yMax);
@@ -327,7 +329,8 @@ case 'exponential': {
 
 case 'logarithmic': {
     const { a, b, c } = config.function;
-    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
+    const [rawXMin, rawXMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax);// enforce minimum
     const points = buildPoints(
         x => x > 0 ? a * (Math.log(x) / Math.log(b)) + c : NaN,
         Math.max(xMin, 0.01),
@@ -353,7 +356,8 @@ case 'logarithmic': {
 
 case 'rational': {
     const { a, h, k } = config.function;
-    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax); // enforce minimum
+    const [rawXMin, rawXMax] = config.xRange;
+    const [xMin, xMax] = enforceMinXRange(rawXMin, rawXMax);// enforce minimum
     const raw = buildPoints(
         x => Math.abs(x - h) < 0.01 ? NaN : a / (x - h) + k,
         xMin, xMax, 200
@@ -385,12 +389,13 @@ case 'rational': {
             const steps = 200;
             const xs = points.map(p => p.x);
 const ys = points.map(p => p.y);
-const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
             for (let i = 0; i <= steps; i++) {
                 const theta = tMin + (i / steps) * (tMax - tMin);
                 const r = a + b * (trig === 'sin' ? Math.sin(theta) : Math.cos(theta));
                 points.push({ x: r * Math.cos(theta), y: r * Math.sin(theta) });
             }
+            const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
+
             currentChartInstance = new Chart(canvas, {
                 type: 'line',
                 data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
@@ -413,11 +418,12 @@ const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.mi
             const steps = 100;
             const xs = points.map(p => p.x);
 const ys = points.map(p => p.y);
-const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
             for (let i = 0; i <= steps; i++) {
                 const t = tMin + (i / steps) * (tMax - tMin);
                 points.push({ x: ax * t + bx, y: ay * t + by });
             }
+            const axisDatasets = buildAxisDatasets(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
+
             currentChartInstance = new Chart(canvas, {
                 type: 'line',
                 data: { datasets: [...axisDatasets, { data: points, ...lineStyle }] },
