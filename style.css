@@ -6102,8 +6102,8 @@ video {
 
     /* Dropdown anchors correctly */
     .account-dropdown {
-        left: 0;
-        right: auto;
+        left: auto;
+        right: 0;
         min-width: 180px;
     }
 
