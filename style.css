@@ -5478,8 +5478,8 @@ video {
   }
 
   .unit-expand-btn{
-
-    width:36px;
+    min-width: 36px !important;
+    width:36px !important;
     height:36px;
 
     flex-shrink:0;

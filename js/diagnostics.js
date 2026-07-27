@@ -960,7 +960,7 @@ div.classList.add("unit-card");
   <div class="unit-card-modern">
 
     <!-- TOP ROW -->
-    <div class="unit-card-header">
+   
 
       <div class="unit-card-left">
         <div class="unit-card-title">
@@ -997,7 +997,7 @@ div.classList.add("unit-card");
 
       </div>
 
-    </div>
+  
 
     <!-- PROGRESS BAR -->
     <div class="unit-progress-bg">
