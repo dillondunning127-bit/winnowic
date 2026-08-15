@@ -1850,7 +1850,7 @@ if (isDiagnosticMode) {
     document.getElementById("next-nav-btn").style.display = "none";
     document.getElementById("explanation").textContent = "";
     document.getElementById("grid-container").style.display = "none";
-    document.getElementById("question-image-container").style.display = "none";
+    document.getElementById("question-chart").style.display = "none";
     document.getElementById("progress-container").textContent = "";
     document.getElementById("progress-bar").style.width = "0%";
     ["choice-a","choice-b","choice-c","choice-d"].forEach(id => {
