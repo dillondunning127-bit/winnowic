@@ -444,7 +444,8 @@ document.addEventListener('DOMContentLoaded', function() {
    ========================================= */
 
 .ww-header-inner {
-  width: min(1180px, 100%);
+  width: 100%;
+  max-width: 1180px;
   height: 68px;
 
   margin: 0 auto;
@@ -452,8 +453,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   display: flex;
   align-items: center;
-
   gap: 28px;
+}
+@media (max-width: 480px) {
+
+  #hero-diagnostic-btn {
+    width: 100% !important;
+    max-width: 320px !important;
+
+    padding: 15px 18px !important;
+
+    font-size: 14px !important;
+
+    white-space: normal !important;
+
+    justify-content: center;
+    text-align: center;
+  }
+
 }
 
 
@@ -632,9 +649,10 @@ width: 38px !important;
   position: absolute;
 
   top: 100%;
-  right: 16px;
+  right: 14px;
 
-  width: min(280px, calc(100vw - 32px));
+  width: 280px;
+  max-width: calc(100vw - 28px);
 
   padding: 8px;
 
@@ -958,6 +976,23 @@ width: 38px !important;
         @media (max-width: 480px) {
             .feature-strip { grid-template-columns: 1fr; }
         }
+        /* =========================================
+   GLOBAL WIDTH / MOBILE FIX
+   ========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: clip;
+}
     </style>
 </head>
 
@@ -2813,7 +2848,7 @@ width: 38px !important;
 
   padding: 58px 24px;
 
-  background: #ffffff;
+background: #F8F6F0;
 
   overflow: hidden;
 }
