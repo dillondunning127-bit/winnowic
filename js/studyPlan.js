@@ -45,7 +45,20 @@ window.addEventListener('DOMContentLoaded', async () => {
     loading.style.display = 'none';
     content.style.display = 'block';
 
-    renderPlan(content, user, unitAccuracy, goal);
+    // ---------------------------------------------
+    // REQUIRE GOAL + TEST DATE BEFORE PLAN CREATION
+    // ---------------------------------------------
+    const hasCompleteGoal =
+        goal?.test_date &&
+        goal?.target_score;
+
+    if (!hasCompleteGoal) {
+        renderGoalSetup(content, user, unitAccuracy, goal);
+        return;
+    }
+
+    // Goal is complete — safe to generate/load the plan
+    await renderPlan(content, user, unitAccuracy, goal);
 });
 
 // ─────────────────────────────────────────────
@@ -289,11 +302,207 @@ function applyWeekProgress(schedule, planStartDate) {
     }));
 }
 
+function renderGoalSetup(container, user, unitAccuracy, existingGoal = null) {
+    const today = new Date().toISOString().split('T')[0];
+
+    container.innerHTML = `
+        <div style="
+            max-width: 520px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        ">
+            <div style="
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: #777;
+                margin-bottom: 8px;
+            ">
+                One last step
+            </div>
+
+            <h1 style="
+                margin: 0 0 10px;
+                color: #0B1F3B;
+                font-size: 28px;
+            ">
+                Build Your Study Plan
+            </h1>
+
+            <p style="
+                color: #666;
+                line-height: 1.5;
+                margin: 0 0 26px;
+            ">
+                Tell us your SAT Math goal and test date so we can build
+                a study plan around your diagnostic results.
+            </p>
+
+            <div style="margin-bottom:18px;">
+                <label style="
+                    display:block;
+                    font-size:13px;
+                    font-weight:600;
+                    color:#0B1F3B;
+                    margin-bottom:6px;
+                ">
+                    Target Score
+                </label>
+
+                <input
+                    type="number"
+                    id="initial-goal-score"
+                    class="modern-select"
+                    min="200"
+                    max="800"
+                    step="10"
+                    placeholder="e.g. 700"
+                    value="${existingGoal?.target_score || ''}"
+                    style="
+                        width:100%;
+                        padding:12px;
+                        box-sizing:border-box;
+                    "
+                >
+            </div>
+
+            <div style="margin-bottom:8px;">
+                <label style="
+                    display:block;
+                    font-size:13px;
+                    font-weight:600;
+                    color:#0B1F3B;
+                    margin-bottom:6px;
+                ">
+                    Test Date
+                </label>
+
+                <input
+                    type="date"
+                    id="initial-goal-date"
+                    class="modern-select"
+                    min="${today}"
+                    value="${existingGoal?.test_date || ''}"
+                    style="
+                        width:100%;
+                        padding:12px;
+                        box-sizing:border-box;
+                    "
+                >
+            </div>
+
+            <div
+                id="initial-goal-error"
+                style="
+                    min-height:20px;
+                    color:#C62828;
+                    font-size:13px;
+                    margin:8px 0 12px;
+                "
+            ></div>
+
+            <button
+                id="create-plan-btn"
+                class="btn-primary"
+                style="
+                    width:100%;
+                    padding:13px 20px;
+                    font-size:14px;
+                    font-weight:700;
+                "
+            >
+                Create My Study Plan →
+            </button>
+        </div>
+    `;
+
+    const button = document.getElementById('create-plan-btn');
+
+    button.addEventListener('click', async () => {
+        const scoreInput = document.getElementById('initial-goal-score');
+        const dateInput  = document.getElementById('initial-goal-date');
+        const errorEl    = document.getElementById('initial-goal-error');
+
+        const score = parseInt(scoreInput.value);
+        const date  = dateInput.value;
+
+        errorEl.textContent = '';
+
+        // Both are REQUIRED
+        if (!scoreInput.value || !date) {
+            errorEl.textContent =
+                'Please enter both your target score and test date.';
+            return;
+        }
+
+        // Validate SAT Math score
+        if (
+            Number.isNaN(score) ||
+            score < 200 ||
+            score > 800 ||
+            score % 10 !== 0
+        ) {
+            errorEl.textContent =
+                'Target score must be between 200 and 800 in increments of 10.';
+            return;
+        }
+
+        // Validate test date
+        const selectedDate = new Date(date + 'T12:00:00');
+        const todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate < todayDate) {
+            errorEl.textContent =
+                'Please choose a test date in the future.';
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = 'Creating your plan...';
+
+        try {
+            // Save goal first
+            await saveUserGoal(EXAM, date, score);
+
+            // Re-fetch it so renderPlan receives the persisted value
+            const savedGoal = await getUserGoal(EXAM);
+
+            if (!savedGoal?.test_date || !savedGoal?.target_score) {
+                throw new Error('Goal was not saved correctly.');
+            }
+
+            // NOW generate the study plan
+            await renderPlan(
+                container,
+                user,
+                unitAccuracy,
+                savedGoal
+            );
+
+        } catch (error) {
+            console.error('Error creating study plan:', error);
+
+            errorEl.textContent =
+                'We could not create your study plan. Please try again.';
+
+            button.disabled = false;
+            button.textContent = 'Create My Study Plan →';
+        }
+    });
+}
+
 // ─────────────────────────────────────────────
 // Render full plan
 // ─────────────────────────────────────────────
 async function renderPlan(container, user, unitAccuracy, goal) {
-    const daysUntil = goal?.test_date ? getDaysUntilTest(goal.test_date) : null;
+    let daysUntil = goal?.test_date
+    ? getDaysUntilTest(goal.test_date)
+    : null;
 
     const totalAttempts = Object.values(unitAccuracy);
     const avgAccuracy = totalAttempts.length > 0
@@ -518,6 +727,9 @@ async function renderPlan(container, user, unitAccuracy, goal) {
             if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
             await saveUserGoal(EXAM, date || null, score ? parseInt(score) : null);
             goal = await getUserGoal(EXAM);
+            daysUntil = goal?.test_date
+    ? getDaysUntilTest(goal.test_date)
+    : null;
             // Keep the saved plan's progress intact, just update its test_date field
             await savePlan(
                 user.id, EXAM, schedule, sessionsPerWeek,
