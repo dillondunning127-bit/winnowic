@@ -10,7 +10,7 @@
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <meta name="description" content="Free SAT Math diagnostic, personalized study plan, and daily practice questions. Get your predicted score range and find your weak areas in 20 minutes — no account required.">
+    <meta name="description" content="Free SAT Math diagnostic, personalized study plan, and daily practice questions. Get your predicted score range and find your weak areas in 20 minutes, no account required.">
 <meta name="keywords" content="SAT math practice, free SAT diagnostic, SAT math study plan, SAT math questions, SAT math prep">
 <meta property="og:title" content="Winnowic — Free SAT Math Diagnostic & Study Plan">
 <meta property="og:description" content="Take a free 20-question SAT Math diagnostic. Get your predicted score range, a personalized week-by-week study plan, and daily practice questions targeting your weakest units.">
@@ -421,6 +421,344 @@ document.addEventListener('DOMContentLoaded', function() {
     .sp-mock-body { padding: 18px 18px; }
     .sp-mock-stat-val { font-size: 20px; }
 }
+/* =========================================
+   WINNOWIC — NEW HEADER
+   ========================================= */
+
+.ww-header {
+  position: relative;
+  z-index: 1000;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid rgba(11,31,59,0.07);
+
+  box-shadow: 0 2px 12px rgba(11,31,59,0.04);
+}
+
+
+/* =========================================
+   MAIN ROW
+   ========================================= */
+
+.ww-header-inner {
+  width: min(1180px, 100%);
+  height: 68px;
+
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+}
+
+
+/* =========================================
+   LOGO
+   ========================================= */
+
+.ww-header-logo {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+}
+
+
+/* =========================================
+   DESKTOP NAV
+   ========================================= */
+
+.ww-desktop-nav {
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 27px;
+}
+
+.ww-header-link {
+  position: relative;
+
+  padding: 24px 0 22px;
+
+  color: #0B1F3B;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  opacity: 0.72;
+
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+}
+
+.ww-header-link:hover {
+  opacity: 1;
+}
+
+
+/* subtle hover underline */
+
+.ww-header-link::after {
+  content: '';
+
+  position: absolute;
+
+  left: 50%;
+  bottom: 16px;
+
+  width: 0;
+  height: 2px;
+
+  transform: translateX(-50%);
+
+  border-radius: 2px;
+
+  background: #FFD84D;
+
+  transition: width 0.15s ease;
+}
+
+.ww-header-link:hover::after {
+  width: 100%;
+}
+
+
+/* =========================================
+   RIGHT ACTIONS
+   ========================================= */
+
+.ww-header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+
+/* Keep account controls nicely aligned */
+
+.ww-header-actions .gear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================
+   HAMBURGER
+   ========================================= */
+
+.ww-mobile-menu-button {
+  display: none;
+
+  height: 38px;
+  min-width: 0 !important;
+width: 38px !important;
+  padding: 9px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  transition: background 0.15s ease;
+}
+
+.ww-mobile-menu-button:hover {
+  background: rgba(11,31,59,0.05);
+}
+
+.ww-mobile-menu-button span {
+  display: block;
+
+  width: 19px;
+  height: 2px;
+
+  border-radius: 5px;
+
+  background: #0B1F3B;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+/* Turn hamburger into X when opened */
+
+.ww-mobile-menu-button.open span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.ww-mobile-menu-button.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.ww-mobile-menu-button.open span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+
+/* =========================================
+   MOBILE DROPDOWN
+   ========================================= */
+
+.ww-mobile-menu {
+  display: none;
+
+  position: absolute;
+
+  top: 100%;
+  right: 16px;
+
+  width: min(280px, calc(100vw - 32px));
+
+  padding: 8px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(11,31,59,0.08);
+  border-radius: 14px;
+
+  box-shadow:
+    0 18px 45px rgba(11,31,59,0.14),
+    0 4px 12px rgba(11,31,59,0.06);
+}
+
+.ww-mobile-menu.open {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.ww-mobile-menu a {
+  display: flex;
+  align-items: center;
+
+  min-height: 45px;
+
+  padding: 0 14px;
+
+  border-radius: 9px;
+
+  color: #0B1F3B;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: background 0.15s ease;
+}
+
+.ww-mobile-menu a:hover {
+  background: rgba(255,216,77,0.18);
+}
+
+
+/* Separate the last item slightly */
+
+.ww-mobile-menu a:last-child {
+  border-top: 1px solid rgba(11,31,59,0.07);
+
+  margin-top: 4px;
+  padding-top: 2px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1000px) {
+
+  .ww-desktop-nav {
+    gap: 19px;
+  }
+
+  .ww-header-link {
+    font-size: 12px;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .ww-header-inner {
+    height: 64px;
+
+    padding: 0 18px;
+  }
+
+  /* Hide desktop navigation */
+  .ww-desktop-nav {
+    display: none;
+  }
+
+  /* Push account/menu controls right */
+  .ww-header-actions {
+    margin-left: auto;
+  }
+
+  /* Show hamburger */
+  .ww-mobile-menu-button {
+    display: flex;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .ww-header-inner {
+    padding: 0 14px;
+
+    gap: 8px;
+  }
+
+  .ww-header-actions {
+    gap: 5px;
+  }
+
+  .ww-mobile-menu-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  /*
+    Keeps Create Account from becoming oversized
+    on narrow phones.
+  */
+  #header-auth-btn {
+    font-size: 12px !important;
+  }
+
+}
 </style>
     <style>
      
@@ -632,81 +970,183 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================= -->
 <!-- TOP NAVIGATION -->
 <!-- ========================= -->
-<header class="site-header">
+<!-- ========================= -->
+<!-- TOP NAVIGATION -->
+<!-- ========================= -->
 
-    <!-- ROW 1: white background — logo left, auth/gear right -->
-    <div class="header-row-1">
+<header class="site-header ww-header">
 
-        <!-- LEFT: Logo -->
-         <div class="header-row-1-left">
-        <a href="/index.html" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none;">
-            <img src="/assets/Logo-Large.png" class="header-logo-img header-logo-large" alt="Winnowic">
-            <img src="/assets/Logo-Small.png" class="header-logo-img header-logo-small" alt="Winnowic">
-            <span style="font-size:10px; font-weight:700; color:#0B1F3B; opacity:0.4; vertical-align:super; margin-left:1px; font-family:'Inter',sans-serif; line-height:1;">TM</span>
-        </a>
+  <div class="ww-header-inner">
+
+    <!-- LOGO -->
+    <div class="ww-header-logo">
+
+      <a href="/index.html"
+         style="display:inline-flex; align-items:center; gap:4px; text-decoration:none;">
+
+        <img
+          src="/assets/Logo-Large.png"
+          class="header-logo-img header-logo-large"
+          alt="Winnowic"
+        >
+
+        <img
+          src="/assets/Logo-Small.png"
+          class="header-logo-img header-logo-small"
+          alt="Winnowic"
+        >
+
+        <span style="
+          font-size:10px;
+          font-weight:700;
+          color:#0B1F3B;
+          opacity:0.4;
+          vertical-align:super;
+          margin-left:1px;
+          font-family:'Inter',sans-serif;
+          line-height:1;
+        ">
+          TM
+        </span>
+
+      </a>
+
     </div>
 
-        <!-- RIGHT: Create Account (logged out) or Gear (logged in) -->
-        <div class="header-row-1-right">
 
-            <!-- Upgrade pill — hidden on index, shown on other pages when logged in -->
-            <button id="header-upgrade-btn"
-                    onclick="window.location.href='/pricing.html'"
-                    style="display:none;">
-                Upgrade to Premium
-            </button>
+    <!-- DESKTOP NAVIGATION -->
+    <nav class="ww-desktop-nav">
 
-            <!-- Gear (logged in) -->
-            <div class="account-menu" style="position:relative;">
-                <button id="account-gear" class="gear-btn"
-                        style="display:none;" aria-label="Account settings">
-                    <i data-lucide="settings"></i>
-                </button>
-                <div id="account-dropdown" class="account-dropdown" style="display:none;">
-                    <div id="account-email" class="dropdown-email"></div>
-                    <button id="logout-btn" class="dropdown-item">
-                        <i data-lucide="log-out"></i> Log Out
-                    </button>
-                    <button id="cnclsub-btn" class="dropdown-item">
-                        <i data-lucide="x-circle"></i> Cancel Subscription
-                    </button>
-                    <button id="dltact-btn" class="dropdown-item danger">
-                        <i data-lucide="trash-2"></i> Delete Account
-                    </button>
-                </div>
-            </div>
+      <a href="/diagnostics.html" class="ww-header-link">
+        Premium Diagnostics
+      </a>
 
-            <!-- Create Account (logged out) -->
-            <button id="header-auth-btn" class="header-auth-link">
-                Create Account
-            </button>
+      <a href="/quiz.html" class="ww-header-link">
+        Study Questions
+      </a>
+
+      <a href="/studyplan.html" class="ww-header-link">
+        Study Plan
+      </a>
+
+      <a href="/pricing.html" class="ww-header-link">
+        Pricing
+      </a>
+
+      <a href="/contact.html" class="ww-header-link">
+        Contact
+      </a>
+
+    </nav>
+
+
+    <!-- RIGHT SIDE -->
+    <div class="ww-header-actions">
+
+      <!-- Upgrade pill -->
+      <button
+        id="header-upgrade-btn"
+        onclick="window.location.href='/pricing.html'"
+        style="display:none;"
+      >
+        Upgrade to Premium
+      </button>
+
+
+      <!-- Account Gear -->
+      <div class="account-menu" style="position:relative;">
+
+        <button
+          id="account-gear"
+          class="gear-btn"
+          style="display:none;"
+          aria-label="Account settings"
+        >
+          <i data-lucide="settings"></i>
+        </button>
+
+
+        <div
+          id="account-dropdown"
+          class="account-dropdown"
+          style="display:none;"
+        >
+
+          <div id="account-email" class="dropdown-email"></div>
+
+          <button id="logout-btn" class="dropdown-item">
+            <i data-lucide="log-out"></i>
+            Log Out
+          </button>
+
+          <button id="cnclsub-btn" class="dropdown-item">
+            <i data-lucide="x-circle"></i>
+            Cancel Subscription
+          </button>
+
+          <button id="dltact-btn" class="dropdown-item danger">
+            <i data-lucide="trash-2"></i>
+            Delete Account
+          </button>
 
         </div>
+
+      </div>
+
+
+      <!-- CREATE ACCOUNT -->
+      <button
+        id="header-auth-btn"
+        class="header-auth-link"
+      >
+        Create Account
+      </button>
+
+
+      <!-- MOBILE MENU BUTTON -->
+      <button
+        id="ww-mobile-menu-button"
+        class="ww-mobile-menu-button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="ww-mobile-menu"
+      >
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+      </button>
+
     </div>
 
-    <!-- ROW 2: dark navy — nav links -->
-     <div class="header-row-2">
-        <button class="header-nav-link"
-                onclick="window.location.href='/diagnostics.html'">
-            Premium Diagnostics
-        </button>
-        <button class="header-nav-link"
-                onclick="window.location.href='/quiz.html'">
-            Study Questions
-        </button>
-         <button class="header-nav-link"
-                onclick="window.location.href='/studyplan.html'">
-            Study Plan
-        </button>
-        <button class="header-nav-link"
-                onclick="window.location.href='/pricing.html'">
-            Pricing
-        </button>
-        <button class="header-nav-link"
-            onclick="window.location.href='/contact.html'">
-        Contact
-    </button>
-    </div>
+  </div>
+
+
+  <!-- MOBILE DROPDOWN -->
+  <div id="ww-mobile-menu" class="ww-mobile-menu">
+
+    <a href="/diagnostics.html">
+      Premium Diagnostics
+    </a>
+
+    <a href="/quiz.html">
+      Study Questions
+    </a>
+
+    <a href="/studyplan.html">
+      Study Plan
+    </a>
+
+    <a href="/pricing.html">
+      Pricing
+    </a>
+
+    <a href="/contact.html">
+      Contact
+    </a>
+
+  </div>
 
 </header>
 
@@ -719,90 +1159,149 @@ document.addEventListener('DOMContentLoaded', function() {
     min-height: auto !important;
 ">
   <div style="
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 28px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 120px;
-      align-items: center;
-  ">
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 90px;
+    align-items: center;
+">
 
-    <!-- LEFT: headline + description only -->
-    <div style="padding-left: 0px;">
-      <h1 class="hero-title" style="
-          margin: 0 0 16px;
-          font-size: 50px;
-      ">
-        Find Your Weak Spots.<br>
-        <span style="color:#FFD84D;">Know Exactly What to<br>Study Next.</span>
-      </h1>
+  <!-- LEFT -->
+  <div style="padding-left:0;">
 
-      <p style="
-          font-size: 18px;
-          color: rgba(255,255,255,0.78);
-          line-height: 1.75;
-          margin: 0;
-          max-width: 480px;
+    <h1 class="hero-title" style="
+        margin:0 0 20px;
+        font-size:50px;
+        line-height:1.08;
+    ">
+      Find Your Weak Spots.<br>
+      <span style="color:#FFD84D;">
+        Know Exactly What to<br>
+        Study Next.
+      </span>
+    </h1>
+<br>
+<div style="
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
+        margin-bottom:20px;
+        font-size:12px;
+        font-weight:800;
+        letter-spacing:1.5px;
+        color:#ffffff;
+    ">
+      <span style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          width:27px;
+          height:27px;
+          border-radius:50%;
+          background:#ffffff;
+          color:#0B1F3B;
+          font-size:11px;
+          font-weight:900;
+          letter-spacing:0;
       ">
-        Take a <strong style="color:#fff;">free 20-question SAT Math
-        diagnostic test</strong>. Get your
-        <strong style="color:#FFD84D;">predicted score range</strong>,
-        see which units are holding you back, and get a
-        <strong style="color:#fff;">personalized study plan</strong> —
-        in under <strong style="color:#FFD84D;">20 minutes</strong>.
-      </p>
+        01
+      </span>
+
+      START WITH A DIAGNOSTIC
     </div>
 
-    <!-- RIGHT: arrow image + button only -->
-    <div style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        position: relative;
+    <p class="ww-hero-mobile-hide-copy" style="
+        font-size:18px;
+        color:rgba(255,255,255,0.78);
+        line-height:1.65;
+        margin:0;
+        max-width:510px;
     ">
-      <!-- Arrow PNG from Canva — sits above the button -->
-      <!-- 
-        ARROW SPECS FOR CANVA:
-        - Canvas size: ~200px wide × 100px tall, transparent background
-        - Color: #FFD84D
-        - Shape: stretched U flipped vertically (∩ shape) —
-          starts bottom-left, arcs UP then curves back DOWN to bottom-right
-          with arrowhead pointing DOWN-RIGHT toward the button
-        - Style: dashed stroke ~3px, or solid — your choice
-        - Export as PNG with transparent background
-        - Save as /assets/hero-arrow.png
-      -->
-     
+      Start with a free SAT Math diagnostic.
+      In about 20 minutes, you'll see where you're losing points
+      and what to focus on next.
+    </p>
 
-      <button id="hero-diagnostic-btn" style="
-          display: block;
-          background: #FFD84D;
-          color: #0B1F3B;
-          border: none;
-          border-radius: 14px;
-          padding: 16px 28px;
-          font-size: 15px;
-          font-weight: 800;
-          cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: opacity 0.15s, transform 0.15s;
-          letter-spacing: -0.01em;
-          white-space: nowrap;
-          display: flex;
-          align-items: center;
-          gap: 8px;
+
+    <p style="
+        font-size:13px;
+        color:rgba(255,255,255,0.48);
+        line-height:1.5;
+        margin:14px 0 0;
+    ">
+      20 questions · ~20 minutes · Free to start
+    </p>
+
+  </div>
+
+
+  <!-- RIGHT -->
+  <div style="
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      position:relative;
+  ">
+
+      <div class="ww-hero-first-step" style="
+          font-size:12px;
+          font-weight:800;
+          letter-spacing:1.2px;
+          text-transform:uppercase;
+          color:#FFD84D;
+          margin-bottom:8px;
+      ">
+        Your first step
+      </div>
+
+    <button id="hero-diagnostic-btn"
+      style="
+          background:#FFD84D;
+          color:#0B1F3B;
+          border:none;
+          border-radius:14px;
+          padding:17px 30px;
+          font-size:15px;
+          font-weight:800;
+          cursor:pointer;
+          font-family:'Inter', sans-serif;
+          transition:opacity 0.15s, transform 0.15s;
+          letter-spacing:-0.01em;
+          white-space:nowrap;
+          display:flex;
+          align-items:center;
+          gap:8px;
       "
-      onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)';"
-      onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';"
-      >
-        Start Free SAT Math Diagnostic Test
-        <i data-lucide="arrow-right" style="width:17px;height:17px;flex-shrink:0;"></i>
-      </button>
+      onmouseover="
+          this.style.opacity='0.9';
+          this.style.transform='translateY(-1px)';
+      "
+      onmouseout="
+          this.style.opacity='1';
+          this.style.transform='translateY(0)';
+      "
+    >
+      Start Free SAT Math Diagnostic
+      <i data-lucide="arrow-right"
+         style="width:17px;height:17px;flex-shrink:0;"></i>
+    </button>
+
+
+    <div style="
+        margin-top:10px;
+        font-size:11px;
+        color:rgba(255,255,255,0.38);
+    ">
+      No account required
     </div>
 
   </div>
+
+</div>
 </section>
 
 <!-- Sentinel — floating CTA appears after this -->
@@ -812,63 +1311,91 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================= -->
 <!-- FEATURE STRIP -->
 <!-- ========================= -->
+<!-- ========================= -->
+<!-- FEATURE STRIP -->
+<!-- ========================= -->
+
 <div class="feature-strip" style="
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    background: #fff;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    margin: 0;
-    padding: 0;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    background:#fff;
+    box-shadow:0 4px 24px rgba(0,0,0,0.08);
+    margin:0;
+    padding:0;
 ">
 
-     <div class="feature-strip-item" style="padding: 18px 20px;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
-            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
-                <i data-lucide="activity" style="width:18px;height:18px;"></i>
-            </div>
-            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Smart Diagnostic Test</div>
-        </div>
-        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            <strong>Results in 20 minutes:</strong> 20 questions pinpoint exactly which SAT Math units are costing you points.
-        </div>
+  <!-- Diagnostic -->
+  <div class="feature-strip-item" style="padding:17px 20px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+      <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+        <i data-lucide="activity" style="width:18px;height:18px;"></i>
+      </div>
+
+      <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">
+        Smart Diagnostic
+      </div>
     </div>
- 
-    <div class="feature-strip-item" style="padding: 18px 20px;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
-            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
-                <i data-lucide="calendar" style="width:18px;height:18px;"></i>
-            </div>
-            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Personalized Study Plan</div>
-        </div>
-        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            <strong>Built from your results:</strong> Week-by-week schedule with daily batches, half tests, and full simulations timed to your test date.
-        </div>
+
+    <div class="feature-strip-why" style="font-size:12px; line-height:1.45;">
+      Pinpoint your weakest SAT Math areas in 20 questions.
     </div>
- 
-    <div class="feature-strip-item" style="padding: 18px 20px;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
-            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
-                <i data-lucide="trending-up" style="width:18px;height:18px;"></i>
-            </div>
-            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Track Your Progress</div>
-        </div>
-        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            <strong>Score updates in real time:</strong> Predicted SAT Math score range refreshes every 20 questions as weak areas become strengths.
-        </div>
+  </div>
+
+
+  <!-- Study Plan -->
+  <div class="feature-strip-item" style="padding:17px 20px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+      <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+        <i data-lucide="calendar" style="width:18px;height:18px;"></i>
+      </div>
+
+      <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">
+        Personalized Study Plan
+      </div>
     </div>
- 
-    <div class="feature-strip-item" style="padding: 18px 20px; border-right:none;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">
-            <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
-                <i data-lucide="trophy" style="width:18px;height:18px;"></i>
-            </div>
-            <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">Adaptive Practice</div>
-        </div>
-        <div class="feature-strip-why" style="font-size:12px; line-height:1.5;">
-            <strong>Targeted, not generic:</strong> Adaptive practice focuses every session automatically on your lowest-scoring units.
-        </div>
+
+    <div class="feature-strip-why" style="font-size:12px; line-height:1.45;">
+      Know exactly what to study each week.
     </div>
+  </div>
+
+
+  <!-- Progress -->
+  <div class="feature-strip-item" style="padding:17px 20px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+      <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+        <i data-lucide="trending-up" style="width:18px;height:18px;"></i>
+      </div>
+
+      <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">
+        Track Your Progress
+      </div>
+    </div>
+
+    <div class="feature-strip-why" style="font-size:12px; line-height:1.45;">
+      Watch your predicted score improve over time.
+    </div>
+  </div>
+
+
+  <!-- Adaptive Practice -->
+  <div class="feature-strip-item" style="padding:17px 20px; border-right:none;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+      <div class="feature-strip-icon" style="width:36px;height:36px;flex-shrink:0;">
+        <i data-lucide="trophy" style="width:18px;height:18px;"></i>
+      </div>
+
+      <div class="feature-strip-title" style="font-size:13px; line-height:1.2;">
+        Adaptive Practice
+      </div>
+    </div>
+
+    <div class="feature-strip-why" style="font-size:12px; line-height:1.45;">
+      Practice automatically focuses on your weak spots.
+    </div>
+  </div>
+
 </div>
 
 <!-- ========================= -->
@@ -893,321 +1420,1181 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
-<!-- ========================= -->
-<!-- HOW IT WORKS -->
-<!-- ========================= -->
-<section style="
-    padding: 64px 0;
-    background: #F8F6F0;
-    position: relative;
-    z-index: 10;
-">
-  <div style="max-width: 1100px; margin: 0 auto; padding: 0 24px;">
- 
-    <div style="text-align:center; margin-bottom:52px;">
-      <div style="
-          font-size: 11px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: #FF6B00;
-          margin-bottom: 10px;
-      ">HOW IT WORKS</div>
-      <h2 style="
-          font-size: 30px;
-          font-weight: 800;
-          color: #0B1F3B;
-          margin: 0 0 10px;
-          line-height: 1.2;
-      ">From zero to a personalized SAT Math plan — in 20 minutes</h2>
-      <p style="font-size: 15px; color: #666; margin: 0; max-width: 520px; margin: 0 auto;">
-        No tutor. No guesswork. Winnowic figures out what you need and builds
-        a plan around it — starting with a free diagnostic test.
-      </p>
-    </div>
- 
-    <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:20px;">
- 
-      <div style="
-          background: #fff;
-          border-radius: 20px;
-          border: 1px solid #f0f0f0;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-          padding: 28px 28px 28px 32px;
-          border-left: 4px solid #FFD84D;
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-      ">
-        <div style="
-            width: 44px;
-            height: 44px;
-            background: #0B1F3B;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-            font-weight: 800;
-            color: #FFD84D;
-            font-family: 'Inter', sans-serif;
-        ">1</div>
-        <div>
-          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">Take the Free Diagnostic Test</h3>
-          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
-            Answer 20 SAT Math questions covering all four units. No account needed.
-            Takes about 20 minutes. At the end, you get a
-            <strong style="color:#0B1F3B;">predicted score range</strong> and a clear
-            picture of where you're losing points.
-          </p>
-          <button id="step1-diagnostic-btn" style="
-              margin-top: 14px;
-              background: #FFD84D;
-              color: #0B1F3B;
-              border: none;
-              border-radius: 8px;
-              padding: 8px 18px;
-              font-size: 13px;
-              font-weight: 700;
-              cursor: pointer;
-              font-family: 'Inter', sans-serif;
-          ">Start Diagnostic Test →</button>
-        </div>
-      </div>
- 
-      <div style="
-          background: #fff;
-          border-radius: 20px;
-          border: 1px solid #f0f0f0;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-          padding: 28px 28px 28px 32px;
-          border-left: 4px solid rgba(11,31,59,0.15);
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-      ">
-        <div style="
-            width: 44px;
-            height: 44px;
-            background: #0B1F3B;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-            font-weight: 800;
-            color: #FFD84D;
-            font-family: 'Inter', sans-serif;
-        ">2</div>
-        <div>
-          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">See Exactly Where You're Losing Points</h3>
-          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
-            Your results break down by unit — Algebra, Advanced Math, Problem Solving,
-            and Geometry. You'll see your <strong style="color:#0B1F3B;">accuracy percentage per unit</strong>
-            and a predicted score range, so you know precisely what to work on first.
-          </p>
-        </div>
-      </div>
- 
-      <div style="
-          background: #fff;
-          border-radius: 20px;
-          border: 1px solid #f0f0f0;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-          padding: 28px 28px 28px 32px;
-          border-left: 4px solid rgba(11,31,59,0.15);
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-      ">
-        <div style="
-            width: 44px;
-            height: 44px;
-            background: #0B1F3B;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-            font-weight: 800;
-            color: #FFD84D;
-            font-family: 'Inter', sans-serif;
-        ">3</div>
-        <div>
-          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">Practice Daily — 10 Questions, ~10 Minutes</h3>
-          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
-            Every day, Winnowic generates a <strong style="color:#0B1F3B;">fresh batch of 10 questions</strong>
-            targeting your weakest units. Consistent daily practice is the single biggest
-            predictor of score improvement — streaks and reminders keep you on track.
-          </p>
-        </div>
-      </div>
- 
-      <div style="
-          background: #fff;
-          border-radius: 20px;
-          border: 1px solid #f0f0f0;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-          padding: 28px 28px 28px 32px;
-          border-left: 4px solid rgba(11,31,59,0.15);
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-      ">
-        <div style="
-            width: 44px;
-            height: 44px;
-            background: #0B1F3B;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-            font-weight: 800;
-            color: #FFD84D;
-            font-family: 'Inter', sans-serif;
-        ">4</div>
-        <div>
-          <h3 style="font-size:16px; font-weight:800; color:#0B1F3B; margin:0 0 6px;">Watch Your Score Climb</h3>
-          <p style="font-size:14px; color:#666; line-height:1.65; margin:0;">
-            Your predicted score range updates every 20 questions. As weak areas
-            turn into strengths, your range tightens and shifts upward.
-            <strong style="color:#0B1F3B;">You can see the improvement happening</strong> —
-            week over week, not just on test day.
-          </p>
-        </div>
-      </div>
- 
-    </div>
- 
-    <!-- Mobile responsive note -->
-    <style>
-      @media (max-width: 640px) {
-        .how-it-works-grid { grid-template-columns: 1fr !important; }
-      }
-    </style>
- 
-  </div>
-</section>
+<section class="ww-weakspots-section">
+  <div class="ww-weakspots-container">
 
+    <!-- Text / Copy -->
+    <div class="ww-weakspots-copy">
 
-<section class="study-plan-preview-section reveal-on-scroll">
-  <div class="study-plan-preview-inner">
+      <div class="ww-step-label">
+        <span>02</span>
+        FIND YOUR WEAK SPOTS
+      </div>
 
-    <div class="study-plan-preview-header">
-      <div class="study-plan-preview-label">FREE FEATURE</div>
-      <h2 class="study-plan-preview-title">
-        Your Personal SAT Math Study Plan
+      <h2>
+        See exactly where<br class="ww-desktop-break">
+        you need to improve.
       </h2>
-      <p class="study-plan-preview-sub">
-        After your diagnostic, Winnowic builds a week-by-week schedule tailored to your results —
-        with daily practice batches, half tests, and a full simulation timed to your test date.
-        No guessing what to study next.
-      </p>
-      <a href="/studyplan.html" class="study-plan-preview-link">
-        Take your free diagnostic to get your study plan →
-      </a>
-    </div>
 
-    <!-- Mock study plan -->
-    <div class="sp-mock">
+      <div class="ww-weakspot-points">
 
-      <!-- Header -->
-      <div class="sp-mock-header">
-        <div>
-          <div class="sp-mock-header-title">Your SAT Math Study Plan</div>
-          <div class="sp-mock-header-sub">Test date: Aug 23, 2026 · 57 days away</div>
-        </div>
-        <div class="sp-mock-stats">
+        <div class="ww-weakspot-point">
+          <div class="ww-point-icon">✓</div>
           <div>
-            <div class="sp-mock-stat-val">580–620</div>
-            <div class="sp-mock-stat-lbl">Current Range</div>
+            <strong>See your predicted score</strong>
           </div>
+        </div>
+<br>
+        <div class="ww-weakspot-point">
+          <div class="ww-point-icon">✓</div>
           <div>
-            <div class="sp-mock-stat-val">700</div>
-            <div class="sp-mock-stat-lbl">Target Score</div>
+            <strong>Identify your weak areas</strong>
           </div>
+        </div>
+<br>
+        <div class="ww-weakspot-point">
+          <div class="ww-point-icon">✓</div>
           <div>
-            <div class="sp-mock-stat-val">57</div>
-            <div class="sp-mock-stat-lbl">Days Left</div>
+            <strong>Know what to focus on</strong>
           </div>
         </div>
-      </div>
 
-      <!-- Body -->
-      <div class="sp-mock-body">
-
-        <!-- Sessions selector -->
-        <div class="sp-mock-sessions">
-          <span class="sp-mock-sessions-label">Sessions per week:</span>
-          <div class="sp-mock-session-pill">3</div>
-          <div class="sp-mock-session-pill active">5</div>
-          <div class="sp-mock-session-pill">7</div>
-        </div>
-
-        <!-- Week cards -->
-        <div class="sp-mock-weeks">
-
-          <div class="sp-mock-week wk-current">
-            <div>
-              <div class="sp-mock-week-title">Week 1 — Algebra + Advanced Math</div>
-              <div class="sp-mock-week-desc">Daily batch of 10 questions · 5 sessions · 50 questions this week</div>
-            </div>
-            <div class="sp-mock-week-badge badge-this-week">This Week</div>
-          </div>
-
-          <div class="sp-mock-week wk-half">
-            <div>
-              <div class="sp-mock-week-title">Week 2 — 22-Question Half Test</div>
-              <div class="sp-mock-week-desc">Timed · all units · ~35 minutes</div>
-            </div>
-            <div class="sp-mock-week-badge badge-half">Half Test</div>
-          </div>
-
-          <div class="sp-mock-week">
-            <div>
-              <div class="sp-mock-week-title">Week 3 — Problem Solving + Geometry</div>
-              <div class="sp-mock-week-desc">Daily batch of 10 questions · 5 sessions</div>
-            </div>
-            <div class="sp-mock-week-badge badge-upcoming">Week 3</div>
-          </div>
-
-          <div class="sp-mock-week wk-sim">
-            <div>
-              <div class="sp-mock-week-title">Week 8 — Full SAT Math Simulation</div>
-              <div class="sp-mock-week-desc">44 questions · 2 modules · ~70 minutes</div>
-            </div>
-            <div class="sp-mock-week-badge badge-sim">Full Sim</div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="sp-mock-cta">
-        <button onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'"
-                style="
-                  background:#FFD84D; color:#0B1F3B; border:none;
-                  border-radius:12px; padding:13px 28px; font-size:14px;
-                  font-weight:800; cursor:pointer; font-family:'Inter',sans-serif;
-                  transition:opacity 0.15s;
-                "
-                onmouseover="this.style.opacity='0.88'"
-                onmouseout="this.style.opacity='1'">
-          Take Free Diagnostic to Get Your Plan
-        </button>
-        <p style="font-size:12px;color:#aaa;margin-top:8px;">
-          Free · No account required · Takes 20 minutes
-        </p>
       </div>
 
     </div>
+
+
+    <!-- Screenshot -->
+    <div class="ww-weakspots-visual">
+
+      <div class="ww-results-glow"></div>
+
+      <div class="ww-results-card">
+        <img
+          src="/assets/Diag_Result_SS.PNG"
+          alt="Winnowic SAT Math diagnostic results showing predicted score and weak areas"
+          class="ww-results-image"
+        >
+      </div>
+
+    </div>
+
   </div>
 </section>
+
+
+<style>
+
+@media (max-width: 900px) {
+
+  /* Hide feature strip on smaller screens */
+  .feature-strip {
+    display: none !important;
+  }
+
+  /* Hide longer hero explanation */
+  .ww-hero-mobile-hide-copy {
+    display: none !important;
+  }
+
+  /* Hide "Your first step" eyebrow */
+  .ww-hero-first-step {
+    display: none !important;
+  }
+
+}
+@media (max-width: 900px) {
+
+  .hero-section {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+
+}
+  /* =========================================
+     WINNOWIC — STEP 2
+     ========================================= */
+
+  .ww-weakspots-section {
+    position: relative;
+    width: 100%;
+    padding: 72px 24px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+
+  /* =========================================
+     CONTAINER
+     ========================================= */
+
+  .ww-weakspots-container {
+    width: min(1080px, 100%);
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+    align-items: center;
+    gap: 70px;
+
+    /* Keeps the section compact */
+    min-height: 500px;
+  }
+
+
+  /* =========================================
+     STEP LABEL
+     ========================================= */
+
+  .ww-step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+
+    color: #0B1F3B;
+  }
+
+  .ww-step-label span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 27px;
+    height: 27px;
+
+    border-radius: 50%;
+
+    background: #FFD84D;
+    color: #0B1F3B;
+
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+
+
+  /* =========================================
+     HEADING
+     ========================================= */
+
+  .ww-weakspots-copy h2 {
+    margin: 0;
+
+    max-width: 460px;
+
+    font-size: clamp(30px, 3.4vw, 44px);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+
+    color: #0B1F3B;
+  }
+
+
+  /* =========================================
+     POINTS
+     ========================================= */
+
+  .ww-weakspot-points {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    margin-top: 28px;
+  }
+
+  .ww-weakspot-point {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ww-point-icon {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 23px;
+    height: 23px;
+
+    border-radius: 50%;
+
+    background: #FFD84D;
+    color: #0B1F3B;
+
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .ww-weakspot-point strong {
+    font-size: 15px;
+    line-height: 1.3;
+    font-weight: 700;
+
+    color: #0B1F3B;
+  }
+
+
+  /* =========================================
+     SCREENSHOT
+     ========================================= */
+
+  .ww-weakspots-visual {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  /* Subtle background glow */
+
+  .ww-results-glow {
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 216, 77, 0.20);
+
+    filter: blur(55px);
+
+    pointer-events: none;
+  }
+
+
+  /* Screenshot frame */
+
+  .ww-results-card {
+    position: relative;
+    z-index: 1;
+
+    width: min(280px, 78%);
+
+    padding: 8px;
+
+    border-radius: 25px;
+
+    background: #0B1F3B;
+
+    box-shadow:
+      0 24px 55px rgba(11, 31, 59, 0.16),
+      0 8px 20px rgba(11, 31, 59, 0.08);
+  }
+
+
+  /* Screenshot */
+
+  .ww-results-image {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    border-radius: 18px;
+
+    object-fit: contain;
+  }
+
+
+  /* =========================================
+     TABLET
+     ========================================= */
+
+  @media (max-width: 900px) {
+
+    .ww-weakspots-section {
+      padding: 65px 24px;
+    }
+
+    .ww-weakspots-container {
+      grid-template-columns: 1fr 300px;
+      gap: 45px;
+      min-height: 450px;
+    }
+
+    .ww-weakspots-copy h2 {
+      font-size: 38px;
+    }
+
+    .ww-results-card {
+      width: 250px;
+    }
+  }
+
+
+  /* =========================================
+     MOBILE
+     ========================================= */
+
+  @media (max-width: 700px) {
+
+    .ww-weakspots-section {
+      padding: 55px 20px;
+    }
+
+    .ww-weakspots-container {
+      display: flex;
+      flex-direction: column;
+
+      gap: 35px;
+
+      min-height: auto;
+
+      text-align: center;
+    }
+
+    .ww-step-label {
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .ww-weakspots-copy h2 {
+      margin: 0 auto;
+
+      font-size: 31px;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
+    }
+
+    .ww-desktop-break {
+      display: none;
+    }
+
+    .ww-weakspot-points {
+      align-items: flex-start;
+
+      width: fit-content;
+      margin: 24px auto 0;
+
+      text-align: left;
+      gap: 13px;
+    }
+
+    .ww-weakspot-point {
+      gap: 10px;
+    }
+
+    .ww-weakspot-point strong {
+      font-size: 14px;
+    }
+
+    .ww-point-icon {
+      width: 22px;
+      height: 22px;
+      font-size: 11px;
+    }
+
+    .ww-results-card {
+      width: min(250px, 72vw);
+    }
+
+    .ww-results-glow {
+      width: 220px;
+      height: 220px;
+    }
+  }
+
+
+  /* =========================================
+     SMALL PHONES
+     ========================================= */
+
+  @media (max-width: 380px) {
+
+    .ww-weakspots-section {
+      padding: 48px 18px;
+    }
+
+    .ww-weakspots-copy h2 {
+      font-size: 28px;
+    }
+
+    .ww-weakspot-points {
+      margin-top: 20px;
+    }
+
+    .ww-results-card {
+      width: min(225px, 70vw);
+    }
+  }
+
+</style>
+
+<!-- =========================================
+     WINNOWIC — STEP 3: STUDY PLAN
+     ========================================= -->
+
+<section class="ww-studyplan-section reveal-on-scroll">
+  <div class="ww-studyplan-container">
+
+    <!-- LEFT: COPY -->
+    <div class="ww-studyplan-copy">
+
+      <div class="ww-studyplan-step-label">
+        <span>03</span>
+        GET YOUR STUDY PLAN
+      </div>
+
+      <h2>
+        Know exactly what<br class="ww-studyplan-desktop-break">
+        to study each week.
+      </h2>
+
+      <p class="ww-studyplan-intro">
+        Your results become a personalized SAT Math plan built around your weak areas and test date.
+      </p>
+
+      <div class="ww-studyplan-points">
+
+        <div class="ww-studyplan-point">
+          <div class="ww-studyplan-point-icon">✓</div>
+          <strong>Practice your weakest topics first</strong>
+        </div>
+
+        <div class="ww-studyplan-point">
+          <div class="ww-studyplan-point-icon">✓</div>
+          <strong>Follow a week-by-week schedule</strong>
+        </div>
+
+        <div class="ww-studyplan-point">
+          <div class="ww-studyplan-point-icon">✓</div>
+          <strong>Build toward your SAT test date</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT: STUDY PLAN PREVIEW -->
+    <div class="ww-studyplan-visual">
+
+      <div class="ww-studyplan-glow"></div>
+
+      <div class="ww-studyplan-card">
+
+        <!-- MOCK HEADER -->
+        <div class="ww-studyplan-card-header">
+
+          <div>
+            <div class="ww-studyplan-card-title">
+              Your SAT Math Study Plan
+            </div>
+
+            <div class="ww-studyplan-card-sub">
+              57 days until test day
+            </div>
+          </div>
+
+          <div class="ww-studyplan-score">
+            <div class="ww-studyplan-score-value">580–620</div>
+            <div class="ww-studyplan-score-label">Current Range</div>
+          </div>
+
+        </div>
+
+
+        <!-- MOCK BODY -->
+        <div class="ww-studyplan-card-body">
+
+          <div class="ww-studyplan-sessions">
+            <span>Sessions / week</span>
+
+            <div class="ww-studyplan-session">3</div>
+            <div class="ww-studyplan-session active">5</div>
+            <div class="ww-studyplan-session">7</div>
+          </div>
+
+
+          <!-- WEEK 1 -->
+          <div class="ww-studyplan-week current">
+            <div>
+              <div class="ww-studyplan-week-title">
+                Week 1 — Algebra + Advanced Math
+              </div>
+              <div class="ww-studyplan-week-desc">
+                5 targeted practice sessions
+              </div>
+            </div>
+
+            <div class="ww-studyplan-week-badge this-week">
+              This Week
+            </div>
+          </div>
+
+
+          <!-- WEEK 2 -->
+          <div class="ww-studyplan-week half-test">
+            <div>
+              <div class="ww-studyplan-week-title">
+                Week 2 — Half Test
+              </div>
+              <div class="ww-studyplan-week-desc">
+                22 timed SAT Math questions
+              </div>
+            </div>
+
+            <div class="ww-studyplan-week-badge half">
+              Half Test
+            </div>
+          </div>
+
+
+          <!-- WEEK 3 -->
+          <div class="ww-studyplan-week">
+            <div>
+              <div class="ww-studyplan-week-title">
+                Week 3 — Problem Solving + Geometry
+              </div>
+              <div class="ww-studyplan-week-desc">
+                Practice shifts as you improve
+              </div>
+            </div>
+
+            <div class="ww-studyplan-week-badge upcoming">
+              Week 3
+            </div>
+          </div>
+
+
+          <!-- FINAL -->
+          <div class="ww-studyplan-week simulation">
+            <div>
+              <div class="ww-studyplan-week-title">
+                Final Week — Full Simulation
+              </div>
+              <div class="ww-studyplan-week-desc">
+                44 questions · full SAT Math timing
+              </div>
+            </div>
+
+            <div class="ww-studyplan-week-badge full-sim">
+              Full Sim
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<style>
+
+/* =========================================
+   WINNOWIC — STEP 3
+   ========================================= */
+
+.ww-studyplan-section {
+  position: relative;
+  width: 100%;
+  padding: 58px 24px;
+  background: #F8F6F0;
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+   ========================================= */
+
+.ww-studyplan-container {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr);
+  align-items: center;
+  gap: 68px;
+
+  min-height: 480px;
+}
+
+
+/* =========================================
+   STEP LABEL
+   ========================================= */
+
+.ww-studyplan-step-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 18px;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+
+  color: #0B1F3B;
+}
+
+.ww-studyplan-step-label span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 27px;
+  height: 27px;
+
+  border-radius: 50%;
+
+  background: #FFD84D;
+  color: #0B1F3B;
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+
+/* =========================================
+   COPY
+   ========================================= */
+
+.ww-studyplan-copy h2 {
+  margin: 0;
+
+  max-width: 470px;
+
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+
+  color: #0B1F3B;
+}
+
+.ww-studyplan-intro {
+  max-width: 445px;
+
+  margin: 18px 0 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #666;
+}
+
+
+/* =========================================
+   POINTS
+   ========================================= */
+
+.ww-studyplan-points {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin-top: 24px;
+}
+
+.ww-studyplan-point {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ww-studyplan-point-icon {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 23px;
+  height: 23px;
+
+  border-radius: 50%;
+
+  background: #FFD84D;
+  color: #0B1F3B;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ww-studyplan-point strong {
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+
+  color: #0B1F3B;
+}
+
+
+/* =========================================
+   TEXT LINK
+   ========================================= */
+
+.ww-studyplan-link {
+  display: inline-block;
+
+  margin-top: 25px;
+
+  color: #FF6B00;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.ww-studyplan-link:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   VISUAL
+   ========================================= */
+
+.ww-studyplan-visual {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ww-studyplan-glow {
+  position: absolute;
+
+  width: 350px;
+  height: 350px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 216, 77, 0.17);
+
+  filter: blur(60px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   STUDY PLAN CARD
+   ========================================= */
+
+.ww-studyplan-card {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 535px;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+  overflow: hidden;
+
+  border: 1px solid rgba(11, 31, 59, 0.06);
+
+  box-shadow:
+    0 24px 55px rgba(11, 31, 59, 0.13),
+    0 8px 20px rgba(11, 31, 59, 0.06);
+}
+
+
+/* =========================================
+   CARD HEADER
+   ========================================= */
+
+.ww-studyplan-card-header {
+  background: #0B1F3B;
+
+  padding: 18px 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.ww-studyplan-card-title {
+  color: #FFD84D;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.ww-studyplan-card-sub {
+  margin-top: 3px;
+
+  color: rgba(255,255,255,0.48);
+
+  font-size: 11px;
+}
+
+.ww-studyplan-score {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.ww-studyplan-score-value {
+  color: #FFD84D;
+
+  font-size: 19px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.ww-studyplan-score-label {
+  margin-top: 4px;
+
+  color: rgba(255,255,255,0.42);
+
+  font-size: 9px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+/* =========================================
+   CARD BODY
+   ========================================= */
+
+.ww-studyplan-card-body {
+  padding: 18px 20px 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+/* =========================================
+   SESSIONS
+   ========================================= */
+
+.ww-studyplan-sessions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 3px;
+}
+
+.ww-studyplan-sessions > span {
+  margin-right: 3px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #0B1F3B;
+}
+
+.ww-studyplan-session {
+  width: 31px;
+  height: 31px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: #0B1F3B;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ww-studyplan-session.active {
+  background: #0B1F3B;
+  border-color: #0B1F3B;
+
+  color: #FFD84D;
+}
+
+
+/* =========================================
+   WEEKS
+   ========================================= */
+
+.ww-studyplan-week {
+  min-height: 57px;
+
+  padding: 10px 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  border-left: 4px solid #e0e0e0;
+  border-radius: 10px;
+
+  background: #fafafa;
+}
+
+.ww-studyplan-week.current {
+  border-left-color: #FFD84D;
+  background: #FFFDF0;
+}
+
+.ww-studyplan-week.half-test {
+  border-left-color: #E65100;
+  background: #FFF5F0;
+}
+
+.ww-studyplan-week.simulation {
+  border-left-color: #C62828;
+  background: #FFF8F8;
+}
+
+.ww-studyplan-week-title {
+  color: #0B1F3B;
+
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.ww-studyplan-week-desc {
+  margin-top: 2px;
+
+  color: #888;
+
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+
+/* =========================================
+   BADGES
+   ========================================= */
+
+.ww-studyplan-week-badge {
+  flex-shrink: 0;
+
+  padding: 3px 8px;
+
+  border-radius: 20px;
+
+  font-size: 8px;
+  line-height: 1.2;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  white-space: nowrap;
+}
+
+.ww-studyplan-week-badge.this-week {
+  background: #FFD84D;
+  color: #0B1F3B;
+}
+
+.ww-studyplan-week-badge.half {
+  background: #E65100;
+  color: #fff;
+}
+
+.ww-studyplan-week-badge.upcoming {
+  background: rgba(11,31,59,0.08);
+  color: #0B1F3B;
+}
+
+.ww-studyplan-week-badge.full-sim {
+  background: #C62828;
+  color: #fff;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .ww-studyplan-section {
+    padding: 58px 24px;
+  }
+
+  .ww-studyplan-container {
+    grid-template-columns: minmax(0, 0.85fr) minmax(360px, 1.15fr);
+    gap: 42px;
+    min-height: 440px;
+  }
+
+  .ww-studyplan-copy h2 {
+    font-size: 37px;
+  }
+
+  .ww-studyplan-card {
+    max-width: 460px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+  .ww-studyplan-section {
+    padding: 52px 20px;
+  }
+
+  .ww-studyplan-container {
+    display: flex;
+    flex-direction: column;
+
+    gap: 34px;
+
+    min-height: auto;
+
+    text-align: center;
+  }
+
+  .ww-studyplan-step-label {
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .ww-studyplan-copy h2 {
+    margin: 0 auto;
+
+    font-size: 31px;
+    line-height: 1.1;
+    letter-spacing: -0.8px;
+  }
+
+  .ww-studyplan-desktop-break {
+    display: none;
+  }
+
+  .ww-studyplan-intro {
+    margin: 16px auto 0;
+
+    max-width: 430px;
+
+    font-size: 14px;
+  }
+
+  .ww-studyplan-points {
+    width: fit-content;
+
+    margin: 22px auto 0;
+
+    align-items: flex-start;
+
+    text-align: left;
+  }
+
+  .ww-studyplan-link {
+    margin-top: 22px;
+  }
+
+  .ww-studyplan-card {
+    width: min(520px, 94vw);
+  }
+
+  .ww-studyplan-glow {
+    width: 270px;
+    height: 270px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 480px) {
+
+  .ww-studyplan-section {
+    padding: 46px 16px;
+  }
+
+  .ww-studyplan-copy h2 {
+    font-size: 28px;
+  }
+
+  .ww-studyplan-card-header {
+    padding: 15px 15px;
+  }
+
+  .ww-studyplan-card-title {
+    font-size: 13px;
+  }
+
+  .ww-studyplan-score-value {
+    font-size: 16px;
+  }
+
+  .ww-studyplan-card-body {
+    padding: 15px;
+  }
+
+  .ww-studyplan-week {
+    padding: 9px 10px;
+  }
+
+  .ww-studyplan-week-title {
+    font-size: 11px;
+  }
+
+  .ww-studyplan-week-desc {
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+  .ww-studyplan-card-header {
+    align-items: flex-start;
+  }
+
+  .ww-studyplan-score {
+    display: none;
+  }
+
+  .ww-studyplan-sessions {
+    justify-content: center;
+  }
+
+  .ww-studyplan-week {
+    text-align: left;
+  }
+
+}
+
+</style>
 <!-- ========================= -->
 <!-- STATS SECTION -->
 <!-- ========================= -->
@@ -1216,11 +2603,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- LEFT: text + unit bars -->
     <div>
-      <div class="score-track-label">PERFORMANCE ANALYTICS</div>
+      <div class="ww-step-label">
+  <span>04</span>
+  TRACK YOUR PROGRESS
+</div>
       <h2 class="score-track-title">Track Your SAT Math Score<br>Over Time</h2>
       <p class="score-track-desc">
         Every question you answer updates your predicted score range.
-        Winnowic tracks all four SAT Math units individually — so you can see
+        Winnowic tracks all four SAT Math units individually so you can see
         exactly which ones are pulling your score down and how fast they're improving.
       </p>
 
@@ -1298,6 +2688,536 @@ document.addEventListener('DOMContentLoaded', function() {
 
   </div>
 </section>
+
+
+<!-- =========================================
+     WINNOWIC — PREMIUM
+     ========================================= -->
+
+<section class="ww-premium-section">
+  <div class="ww-premium-container">
+
+    <!-- LEFT: COPY -->
+    <div class="ww-premium-copy">
+
+      <div class="ww-premium-label">
+        WINNOWIC PREMIUM
+      </div>
+
+      <h2>
+        Serious SAT Math prep.<br>
+        <span>Without the serious price.</span>
+      </h2>
+
+      <p class="ww-premium-intro">
+        Go beyond the free plan with harder questions, smarter practice,
+        and full SAT Math simulations.
+      </p>
+
+      <div class="ww-premium-points">
+
+        <div class="ww-premium-point">
+          <div class="ww-premium-check">✓</div>
+          <strong>500+ challenging SAT Math questions</strong>
+        </div>
+
+        <div class="ww-premium-point">
+          <div class="ww-premium-check">✓</div>
+          <strong>Adaptive practice for your weak areas</strong>
+        </div>
+
+        <div class="ww-premium-point">
+          <div class="ww-premium-check">✓</div>
+          <strong>Advanced diagnostics + full simulations</strong>
+        </div>
+
+      </div>
+
+      <div class="ww-premium-free-note">
+        Your free plan stays free.
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT: PRICING CARD -->
+    <div class="ww-premium-visual">
+
+      <div class="ww-premium-glow"></div>
+
+      <div class="ww-premium-card">
+
+        <div class="ww-premium-card-eyebrow">
+          WINNOWIC PREMIUM
+        </div>
+
+        <div class="ww-premium-price-row">
+          <span class="ww-premium-price">$6</span>
+          <span class="ww-premium-month">/ month</span>
+        </div>
+
+        <p class="ww-premium-card-desc">
+          Everything you need to take your SAT Math prep further.
+        </p>
+
+        <div class="ww-premium-divider"></div>
+
+        <div class="ww-premium-card-feature">
+          <span>✓</span>
+          Premium question bank
+        </div>
+
+        <div class="ww-premium-card-feature">
+          <span>✓</span>
+          Adaptive practice
+        </div>
+
+        <div class="ww-premium-card-feature">
+          <span>✓</span>
+          Advanced diagnostics
+        </div>
+
+        <div class="ww-premium-card-feature">
+          <span>✓</span>
+          Full SAT simulations
+        </div>
+
+        <button
+          class="ww-premium-button"
+          onclick="window.location.href='/pricing.html'">
+          See Premium
+          <span>→</span>
+        </button>
+
+        <div class="ww-premium-card-note">
+          Cancel anytime · No hidden fees
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<style>
+
+/* =========================================
+   PREMIUM SECTION
+   ========================================= */
+
+.ww-premium-section {
+  position: relative;
+  width: 100%;
+
+  padding: 58px 24px;
+
+  background: #ffffff;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+   ========================================= */
+
+.ww-premium-container {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  align-items: center;
+
+  gap: 80px;
+
+  min-height: 470px;
+}
+
+
+/* =========================================
+   LEFT COPY
+   ========================================= */
+
+.ww-premium-label {
+  margin-bottom: 18px;
+
+  color: #FF6B00;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.ww-premium-copy h2 {
+  max-width: 570px;
+
+  margin: 0;
+
+  color: #0B1F3B;
+
+  font-size: clamp(32px, 3.5vw, 46px);
+  line-height: 1.07;
+  font-weight: 800;
+  letter-spacing: -1.3px;
+}
+
+.ww-premium-copy h2 span {
+  color: #FF6B00;
+}
+
+.ww-premium-intro {
+  max-width: 480px;
+
+  margin: 18px 0 0;
+
+  color: #666;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   BENEFITS
+   ========================================= */
+
+.ww-premium-points {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-top: 25px;
+}
+
+.ww-premium-point {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.ww-premium-check {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 23px;
+  height: 23px;
+
+  border-radius: 50%;
+
+  background: #FFD84D;
+  color: #0B1F3B;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ww-premium-point strong {
+  color: #0B1F3B;
+
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.ww-premium-free-note {
+  display: inline-block;
+
+  margin-top: 24px;
+
+  color: #888;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   RIGHT VISUAL
+   ========================================= */
+
+.ww-premium-visual {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ww-premium-glow {
+  position: absolute;
+
+  width: 320px;
+  height: 320px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 216, 77, 0.20);
+
+  filter: blur(60px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   PRICING CARD
+   ========================================= */
+
+.ww-premium-card {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+
+  padding: 30px;
+
+  border-radius: 22px;
+
+  background: #0B1F3B;
+
+  box-shadow:
+    0 24px 55px rgba(11, 31, 59, 0.16),
+    0 8px 20px rgba(11, 31, 59, 0.08);
+}
+
+.ww-premium-card-eyebrow {
+  margin-bottom: 13px;
+
+  color: rgba(255, 216, 77, 0.65);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.ww-premium-price-row {
+  display: flex;
+  align-items: flex-end;
+
+  gap: 7px;
+}
+
+.ww-premium-price {
+  color: #FFD84D;
+
+  font-size: 54px;
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.ww-premium-month {
+  padding-bottom: 5px;
+
+  color: rgba(255,255,255,0.48);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ww-premium-card-desc {
+  max-width: 290px;
+
+  margin: 16px 0 0;
+
+  color: rgba(255,255,255,0.62);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ww-premium-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 21px 0;
+
+  background: rgba(255,255,255,0.10);
+}
+
+
+/* =========================================
+   CARD FEATURES
+   ========================================= */
+
+.ww-premium-card-feature {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 11px;
+
+  color: rgba(255,255,255,0.82);
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ww-premium-card-feature span {
+  color: #FFD84D;
+
+  font-weight: 900;
+}
+
+
+/* =========================================
+   BUTTON
+   ========================================= */
+
+.ww-premium-button {
+  width: 100%;
+
+  margin-top: 13px;
+
+  padding: 13px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: #FFD84D;
+  color: #0B1F3B;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.ww-premium-button:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.ww-premium-card-note {
+  margin-top: 10px;
+
+  text-align: center;
+
+  color: rgba(255,255,255,0.35);
+
+  font-size: 10px;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .ww-premium-container {
+    grid-template-columns: 1fr 340px;
+
+    gap: 45px;
+
+    min-height: 440px;
+  }
+
+  .ww-premium-copy h2 {
+    font-size: 38px;
+  }
+
+  .ww-premium-card {
+    padding: 25px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+  .ww-premium-section {
+    padding: 52px 20px;
+  }
+
+  .ww-premium-container {
+    display: flex;
+    flex-direction: column;
+
+    gap: 34px;
+
+    min-height: auto;
+
+    text-align: center;
+  }
+
+  .ww-premium-copy h2 {
+    margin: 0 auto;
+
+    font-size: 31px;
+    line-height: 1.1;
+  }
+
+  .ww-premium-intro {
+    margin: 16px auto 0;
+  }
+
+  .ww-premium-points {
+    width: fit-content;
+
+    margin: 23px auto 0;
+
+    text-align: left;
+  }
+
+  .ww-premium-card {
+    width: min(360px, 88vw);
+
+    text-align: left;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+  .ww-premium-section {
+    padding: 46px 17px;
+  }
+
+  .ww-premium-copy h2 {
+    font-size: 28px;
+  }
+
+  .ww-premium-card {
+    padding: 23px;
+  }
+
+  .ww-premium-price {
+    font-size: 48px;
+  }
+
+}
+
+</style>
 
 
 <section style="
@@ -1504,118 +3424,6 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </section>
 
-<!-- ========================= -->
-<!-- PREMIUM SECTION -->
-<!-- ========================= -->
-
-<!-- ========================= -->
-<!-- PREMIUM SECTION — revised -->
-<!-- ========================= -->
-<section style="padding:72px 0; background:#fff; position:relative; z-index:10;">
-  <div style="max-width:1100px; margin:0 auto; padding:0 24px;">
-
-    <!-- Header -->
-    <div style="text-align:center; margin-bottom:48px;">
-      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#FF6B00; margin-bottom:10px;">WINNOWIC PREMIUM</div>
-      <h2 style="font-size:32px; font-weight:800; color:#0B1F3B; margin:0 0 14px; line-height:1.2;">Most SAT prep costs $150–$500.<br>Winnowic is $6/month.</h2>
-      <p style="font-size:16px; color:#666; max-width:480px; margin:0 auto; line-height:1.6;">
-        Everything a serious SAT Math student needs — built with the same precision as the test itself.
-      </p>
-    </div>
-
-    <!-- Feature grid -->
-    <div class="premium-feature-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:32px; ">
-
-      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
-        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
-          <i data-lucide="library" style="width:18px;height:18px;color:#FFD84D;"></i>
-        </div>
-        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">500+ Hard SAT Math Questions</div>
-        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
-          <li>Covers all four SAT Math domains</li>
-          <li>Hard difficulty — the questions that decide your score</li>
-          <li>Continuously expanding question bank</li>
-          <li>MCQ and student-produced response (grid-in) formats</li>
-        </ul>
-      </div>
-
-      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
-        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
-          <i data-lucide="zap" style="width:18px;height:18px;color:#FFD84D;"></i>
-        </div>
-        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Infinite Adaptive Practice</div>
-        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
-          <li>Automatically targets your weakest units every session</li>
-          <li>Difficulty adjusts as you improve</li>
-          <li>Never runs out — new batches generated daily</li>
-          <li>Streak tracking with email reminders</li>
-        </ul>
-      </div>
-
-      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
-        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
-          <i data-lucide="bar-chart-2" style="width:18px;height:18px;color:#FFD84D;"></i>
-        </div>
-        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Advanced Diagnostics</div>
-        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
-          <li>Predicted SAT Math score range — updated in real time</li>
-          <li>Unit-by-unit accuracy tracked over time</li>
-          <li>Identifies your single weakest unit automatically</li>
-          <li>Progress graphs showing improvement week over week</li>
-        </ul>
-      </div>
-
-      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
-        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
-          <i data-lucide="clipboard-list" style="width:18px;height:18px;color:#FFD84D;"></i>
-        </div>
-        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Full SAT Simulations</div>
-        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
-          <li>44-question full simulation — authentic 2-module SAT format</li>
-          <li>22-question half tests to build endurance</li>
-          <li>Timed with section breaks</li>
-          <li>Full review with explanations after each simulation</li>
-        </ul>
-      </div>
-
-      <div style="background:#F8F9FB; border-radius:16px; padding:24px; border:1px solid #f0f0f0;">
-        <div style="width:38px; height:38px; background:#0B1F3B; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
-          <i data-lucide="calendar-check" style="width:18px;height:18px;color:#FFD84D;"></i>
-        </div>
-        <div style="font-size:15px; font-weight:800; color:#0B1F3B; margin-bottom:8px;">Personalized Study Plan</div>
-        <ul style="margin:0; padding-left:16px; font-size:13px; color:#666; line-height:1.7;">
-          <li>Built from your diagnostic test results</li>
-          <li>Week-by-week schedule timed to your test date</li>
-          <li>Balances daily practice, half tests, and full simulations</li>
-          <li>Adjusts as your weak areas change</li>
-        </ul>
-      </div>
-
-      <div style="background:#0B1F3B; border-radius:16px; padding:24px; border:1px solid #0B1F3B; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:13px; font-weight:700; color:rgba(255,216,77,0.7); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Get started today</div>
-          <div style="font-size:48px; font-weight:800; color:#FFD84D; line-height:1; margin-bottom:4px;">$6</div>
-          <div style="font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:20px;">/month · cancel anytime · no hidden fees</div>
-          <div style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin-bottom:20px;">
-            Less than a coffee a week for the focused, data-driven SAT Math prep that most platforms charge hundreds for.
-          </div>
-        </div>
-        <div>
-          <button onclick="window.location.href='/pricing.html'" style="display:block;width:100%;background:#FFD84D;color:#0B1F3B;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:8px;">See Pricing →</button>
-          <button onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'" style="display:block;width:100%;background:transparent;color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Start Free Diagnostic Test</button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Bottom trust line -->
-    <p style="text-align:center; font-size:13px; color:#aaa; margin:0;">
-      Free plan always available · Premium unlocks everything · No commitment required
-    </p>
-
-  </div>
-</section>
-
 <footer class="site-footer">
     <div class="footer-left">
         © 2026 <span>Winnowic™</span> · All rights reserved
@@ -1650,6 +3458,73 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof lucide !== 'undefined') lucide.createIcons();
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const menuButton = document.getElementById('ww-mobile-menu-button');
+  const mobileMenu = document.getElementById('ww-mobile-menu');
+
+  if (!menuButton || !mobileMenu) return;
+
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    menuButton.classList.remove('open');
+
+    menuButton.setAttribute('aria-expanded', 'false');
+  }
+
+
+  menuButton.addEventListener('click', function (event) {
+
+    event.stopPropagation();
+
+    const isOpen = mobileMenu.classList.toggle('open');
+
+    menuButton.classList.toggle('open', isOpen);
+
+    menuButton.setAttribute(
+      'aria-expanded',
+      isOpen ? 'true' : 'false'
+    );
+
+  });
+
+
+  /* Clicking elsewhere closes menu */
+  document.addEventListener('click', function (event) {
+
+    if (
+      !mobileMenu.contains(event.target) &&
+      !menuButton.contains(event.target)
+    ) {
+      closeMobileMenu();
+    }
+
+  });
+
+
+  /* Escape key closes menu */
+  document.addEventListener('keydown', function (event) {
+
+    if (event.key === 'Escape') {
+      closeMobileMenu();
+    }
+
+  });
+
+
+  /* Close if window returns to desktop size */
+  window.addEventListener('resize', function () {
+
+    if (window.innerWidth > 900) {
+      closeMobileMenu();
+    }
+
+  });
+
+});
 </script>
 <script type="application/ld+json">
 {
