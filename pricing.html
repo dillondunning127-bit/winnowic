@@ -510,6 +510,756 @@ width: 38px !important;
   width: 280px;
   max-width: calc(100vw - 28px);
 }
+/* =========================================
+   WINNOWIC — REFRESHED PRICING PAGE
+   ========================================= */
+
+
+/* =========================================
+   FORCE WHITE BACKGROUND
+   ========================================= */
+
+html,
+body,
+body.pricing-page {
+  background: #ffffff !important;
+}
+
+body.pricing-page {
+  margin: 0;
+}
+
+
+/* =========================================
+   PAGE
+   ========================================= */
+
+.ww-pricing {
+  width: 100%;
+
+  background: #ffffff;
+
+  padding: 0 24px 48px;
+
+  font-family: 'Inter', sans-serif;
+}
+
+
+/* =========================================
+   HERO
+   ========================================= */
+
+.ww-pricing-hero {
+  width: min(900px, 100%);
+
+  margin: 0 auto;
+
+  padding: 62px 0 44px;
+
+  text-align: center;
+}
+
+.ww-pricing-eyebrow {
+  margin-bottom: 15px;
+
+  color: #FF6B00;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.ww-pricing-hero h1 {
+  margin: 0;
+
+  color: #0B1F3B;
+
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.03;
+  font-weight: 800;
+
+  letter-spacing: -2px;
+}
+
+.ww-pricing-hero h1 span {
+  color: #FF6B00;
+}
+
+.ww-pricing-subtitle {
+  max-width: 620px;
+
+  margin: 20px auto 0;
+
+  color: #666;
+
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.ww-pricing-trust {
+  margin-top: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  color: #aaa;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ww-pricing-trust span {
+  color: #FFD84D;
+}
+
+
+/* =========================================
+   PLAN GRID
+   ========================================= */
+
+.ww-pricing-plans {
+  width: min(880px, 100%);
+
+  margin: 0 auto 72px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 22px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================
+   PLAN CARDS
+   ========================================= */
+
+.ww-plan-card {
+  position: relative;
+
+  padding: 29px;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 22px;
+
+  box-sizing: border-box;
+}
+
+.ww-plan-free {
+  background: #ffffff;
+
+  border: 1px solid #e8e8e8;
+
+  box-shadow:
+    0 12px 35px rgba(11,31,59,0.07);
+}
+
+.ww-plan-premium {
+  background: #0B1F3B;
+
+  border: 2px solid #0B1F3B;
+
+  box-shadow:
+    0 22px 50px rgba(11,31,59,0.17);
+}
+
+
+/* =========================================
+   POPULAR BADGE
+   ========================================= */
+
+.ww-popular-badge {
+  position: absolute;
+
+  top: -12px;
+  right: 22px;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  background: #FFD84D;
+  color: #0B1F3B;
+
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+
+  box-shadow: 0 4px 12px rgba(255,216,77,0.25);
+}
+
+
+/* =========================================
+   PLAN HEADERS
+   ========================================= */
+
+.ww-plan-label {
+  margin-bottom: 13px;
+
+  color: #888;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.ww-plan-label-premium {
+  color: rgba(255,216,77,0.65);
+}
+
+.ww-plan-price {
+  color: #0B1F3B;
+
+  font-size: 48px;
+  line-height: 0.95;
+  font-weight: 800;
+
+  letter-spacing: -2px;
+}
+
+.ww-plan-price span {
+  margin-left: 4px;
+
+  color: #888;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  letter-spacing: 0;
+}
+
+.ww-plan-price-premium {
+  color: #FFD84D;
+}
+
+.ww-plan-price-premium span {
+  color: rgba(255,255,255,0.45);
+}
+
+.ww-plan-price-note {
+  margin-top: 7px;
+
+  color: #aaa;
+
+  font-size: 11px;
+}
+
+.ww-plan-price-note-premium {
+  color: rgba(255,255,255,0.38);
+}
+
+.ww-plan-description {
+  min-height: 42px;
+
+  margin: 18px 0 0;
+
+  color: #666;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ww-plan-description-premium {
+  color: rgba(255,255,255,0.62);
+}
+
+
+/* =========================================
+   DIVIDERS
+   ========================================= */
+
+.ww-plan-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 22px 0;
+
+  background: #eeeeee;
+}
+
+.ww-plan-divider-premium {
+  background: rgba(255,255,255,0.10);
+}
+
+
+/* =========================================
+   FEATURES
+   ========================================= */
+
+.ww-plan-features {
+  display: flex;
+  flex-direction: column;
+
+  gap: 13px;
+
+  margin-bottom: 25px;
+
+  flex: 1;
+}
+
+.ww-plan-feature {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  color: #444;
+
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.ww-plan-feature > span {
+  color: #2E7D32;
+
+  font-weight: 900;
+
+  flex-shrink: 0;
+}
+
+.ww-plan-feature strong {
+  color: inherit;
+
+  font-weight: 700;
+}
+
+.ww-plan-feature small {
+  display: block;
+
+  margin-top: 2px;
+
+  color: rgba(255,255,255,0.38);
+
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.ww-plan-feature-premium {
+  color: rgba(255,255,255,0.83);
+}
+
+.ww-plan-feature-premium > span {
+  color: #FFD84D;
+}
+
+
+/* =========================================
+   PLAN BUTTONS
+   ========================================= */
+
+.ww-plan-button {
+  width: 100%;
+
+  min-width: 0 !important;
+
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border-radius: 11px;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.ww-plan-button:hover {
+  transform: translateY(-1px);
+
+  opacity: 0.9;
+}
+
+.ww-plan-button-free {
+  background: #f5f5f5;
+  color: #0B1F3B;
+
+  border: 1px solid #ededed;
+}
+
+.ww-plan-button-premium {
+  background: #FFD84D;
+  color: #0B1F3B;
+
+  border: none;
+}
+
+.ww-plan-bottom-note {
+  margin-top: 9px;
+
+  color: #aaa;
+
+  text-align: center;
+
+  font-size: 9px;
+}
+
+.ww-plan-bottom-note-premium {
+  color: rgba(255,255,255,0.32);
+}
+
+
+/* =========================================
+   WHY PREMIUM
+   ========================================= */
+
+.ww-premium-reason {
+  width: min(1000px, 100%);
+
+  margin: 0 auto 70px;
+
+  padding: 45px 48px;
+
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+
+  align-items: center;
+
+  gap: 70px;
+
+  border-radius: 24px;
+
+  background: #F8F6F0;
+}
+
+.ww-premium-reason-label {
+  margin-bottom: 12px;
+
+  color: #FF6B00;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.ww-premium-reason-copy h2 {
+  margin: 0;
+
+  color: #0B1F3B;
+
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 800;
+
+  letter-spacing: -0.8px;
+}
+
+.ww-premium-reason-copy p {
+  max-width: 350px;
+
+  margin: 14px 0 0;
+
+  color: #777;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+
+/* =========================================
+   WHY PREMIUM ITEMS
+   ========================================= */
+
+.ww-premium-reason-items {
+  display: flex;
+  flex-direction: column;
+
+  gap: 17px;
+}
+
+.ww-reason-item {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+}
+
+.ww-reason-icon {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #FFD84D;
+  color: #0B1F3B;
+}
+
+.ww-reason-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.ww-reason-item strong {
+  display: block;
+
+  color: #0B1F3B;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ww-reason-item span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #888;
+
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   BOTTOM CTA
+   ========================================= */
+
+.ww-pricing-bottom {
+  width: min(880px, 100%);
+
+  margin: 0 auto 45px;
+
+  padding: 26px 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  border: 1px solid #eeeeee;
+  border-radius: 18px;
+
+  background: #ffffff;
+}
+
+.ww-pricing-bottom h2 {
+  margin: 0;
+
+  color: #0B1F3B;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.ww-pricing-bottom p {
+  margin: 5px 0 0;
+
+  color: #888;
+
+  font-size: 12px;
+}
+
+.ww-bottom-button {
+  min-width: 130px !important;
+
+  padding: 12px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #0B1F3B;
+  color: #FFD84D;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   DISCLAIMER
+   ========================================= */
+
+.ww-pricing-disclaimer {
+  width: min(800px, 100%);
+
+  margin: 0 auto !important;
+
+  padding: 0 !important;
+
+  background: transparent !important;
+
+  border: none !important;
+  box-shadow: none !important;
+
+  color: #aaa !important;
+
+  text-align: center;
+
+  font-size: 9px !important;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 800px) {
+
+  .ww-pricing-hero {
+    padding-top: 48px;
+  }
+
+  .ww-pricing-plans {
+    width: min(700px, 100%);
+  }
+
+  .ww-premium-reason {
+    gap: 40px;
+
+    padding: 38px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 650px) {
+
+  .ww-pricing {
+    padding: 0 18px 38px;
+  }
+
+  .ww-pricing-hero {
+    padding: 42px 0 34px;
+  }
+
+  .ww-pricing-hero h1 {
+    font-size: 38px;
+
+    letter-spacing: -1.3px;
+  }
+
+  .ww-pricing-subtitle {
+    font-size: 14px;
+  }
+
+  .ww-pricing-trust {
+    flex-wrap: wrap;
+
+    font-size: 10px;
+  }
+
+
+  /* Stack plans */
+
+  .ww-pricing-plans {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+
+    margin-bottom: 50px;
+  }
+
+  .ww-plan-card {
+    padding: 25px;
+  }
+
+
+  /* Premium first visually on mobile */
+
+  .ww-plan-premium {
+    order: -1;
+  }
+
+
+  /* Why Premium */
+
+  .ww-premium-reason {
+    margin-bottom: 48px;
+
+    padding: 30px 25px;
+
+    grid-template-columns: 1fr;
+
+    gap: 28px;
+  }
+
+  .ww-premium-reason-copy {
+    text-align: center;
+  }
+
+  .ww-premium-reason-copy p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  /* Bottom CTA */
+
+  .ww-pricing-bottom {
+    padding: 24px;
+
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+  .ww-bottom-button {
+    width: 100%;
+
+    min-width: 0 !important;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONES
+   ========================================= */
+
+@media (max-width: 380px) {
+
+  .ww-pricing {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .ww-pricing-hero h1 {
+    font-size: 34px;
+  }
+
+  .ww-plan-card {
+    padding: 22px;
+  }
+
+}
   </style>
 </head>
 
@@ -692,279 +1442,347 @@ width: 38px !important;
 
 </header>
 
-<div class="container">
+<!-- =========================================
+     PRICING PAGE
+     ========================================= -->
 
-  <!-- PAGE HEADER -->
-  <div class="pricing-header">
-    <div>
-      <div class="pricing-label">WINNOWIC PREMIUM</div>
-      <h1 class="pricing-title">Serious SAT Prep.<br>Not Serious Prices.</h1>
-      <p id="pricing-message" class="pricing-subtitle">
-        Start free — no account required. Upgrade when you're ready for 500+ SAT Math questions, adaptive practice, and advanced analytics.
-      </p>
-    </div>
-  </div>
+<main class="ww-pricing">
 
-  <!-- VALUE HERO -->
-  <div class="pricing-hero-value">
-    <div>
-      <h2>Most SAT prep costs $150–$500.<br>Winnowic is $6/month.</h2>
-      <p>
-        Adaptive practice, personalized study plans, predicted score tracking,
-        and daily question batches — everything premium platforms charge hundreds for,
-        for less than a coffee a week.
-      </p>
-    </div>
-    <div class="pricing-hero-stats">
-      <div class="pricing-hero-stat">
-        <div class="pricing-hero-stat-value">$6</div>
-        <div class="pricing-hero-stat-label">Per month</div>
-      </div>
-      <div class="pricing-hero-stat">
-        <div class="pricing-hero-stat-value">500+</div>
-        <div class="pricing-hero-stat-label">SAT questions</div>
-      </div>
-      <div class="pricing-hero-stat">
-        <div class="pricing-hero-stat-value">$0</div>
-        <div class="pricing-hero-stat-label">To start</div>
-      </div>
-    </div>
-  </div>
+  <!-- =========================================
+       HERO
+       ========================================= -->
 
-  <!-- FREE FEATURES -->
-  <div style="margin-bottom:12px;">
-    <h2 style="font-size:20px;font-weight:800;color:#0B1F3B;margin-bottom:4px;">What you get for free</h2>
-    <p style="font-size:14px;color:#888;margin-bottom:18px;">No account required for the diagnostic. Create a free account to unlock everything below.</p>
-  </div>
+  <section class="ww-pricing-hero">
 
-  <div class="free-features-grid">
-    <div class="free-feature-card">
-      <div class="free-feature-icon"><i data-lucide="activity" style="width:16px;height:16px;"></i></div>
-      <div class="free-feature-text">
-        <strong>Free SAT Diagnostic</strong>
-        <span>20 questions · predicted score range · unit breakdown</span>
-      </div>
+    <div class="ww-pricing-eyebrow">
+      SIMPLE PRICING
     </div>
-    <div class="free-feature-card">
-      <div class="free-feature-icon"><i data-lucide="calendar" style="width:16px;height:16px;"></i></div>
-      <div class="free-feature-text">
-        <strong>Personalized Study Plan</strong>
-        <span>Week-by-week schedule built from your diagnostic</span>
-      </div>
-    </div>
-    <div class="free-feature-card">
-      <div class="free-feature-icon"><i data-lucide="zap" style="width:16px;height:16px;"></i></div>
-      <div class="free-feature-text">
-        <strong>Daily Practice Batches</strong>
-        <span>10 questions every day targeting your weakest units</span>
-      </div>
-    </div>
-    <div class="free-feature-card">
-      <div class="free-feature-icon"><i data-lucide="flame" style="width:16px;height:16px;"></i></div>
-      <div class="free-feature-text">
-        <strong>Streak Tracking</strong>
-        <span>Daily streaks with email reminders to keep you on track</span>
-      </div>
-    </div>
-    <div class="free-feature-card">
-      <div class="free-feature-icon"><i data-lucide="target" style="width:16px;height:16px;"></i></div>
-      <div class="free-feature-text">
-        <strong>Test Goal Setting</strong>
-        <span>Set your test date and target score for a personalized countdown</span>
-      </div>
-    </div>
-    <div class="free-feature-card">
-      <div class="free-feature-icon"><i data-lucide="book-open" style="width:16px;height:16px;"></i></div>
-      <div class="free-feature-text">
-        <strong>Basic Practice Access</strong>
-        <span>Free practice questions with exam and unit filters</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- COMPARISON TABLE -->
-  <div class="comparison-section">
-    <h2>How we compare</h2>
-    <p>Premium SAT prep features at a fraction of the cost.</p>
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Feature</th>
-          <th class="highlight-col">Winnowic Premium</th>
-          <th>Khan Academy</th>
-          <th>Princeton Review</th>
-          <th>Kaplan</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="feature-name">Monthly cost</td>
-          <td class="highlight-col price-cell winnowic">$6/mo</td>
-          <td class="price-cell">Free</td>
-          <td class="price-cell">$150+</td>
-          <td class="price-cell">$180+</td>
-        </tr>
-        <tr>
-          <td class="feature-name">Adaptive practice</td>
-          <td class="highlight-col"><span class="check">✓</span> Full</td>
-          <td><span class="check">✓</span> Limited</td>
-          <td><span class="check">✓</span></td>
-          <td><span class="check">✓</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">Predicted score tracking</td>
-          <td class="highlight-col"><span class="check">✓</span> With range</td>
-          <td><span class="check">✓</span> Basic</td>
-          <td><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">Personalized study plan</td>
-          <td class="highlight-col"><span class="check">✓</span> Free</td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span> $300+</td>
-          <td><span class="cross">✗</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">Daily practice batches</td>
-          <td class="highlight-col"><span class="check">✓</span> Free</td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">Unit-by-unit analytics</td>
-          <td class="highlight-col"><span class="check">✓</span></td>
-          <td><span class="check">✓</span> Basic</td>
-          <td><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">500+ hard SAT questions</td>
-          <td class="highlight-col"><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span></td>
-          <td><span class="check">✓</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">Streak + email reminders</td>
-          <td class="highlight-col"><span class="check">✓</span> Free</td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="cross">✗</span></td>
-        </tr>
-        <tr>
-          <td class="feature-name">Half + full SAT simulations</td>
-          <td class="highlight-col"><span class="check">✓</span></td>
-          <td><span class="cross">✗</span></td>
-          <td><span class="check">✓</span></td>
-          <td><span class="check">✓</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <h1>
+      Start free.<br>
+      <span>Upgrade when you need more.</span>
+    </h1>
 
-  <!-- PLAN CARDS -->
-  <div style="margin-bottom:16px;">
-    <h2 style="font-size:20px;font-weight:800;color:#0B1F3B;margin-bottom:4px;">Choose your plan</h2>
-    <p style="font-size:14px;color:#888;">Upgrade anytime. Cancel anytime. No hidden fees.</p>
-  </div>
+    <p id="pricing-message" class="ww-pricing-subtitle">
+      Everything you need to find your weak spots and start improving is free.
+      Premium unlocks the full Winnowic SAT Math experience.
+    </p>
 
-  <div class="pricing-plans-grid">
+    <div class="ww-pricing-trust">
+      No contracts
+      <span>•</span>
+      Cancel anytime
+      <span>•</span>
+      No hidden fees
+    </div>
+
+  </section>
+
+
+  <!-- =========================================
+       PLAN CARDS
+       ========================================= -->
+
+  <section class="ww-pricing-plans">
 
     <!-- FREE -->
-    <div class="plan-card">
-      <div class="plan-badge-wrap"><span class="plan-badge badge-free">Free</span></div>
-      <div class="plan-name">Starter</div>
-      <div class="plan-price">$0</div>
-      <div class="plan-desc">Diagnose your weaknesses, build a study plan, and practice daily — completely free.</div>
-      <ul class="plan-features">
-        <li><span class="li-check">✓</span><div>Free SAT diagnostic<span class="li-sub">Predicted score range + unit breakdown</span></div></li>
-        <li><span class="li-check">✓</span><div>Personalized week-by-week study plan</div></li>
-        <li><span class="li-check">✓</span><div>Daily practice batches<span class="li-sub">10 targeted questions every day</span></div></li>
-        <li><span class="li-check">✓</span><div>Streak tracking + email reminders</div></li>
-        <li><span class="li-check">✓</span><div>Test goal + countdown</div></li>
-        <li><span class="li-check">✓</span><div>Limited question bank</div></li>
-      </ul>
-      <button class="plan-cta plan-cta-secondary"
-              onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'">
-        Start Free Diagnostic
-      </button>
-    </div>
+    <div class="ww-plan-card ww-plan-free">
 
-    <!-- SAT PREMIUM -->
-    <div class="plan-card plan-featured">
-      <div class="plan-badge-wrap"><span class="plan-badge badge-popular">Most Popular</span></div>
-      <div class="plan-name">SAT Math Premium</div>
-      <div class="plan-price">$6<span>/month</span></div>
-      <div class="plan-desc">Full access to every question, advanced analytics, and adaptive practice that targets exactly what you need to fix.</div>
-      <ul class="plan-features">
-        <li><span class="li-check">✓</span><div><strong>500+ Hard SAT Math Questions</strong><span class="li-sub">Continuously expanding question bank</span></div></li>
-        <li><span class="li-check">✓</span><div><strong>Adaptive Practice Mode</strong><span class="li-sub">Questions dynamically target your weakest units</span></div></li>
-        <li><span class="li-check">✓</span><div><strong>Advanced Diagnostics Dashboard</strong><span class="li-sub">Unit accuracy, readiness %, progress graphs over time</span></div></li>
-        <li><span class="li-check">✓</span><div><strong>Live Score Prediction</strong><span class="li-sub">Predicted range updates every 20 questions</span></div></li>
-        <li><span class="li-check">✓</span><div><strong>22-Question Half Tests + Full 44-Question Simulations</strong><span class="li-sub">Timed, authentic SAT format</span></div></li>
-        <li><span class="li-check">✓</span><div>Everything in Starter — included free</div></li>
-      </ul>
-      <button id="sat-btn" class="plan-cta plan-cta-primary">
-        Start SAT Plan — $6/mo
-      </button>
-      <p style="font-size:11px;color:#aaa;text-align:center;margin-top:8px;">
-        Cancel anytime · No hidden fees
-      </p>
-      <p id="sat-auth-message" style="
-        display:none; font-size:13px; color:#C62828;
-        margin:8px 0 0; text-align:center; font-weight:500;
-      "></p>
-    </div>
+      <div class="ww-plan-top">
 
-    <!-- AP DEAL -->
-    <div class="plan-card plan-disabled">
-      <div class="plan-badge-wrap"><span class="plan-badge badge-locked">Returns April 2027</span></div>
-      <div class="plan-name">AP 5's Deal</div>
-      <div class="plan-price" style="color:#aaa;">$5<span>/exam</span></div>
-      <div class="plan-desc">One-time access to a single AP exam for the season. Available April–May only.</div>
-      <ul class="plan-features">
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>200+ questions per AP exam</div></li>
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>Diagnostics included</div></li>
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>AP Precalc, Calc AB, Calc BC</div></li>
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>Expires May 31</div></li>
-      </ul>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <button class="plan-cta plan-cta-secondary" disabled id="ap_calc_ab_btn">AP Calc AB</button>
-        <button class="plan-cta plan-cta-secondary" disabled id="ap_calc_bc_btn">AP Calc BC</button>
-        <button class="plan-cta plan-cta-secondary" disabled id="ap_precalc_btn">AP Precalc</button>
+        <div class="ww-plan-label">
+          STARTER
+        </div>
+
+        <div class="ww-plan-price">
+          $0
+        </div>
+
+        <div class="ww-plan-price-note">
+          Free to use
+        </div>
+
+        <p class="ww-plan-description">
+          Find your weak spots, get your study plan, and start practicing.
+        </p>
+
       </div>
-      <p class="locked-note">AP exam season has ended for 2026. Returns April 2027.</p>
+
+
+      <div class="ww-plan-divider"></div>
+
+
+      <div class="ww-plan-features">
+
+        <div class="ww-plan-feature">
+          <span>✓</span>
+          Free SAT Math diagnostic
+        </div>
+
+        <div class="ww-plan-feature">
+          <span>✓</span>
+          Predicted score range
+        </div>
+
+        <div class="ww-plan-feature">
+          <span>✓</span>
+          Personalized study plan
+        </div>
+
+        <div class="ww-plan-feature">
+          <span>✓</span>
+          Daily practice
+        </div>
+
+        <div class="ww-plan-feature">
+          <span>✓</span>
+          Progress + streak tracking
+        </div>
+
+        <div class="ww-plan-feature">
+          <span>✓</span>
+          Limited question bank
+        </div>
+
+      </div>
+
+
+      <button
+        class="ww-plan-button ww-plan-button-free"
+        onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'"
+      >
+        Start Free Diagnostic
+        <span>→</span>
+      </button>
+
+      <div class="ww-plan-bottom-note">
+        No account required to take the diagnostic
+      </div>
+
     </div>
 
-    <!-- ALL EXAMS -->
-    <div class="plan-card plan-disabled">
-      <div class="plan-badge-wrap"><span class="plan-badge badge-locked">Coming Soon</span></div>
-      <div class="plan-name">All Exams Bundle</div>
-      <div class="plan-price" style="color:#aaa;">$10<span>/month</span></div>
-      <div class="plan-desc">SAT Math Premium plus all AP exams in one subscription.</div>
-      <ul class="plan-features">
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>SAT Math Premium included</div></li>
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>All AP exams included</div></li>
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>800+ total questions</div></li>
-        <li><span class="li-check" style="color:#aaa;">✓</span><div>Unified diagnostics dashboard</div></li>
-      </ul>
-      <button class="plan-cta plan-cta-secondary" disabled id="all-exams-btn">Currently Unavailable</button>
-      <p class="locked-note">Returns with next AP season in spring 2027.</p>
+
+    <!-- PREMIUM -->
+    <div class="ww-plan-card ww-plan-premium">
+
+      <div class="ww-popular-badge">
+        MOST POPULAR
+      </div>
+
+
+      <div class="ww-plan-top">
+
+        <div class="ww-plan-label ww-plan-label-premium">
+          SAT MATH PREMIUM
+        </div>
+
+        <div class="ww-plan-price ww-plan-price-premium">
+          $6<span>/month</span>
+        </div>
+
+        <div class="ww-plan-price-note ww-plan-price-note-premium">
+          Cancel anytime
+        </div>
+
+        <p class="ww-plan-description ww-plan-description-premium">
+          More questions, smarter practice, and deeper insight into your progress.
+        </p>
+
+      </div>
+
+
+      <div class="ww-plan-divider ww-plan-divider-premium"></div>
+
+
+      <div class="ww-plan-features">
+
+        <div class="ww-plan-feature ww-plan-feature-premium">
+          <span>✓</span>
+          <div>
+            <strong>500+ SAT Math questions</strong>
+          </div>
+        </div>
+
+        <div class="ww-plan-feature ww-plan-feature-premium">
+          <span>✓</span>
+          <div>
+            <strong>Adaptive practice</strong>
+            <small>Targets your weakest units</small>
+          </div>
+        </div>
+
+        <div class="ww-plan-feature ww-plan-feature-premium">
+          <span>✓</span>
+          <div>
+            <strong>Advanced diagnostics</strong>
+            <small>See accuracy and progress by unit</small>
+          </div>
+        </div>
+
+        <div class="ww-plan-feature ww-plan-feature-premium">
+          <span>✓</span>
+          <div>
+            <strong>Live score prediction</strong>
+            <small>Updates as you practice</small>
+          </div>
+        </div>
+
+        <div class="ww-plan-feature ww-plan-feature-premium">
+          <span>✓</span>
+          <div>
+            <strong>Half tests + full simulations</strong>
+          </div>
+        </div>
+
+        <div class="ww-plan-feature ww-plan-feature-premium">
+          <span>✓</span>
+          <div>
+            Everything in Starter
+          </div>
+        </div>
+
+      </div>
+
+
+      <button
+        id="sat-btn"
+        class="ww-plan-button ww-plan-button-premium"
+      >
+        Get Premium — $6/month
+        <span>→</span>
+      </button>
+
+      <div class="ww-plan-bottom-note ww-plan-bottom-note-premium">
+        Cancel anytime · No hidden fees
+      </div>
+
+      <p
+        id="sat-auth-message"
+        style="
+          display:none;
+          font-size:12px;
+          color:#FFD84D;
+          margin:10px 0 0;
+          text-align:center;
+          font-weight:600;
+        "
+      ></p>
+
     </div>
 
-  </div>
+  </section>
 
-  <!-- DISCLAIMER -->
-  <div class="pricing-disclaimer modern-disclaimer">
+
+  <!-- =========================================
+       WHY PREMIUM
+       ========================================= -->
+
+  <section class="ww-premium-reason">
+
+    <div class="ww-premium-reason-copy">
+
+      <div class="ww-premium-reason-label">
+        WHY PREMIUM?
+      </div>
+
+      <h2>
+        Practice gets smarter<br>
+        as you improve.
+      </h2>
+
+      <p>
+        Premium goes beyond more questions. Winnowic uses your performance
+        to focus practice where it matters most.
+      </p>
+
+    </div>
+
+
+    <div class="ww-premium-reason-items">
+
+      <div class="ww-reason-item">
+
+        <div class="ww-reason-icon">
+          <i data-lucide="target"></i>
+        </div>
+
+        <div>
+          <strong>Target weak areas</strong>
+          <span>Spend more time where you're losing points.</span>
+        </div>
+
+      </div>
+
+
+      <div class="ww-reason-item">
+
+        <div class="ww-reason-icon">
+          <i data-lucide="trending-up"></i>
+        </div>
+
+        <div>
+          <strong>See your progress</strong>
+          <span>Track your predicted score and unit performance.</span>
+        </div>
+
+      </div>
+
+
+      <div class="ww-reason-item">
+
+        <div class="ww-reason-icon">
+          <i data-lucide="timer"></i>
+        </div>
+
+        <div>
+          <strong>Practice test day</strong>
+          <span>Build up to timed half tests and full simulations.</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================
+       BOTTOM CTA
+       ========================================= -->
+
+  <section class="ww-pricing-bottom">
+
+    <div>
+      <h2>Not ready for Premium?</h2>
+
+      <p>
+        Start with the free diagnostic. Upgrade later if you want more.
+      </p>
+    </div>
+
+    <button
+      onclick="window.location.href='/quiz.html?mode=diagnostic&exam=SAT_MATH'"
+      class="ww-bottom-button"
+    >
+      Start Free
+      <span>→</span>
+    </button>
+
+  </section>
+
+
+  <!-- =========================================
+       DISCLAIMER
+       ========================================= -->
+
+  <div class="pricing-disclaimer modern-disclaimer ww-pricing-disclaimer">
     MCQ and other exam content are not affiliated with or endorsed by the College Board.
     No refunds once purchased. No cancellation fees.
-    When canceling subscriptions (SAT or All Exams) you will be charged for the billing
-    cycle in which the cancellation occurred. Your subscription will immediately stop thereafter.
+    When canceling subscriptions, you will be charged for the billing cycle in which
+    the cancellation occurred. Your subscription will immediately stop thereafter.
   </div>
 
-</div>
+</main>
 
 <footer class="site-footer">
     <div class="footer-left">

@@ -623,6 +623,467 @@ width: 38px !important;
   width: 280px;
   max-width: calc(100vw - 28px);
 }
+
+/* =========================================
+   WINNOWIC — CONTACT REFRESH
+   ========================================= */
+
+
+/* Force white background over style.css */
+
+html,
+body {
+  background: #ffffff !important;
+}
+
+
+/* =========================================
+   PAGE
+   ========================================= */
+
+.ww-contact-page {
+  width: 100%;
+
+  min-height: calc(100vh - 68px);
+
+  padding: 68px 24px 76px;
+
+  background: #ffffff !important;
+
+  font-family: 'Inter', sans-serif;
+}
+
+
+/* =========================================
+   LAYOUT
+   ========================================= */
+
+.ww-contact-layout {
+  width: min(1000px, 100%);
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 0.75fr 1.25fr;
+
+  align-items: center;
+
+  gap: 82px;
+}
+
+
+/* =========================================
+   LEFT COPY
+   ========================================= */
+
+.ww-contact-label {
+  margin-bottom: 15px;
+
+  color: #FF6B00;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.ww-contact-copy h1 {
+  margin: 0;
+
+  color: #0B1F3B;
+
+  font-size: clamp(38px, 4vw, 50px);
+
+  line-height: 1.05;
+
+  font-weight: 800;
+
+  letter-spacing: -1.5px;
+}
+
+.ww-contact-copy > p {
+  max-width: 370px;
+
+  margin: 18px 0 0;
+
+  color: #777;
+
+  font-size: 14px;
+
+  line-height: 1.65;
+}
+
+
+/* =========================================
+   SMALL BENEFIT LIST
+   ========================================= */
+
+.ww-contact-mini-points {
+  margin-top: 27px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 13px;
+}
+
+.ww-contact-mini-points > div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: #0B1F3B;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.ww-contact-mini-points span {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+
+  background: #FFD84D;
+
+  color: #0B1F3B;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   FORM CARD
+   ========================================= */
+
+.ww-contact-form-card {
+  padding: 32px;
+
+  background: #ffffff;
+
+  border: 1px solid #ececec;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 18px 45px rgba(11,31,59,0.08),
+    0 4px 14px rgba(11,31,59,0.04);
+}
+
+
+/* =========================================
+   FORM HEADER
+   ========================================= */
+
+.ww-contact-form-heading {
+  margin-bottom: 20px;
+}
+
+.ww-contact-form-heading h2 {
+  margin: 0;
+
+  color: #0B1F3B;
+
+  font-size: 20px;
+
+  font-weight: 800;
+}
+
+.ww-contact-form-heading p {
+  margin: 5px 0 0;
+
+  color: #999;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   TYPE BUTTONS
+   ========================================= */
+
+.contact-type-select {
+  display: flex;
+
+  gap: 7px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 22px;
+}
+
+.contact-type-btn {
+  min-width: 0 !important;
+
+  padding: 7px 13px;
+
+  border-radius: 20px;
+
+  border: 1px solid #e5e5e5;
+
+  background: #ffffff;
+
+  color: #777;
+
+  font-family: 'Inter', sans-serif;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.contact-type-btn:hover {
+  border-color: #0B1F3B;
+
+  color: #0B1F3B;
+}
+
+.contact-type-btn.active {
+  border-color: #0B1F3B;
+
+  background: #0B1F3B;
+
+  color: #FFD84D;
+}
+
+
+/* =========================================
+   FIELDS
+   ========================================= */
+
+.contact-name-row {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-bottom: 16px;
+}
+
+.contact-field-label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #0B1F3B;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+.contact-input,
+.contact-textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 12px 13px;
+
+  border: 1px solid #e4e4e4;
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #fafafa;
+
+  color: #0B1F3B;
+
+  font-family: 'Inter', sans-serif;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: #bbb;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+  border-color: #0B1F3B;
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(11,31,59,0.05);
+}
+
+.contact-textarea {
+  min-height: 120px;
+
+  resize: vertical;
+
+  margin-bottom: 17px;
+}
+
+
+/* =========================================
+   SUBMIT
+   ========================================= */
+
+.contact-submit-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  flex-wrap: wrap;
+}
+
+.contact-submit-btn {
+  min-width: 0 !important;
+
+  padding: 12px 20px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #0B1F3B;
+
+  color: #FFD84D;
+
+  font-family: 'Inter', sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.contact-submit-btn:hover {
+  opacity: 0.9;
+
+  transform: translateY(-1px);
+}
+
+#feedback-message {
+  margin: 0;
+
+  color: #2E7D32;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+#feedback-message.error {
+  color: #C62828;
+}
+
+
+/* =========================================
+   TABLET / MOBILE
+   ========================================= */
+
+@media (max-width: 760px) {
+
+  .ww-contact-page {
+    padding: 46px 20px 55px;
+  }
+
+  .ww-contact-layout {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .ww-contact-copy {
+    text-align: center;
+  }
+
+  .ww-contact-copy > p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ww-contact-mini-points {
+    display: none;
+  }
+
+  .ww-contact-form-card {
+    width: min(560px, 100%);
+
+    margin: 0 auto;
+
+    padding: 26px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .ww-contact-page {
+    padding: 38px 15px 45px;
+  }
+
+  .ww-contact-copy h1 {
+    font-size: 35px;
+  }
+
+  .ww-contact-form-card {
+    padding: 22px 18px;
+
+    border-radius: 16px;
+  }
+
+  .contact-name-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-submit-btn {
+    width: 100%;
+  }
+
+}
     </style>
 </head>
 
@@ -804,55 +1265,150 @@ width: 38px !important;
 
 </header>
 
-<div class="contact-page-wrap">
+<!-- =========================================
+     CONTACT PAGE
+     ========================================= -->
 
-    <!-- CONTACT FORM -->
-    <div class="contact-form-card">
-        <div class="contact-form-header">
-            <div>
-                <h2>Contact Us</h2>
-                
-            </div>
+<main class="ww-contact-page">
+
+  <section class="ww-contact-layout">
+
+    <!-- LEFT -->
+    <div class="ww-contact-copy">
+
+      <div class="ww-contact-label">
+        CONTACT WINNOWIC
+      </div>
+
+      <h1>
+        How can we help?
+      </h1>
+
+      <p>
+        Questions, feedback, bugs, or ideas. Send us a message and we'll take a look.
+      </p>
+
+      <div class="ww-contact-mini-points">
+
+        <div>
+          <span>✓</span>
+          Product feedback
         </div>
 
-        <!-- Type selector -->
-        <div class="contact-type-select">
-            <button class="contact-type-btn active" data-type="feedback">General Feedback</button>
-            <button class="contact-type-btn" data-type="bug">Bug Report</button>
-            <button class="contact-type-btn" data-type="feature">Feature Request</button>
-            <button class="contact-type-btn" data-type="help">Get Help</button>
+        <div>
+          <span>✓</span>
+          Technical help
         </div>
 
-        <!-- Name row -->
-        <div class="contact-name-row">
-            <div>
-                <label class="contact-field-label" for="contact-name">Name <span style="font-weight:400;color:#aaa;"></span></label>
-                <input type="text" id="contact-name" class="contact-input">
-            </div>
-            <div>
-                <label class="contact-field-label" for="contact-email">Email </label>
-                <input type="email" id="contact-email" class="contact-input">
-            </div>
+        <div>
+          <span>✓</span>
+          Feature requests
         </div>
 
-        <!-- Message -->
-        <label class="contact-field-label" for="feedback-input">Message</label>
-        <textarea
-            id="feedback-input"
-            class="contact-textarea"
-            placeholder="Tell us what's on your mind — be as specific as you'd like. The more detail, the more we can help."
-        ></textarea>
+      </div>
 
-        <div class="contact-submit-row">
-            <button id="submit-feedback-btn" class="contact-submit-btn">
-                <i data-lucide="send" style="width:14px;height:14px;"></i>
-                Send Message
-            </button>
-            <p id="feedback-message"></p>
-        </div>
     </div>
 
-</div>
+
+    <!-- RIGHT: FORM -->
+    <div class="ww-contact-form-card">
+
+      <div class="ww-contact-form-heading">
+        <h2>Send a message</h2>
+        <p>Choose what you're reaching out about.</p>
+      </div>
+
+
+      <!-- Type selector -->
+      <div class="contact-type-select">
+
+        <button class="contact-type-btn active" data-type="feedback">
+          General Feedback
+        </button>
+
+        <button class="contact-type-btn" data-type="bug">
+          Bug Report
+        </button>
+
+        <button class="contact-type-btn" data-type="feature">
+          Feature Request
+        </button>
+
+        <button class="contact-type-btn" data-type="help">
+          Get Help
+        </button>
+
+      </div>
+
+
+      <!-- Name + Email -->
+      <div class="contact-name-row">
+
+        <div>
+          <label class="contact-field-label" for="contact-name">
+            Name
+          </label>
+
+          <input
+            type="text"
+            id="contact-name"
+            class="contact-input"
+            placeholder="Your name"
+          >
+        </div>
+
+
+        <div>
+          <label class="contact-field-label" for="contact-email">
+            Email
+          </label>
+
+          <input
+            type="email"
+            id="contact-email"
+            class="contact-input"
+            placeholder="you@example.com"
+          >
+        </div>
+
+      </div>
+
+
+      <!-- Message -->
+      <label class="contact-field-label" for="feedback-input">
+        Message
+      </label>
+
+      <textarea
+        id="feedback-input"
+        class="contact-textarea"
+        placeholder="Tell us what's on your mind..."
+      ></textarea>
+
+
+      <!-- Submit -->
+      <div class="contact-submit-row">
+
+        <button
+          id="submit-feedback-btn"
+          class="contact-submit-btn"
+        >
+          Send Message
+          <i
+            data-lucide="arrow-right"
+            style="width:15px;height:15px;"
+          ></i>
+        </button>
+
+        <p id="feedback-message"></p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
 
 <footer class="site-footer">
     <div class="footer-left">
